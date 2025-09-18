@@ -18,14 +18,16 @@ interface UserProps {
 }
 
 interface AuthContextData {
-    setUser: React.Dispatch<React.SetStateAction<UserProps | null>>
-    user: UserProps
-    signIn: (data: SignInProps) => Promise<void>
-    checkPassword: (data: UserProps) => Promise<void>
-    signOut: () => void
-    deviceId: string
-    signedIn: boolean
-    disconnect: () => void
+    setUser: React.Dispatch<React.SetStateAction<UserProps | null>>;
+    user: UserProps;
+    signIn: (data: SignInProps) => Promise<void>;
+    checkPassword: (data: UserProps) => Promise<void>;
+    signOut: () => void;
+    deviceId: string;
+    signedIn: boolean;
+    disconnect: () => void;
+    positionGlobal: any;
+    currentCity: string;
 }
 
 export {

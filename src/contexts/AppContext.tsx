@@ -17,6 +17,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [positionGlobal, setPositionGlobal] = useState<any>([0, 0]);
     const storageUserKey = '@solar:user';
 
+    const [currentCity, setCurrentCity] = useState<any>(null);
+
     useEffect(() => {
         async function loadPosition() {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -26,6 +28,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const location = await Location.getCurrentPositionAsync({});
             const { latitude, longitude } = location.coords;
             setPositionGlobal([latitude, longitude]);
+            
+            let resp: any = await Location.reverseGeocodeAsync({           
+                latitude,
+                longitude
+            });
+            setCurrentCity(resp[0]?.subregion);
+
         }
         loadPosition();
     }, []);
@@ -181,7 +190,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 deviceId,
                 signOut,
                 disconnect,
-                positionGlobal
+                positionGlobal,
+                currentCity
             }}
         >
             {children}
