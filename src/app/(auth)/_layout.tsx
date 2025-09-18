@@ -2,14 +2,6 @@ import React from 'react'
 import { router, Stack } from 'expo-router'
 import StackHeader from '@/components/StackHeader'
 
-export type RootStackParamList = {
-  'sign-in': undefined,
-  'check-password': undefined,
-  'register-customer': { cpfCnpj: string},
-  'not-registered': undefined,
-  'register-password': undefined,
-}
-
 const AuthLayout = () => {
   return (
     <Stack
