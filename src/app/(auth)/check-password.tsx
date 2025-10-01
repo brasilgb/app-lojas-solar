@@ -1,17 +1,17 @@
-import { View, Text, ActivityIndicator, Keyboard } from 'react-native'
-import React, { useState } from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { CheckPasswordFormType, CheckPasswordSchema } from '@/schema/app';
-import { zodResolver } from '@hookform/resolvers/zod';
-import ScreenHeader from '@/components/ScreenHeader';
-import { Input } from '@/components/Input';
-import { ArrowRight, EyeClosedIcon, EyeIcon } from 'lucide-react-native';
 import { Button } from '@/components/Button';
-import AuthLayout from '@/components/auth-layout';
-import { useLocalSearchParams } from 'expo-router';
-import { useAuthContext } from '@/contexts/AppContext';
-import { UserProps } from '@/types/app-types';
+import { Input } from '@/components/Input';
 import MessageAlert from '@/components/MessageAlert';
+import ScreenHeader from '@/components/ScreenHeader';
+import AuthLayout from '@/components/auth-layout';
+import { useAuthContext } from '@/contexts/AppContext';
+import { CheckPasswordFormType, CheckPasswordSchema } from '@/schema/app';
+import { UserProps } from '@/types/app-types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useLocalSearchParams } from 'expo-router';
+import { ArrowRight, EyeClosedIcon, EyeIcon } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
 
 const CheckPassword = () => {
     const params = useLocalSearchParams();
@@ -31,7 +31,7 @@ const CheckPassword = () => {
         setLoading(true);
         try {
             let { senha }: any = data;
-            let cpfcnpj = params?.cpfCnpj;
+            let cpfcnpj = params?.cpfcnpj;
             let datacheck = {
                 cpfcnpj: cpfcnpj,
                 senha: senha,

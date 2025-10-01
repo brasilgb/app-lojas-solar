@@ -1,22 +1,22 @@
 
 
+import { AuthContextData, SignInProps, UserProps } from "@/types/app-types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from 'expo-location';
 import { router } from "expo-router";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import * as Location from 'expo-location';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import DeviceInfo from 'react-native-device-info';
 import serviceapp from "../services/serviceapp";
-import { AuthContextData, SignInProps, UserProps } from "@/types/app-types";
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<any>(null);
     const [deviceId, setDeviceId] = useState<any>(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [positionGlobal, setPositionGlobal] = useState<any>([0, 0]);
     const storageUserKey = '@solar:user';
-
+    const [storeList, setStoreList] =useState<any>([]);
     const [currentCity, setCurrentCity] = useState<any>(null);
 
     useEffect(() => {
@@ -92,7 +92,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 router.replace({
                     pathname: '/check-password',
                     params: {
-                        cpfCnpj: cpfcnpj as any,
+                        cpfcnpj: cpfcnpj as any,
                         nomeCliente: data.nomeCliente,
                         codigoCliente: data.codigoCliente,
                     }
@@ -104,7 +104,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     // pathname: '/register-customer',
                     pathname: '/not-registered',
                     params: {
-                        cpfCnpj: cpfcnpj as any
+                        cpfcnpj: cpfcnpj as any
                     }
                 })
             }
@@ -113,7 +113,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 router.replace({
                     pathname: '/register-password',
                     params: {
-                        cpfCnpj: cpfcnpj as any,
+                        cpfcnpj: cpfcnpj as any,
                         nomeCliente: data.nomeCliente
                     }
                 })
@@ -140,7 +140,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }
 
             let userData = {
-                cpfCnpj: datacheck?.cpfcnpj,
+                cpfcnpj: datacheck?.cpfcnpj,
                 codigoCliente: datacheck.codigoCliente,
                 nomeCliente: datacheck.nomeCliente,
                 token: data.token,
@@ -182,11 +182,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             value={{
                 signedIn: !!user,
                 user,
+                signIn, // Cast to any to satisfy the type for now
+                checkPassword,
                 setUser,
                 loading,
                 setLoading,
-                signIn,
-                checkPassword,
+                storeList, 
+                setStoreList,
                 deviceId,
                 signOut,
                 disconnect,

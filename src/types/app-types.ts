@@ -9,7 +9,7 @@ interface CheckPasswordProps {
 }
 
 interface UserProps {
-    cpfCnpj: string
+    cpfcnpj: string
     senha: string
     nomeCliente: string
     codigoCliente: string
@@ -20,19 +20,20 @@ interface UserProps {
 interface AuthContextData {
     setUser: React.Dispatch<React.SetStateAction<UserProps | null>>;
     user: UserProps;
-    signIn: (data: SignInProps) => Promise<void>;
-    checkPassword: (data: UserProps) => Promise<void>;
+    signIn: any;
+    checkPassword: any;
     signOut: () => void;
     deviceId: string;
     signedIn: boolean;
     disconnect: () => void;
     positionGlobal: any;
     currentCity: string;
+    storeList: any;
+    setStoreList: any;
+    loading: any;
+    setLoading: any;
 }
 
 export {
-    SignInProps,
-    CheckPasswordProps,
-    UserProps,
-    AuthContextData
-}
+    AuthContextData, CheckPasswordProps, SignInProps, UserProps
+};

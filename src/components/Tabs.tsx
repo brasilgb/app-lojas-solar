@@ -9,7 +9,7 @@ interface TabsContextProps {
 }
 const TabsContext = createContext<TabsContextProps>({
   activeTab: '',
-  setActiveTab: () => {},
+  setActiveTab: () => { },
 });
 
 interface TabsProps {
@@ -32,7 +32,7 @@ function TabsList({
 }: React.ComponentPropsWithoutRef<typeof View>) {
   return (
     <View
-      className={cn('flex flex-row justify-center', className)}
+      className={cn('flex flex-row justify-center gap-2', className)}
       {...props}
     />
   );
@@ -55,8 +55,8 @@ function TabsTrigger({
 
   return (
     <TouchableOpacity
-      className={cn('px-8 py-3 rounded-md w-1/2 bg-muted', {
-        'bg-foreground': activeTab === value,
+      className={cn('px-8 py-3 rounded-md w-1/2 bg-gray-200', {
+        'bg-solar-blue-primary': activeTab === value,
         className,
       })}
       onPress={() => setActiveTab(value)}
@@ -65,7 +65,7 @@ function TabsTrigger({
       <Text
         className={cn(
           'font-medium text-center text-muted-foreground',
-          { 'text-background': activeTab === value },
+          { 'text-white': activeTab === value },
           textClasses
         )}
       >
@@ -85,7 +85,7 @@ function TabsContent({ value, className, ...props }: TabsContentProps) {
     return (
       <View
         className={cn(
-          'border border-border mt-2 px-4 py-4 rounded-xl',
+          'border border-gray-200 mt-2 rounded-xl',
           className
         )}
         {...props}

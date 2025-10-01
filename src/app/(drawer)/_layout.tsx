@@ -35,12 +35,13 @@ const CustomDrawerContent = (props: any) => {
         </View>
       </DrawerContentScrollView>
       <View className={`flex-row items-center justify-between p-5 border-t border-t-gray-200`} >
-        <Link className="text-xs text-gray-600" href={'/'}>Política de Privacidade</Link>
-        <Link className="text-xs text-gray-600" href={'/'}>Perguntas frequentes</Link>
+        <Link className="text-xs text-gray-600" href={'/(drawer)/privacy-police'}>Política de Privacidade</Link>
+        <Link className="text-xs text-gray-600" href={'/(drawer)/frequently-asked-questions'}>Perguntas frequentes</Link>
       </View>
     </View>
   )
 }
+
 const DrawerLayout = () => {
   const { signedIn } = useAuthContext();
   return (
@@ -117,6 +118,7 @@ const DrawerLayout = () => {
         <Drawer.Screen
           name="(stores)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Lojas solar próximas',
             title: 'Lojas solar próximas',
             drawerIcon: ({ color, size }) => (
@@ -183,6 +185,23 @@ const DrawerLayout = () => {
             )
           }}
         />
+
+        <Drawer.Screen
+          name='privacy-police'
+          options={{
+            drawerLabel: () => null,
+            drawerItemStyle: { display: 'none' }
+          }}
+        />
+
+        <Drawer.Screen
+          name='frequently-asked-questions'
+          options={{
+            drawerLabel: () => null,
+            drawerItemStyle: { display: 'none' }
+          }}
+        />
+
       </Drawer>
     </GestureHandlerRootView>
   );

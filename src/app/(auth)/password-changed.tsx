@@ -1,7 +1,7 @@
 import { Button } from '@/components/Button'
 import { router, useLocalSearchParams } from 'expo-router'
-import React, { useState } from 'react'
-import { View, Text, Image } from 'react-native'
+import React from 'react'
+import { Image, Text, View } from 'react-native'
 
 const PasswordChanged = () => {
   const params = useLocalSearchParams();
@@ -28,7 +28,7 @@ const PasswordChanged = () => {
               onPress={() => router.push({
                 pathname: '/register-password',
                 params: {
-                  cpfCnpj: params?.cpfCnpj
+                  cpfcnpj: params?.cpfcnpj
                 }
               })}
               labelClasses='text-xl font-medium'

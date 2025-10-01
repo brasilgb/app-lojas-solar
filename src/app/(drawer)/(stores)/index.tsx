@@ -1,39 +1,75 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, Text, TouchableOpacity, Platform } from 'react-native'
+import { View, Text, TouchableOpacity, Platform, Dimensions, Animated, StyleSheet } from 'react-native'
 import ScreenHeader from '@/components/ScreenHeader'
 import { MapPinIcon } from 'lucide-react-native'
 import { Button } from '@/components/Button'
 import { useAuthContext } from '@/contexts/AppContext'
 import serviceapp from '@/services/serviceapp'
-import { useIsFocused } from '@react-navigation/native'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
+import Carousel from 'react-native-snap-carousel';
+import AppLoading from '@/components/app-loading'
+import Map, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import StoreListModal from '@/components/StoreListModal';
+import { Modalize } from 'react-native-modalize';
+
+const { width, height } = Dimensions.get('window');
+export const HEIGHT = Dimensions.get('window').height;
+export const SLIDER_WIDTH = Dimensions.get('window').width;
+export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
+const CARD_WIDTH = width * 0.8;
 
 const SolarStores = () => {
-  const params = useLocalSearchParams();
+  const { storeList, setStoreList } = useAuthContext();
   const { positionGlobal, currentCity } = useAuthContext();
   const [location, setLocation] = useState<[any, any]>([0, 0]);
   const [locationLojasProxima, setLocationLojasProxima] = useState<any>([]);
   const [citiesStore, setCitiesStore] = useState<any>([]);
-  const isFocused = useIsFocused();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  // Estado para guardar a cidade que foi selecionada
+  const [selectedCity, setSelectedCity] = useState(null);
+  const modalizeRef = useRef<Modalize>(null);
+
+  const onOpen = () => {
+    modalizeRef.current?.open();
+  };
+
+  // Função para lidar com a seleção de uma cidade
+  const handleSelectCity = (city: any) => {
+    setSelectedCity(city); // Atualiza o estado com a cidade selecionada
+    modalizeRef.current?.close(); // Fecha o modal automaticamente após a seleção
+  };
+
+  // Maps animation
   const mapRef = useRef<any>(0);
-  const paramdata: any = params?.data;
+  let mapAnimation = new Animated.Value(0);
+
+  const [region, setRegion] = useState({
+    latitude: positionGlobal[0],
+    longitude: positionGlobal[1],
+    latitudeDelta: 0.0043,
+    longitudeDelta: 0.0034,
+  });
 
   useEffect(() => {
     async function getLocationLojasProxima() {
-      let lojas = paramdata ? 'WS_CARREGA_LOJAS' : 'WS_LOJAS_PROXIMA';
+      setLoading(true);
+
+      let lojas = selectedCity ? 'WS_CARREGA_LOJAS' : 'WS_LOJAS_PROXIMA';
       let latitudel = parseFloat(positionGlobal[0]);
       let longitudel = parseFloat(positionGlobal[1]);
       await serviceapp
         .get(`(${lojas})?latitude=${latitudel}&longitude=${longitudel}`)
         .then(response => {
-          if (paramdata) {
+          if (selectedCity) {
             let result = response.data.resposta.data.filter(
               (l: any) =>
-                l.cidade.split('-')[0] === paramdata.split('-')[0] &&
+                l.cidade.split('-')[0] === (selectedCity as any)?.cidade?.split('-')[0] &&
                 l.latitude !== '' &&
                 l.longitude !== '',
             );
             setLocationLojasProxima(result);
+            setStoreList(result);
             const { latitude, longitude } = result[0];
             setTimeout(() => {
               const setregion = {
@@ -48,64 +84,117 @@ const SolarStores = () => {
             }, 1000);
           } else {
             setLocationLojasProxima(response.data.resposta.data);
+            setStoreList(response.data.resposta.data);
           }
+        })
+        .catch(err => {
+          console.log(err);
+        }).finally(() => setLoading(false));
+    }
+      getLocationLojasProxima();
+    
+  }, [location, selectedCity]);
+
+
+  useEffect(() => {
+    async function getLocationLojas() {
+      await serviceapp
+        .get(`(WS_CARREGA_LOJAS)`)
+        .then(response => {
+          const dadosCity = response.data.resposta.data;
+          setCitiesStore(dadosCity);
         })
         .catch(err => {
           console.log(err);
         });
     }
-    if (isFocused) {
-      getLocationLojasProxima();
+      getLocationLojas();
+  }, []);
+
+
+  const onCaroucelItemChange = (index: any) => {
+    const { latitude, longitude } = locationLojasProxima[index];
+
+    const setregion = {
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+      latitudeDelta: 0.0043,
+      longitudeDelta: 0.0034,
+    };
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(setregion, 300);
     }
-  }, [location, paramdata]);
+  };
+
+  const interpolations = locationLojasProxima.map(
+    (marker: any, index: any) => {
+      const inputRange = [
+        (index - 1) * CARD_WIDTH,
+        index * CARD_WIDTH,
+        (index + 1) * CARD_WIDTH,
+      ];
+
+      const scale = mapAnimation.interpolate({
+        inputRange,
+        outputRange: [1, 1.5, 1],
+        extrapolate: 'clamp',
+      });
+
+      return { scale };
+    },
+  );
 
   const renderStore = ({ item, index }: any) => (
     <TouchableOpacity
+      key={index}
       activeOpacity={1}
-      onPress={() => router.push('/store-selected', { dataStore: item } as any)}
+      onPress={() => router.push({
+        pathname: '/store-selected',
+        params: item
+      })}
     >
       <View
         key={index}
         className={` ${Platform.OS == 'ios'
           ? 'shadow-sm shadow-gray-300'
           : 'shadow-sm shadow-black'
-          } bg-solar-gray-middle m-2 border border-white rounded-lg`}
+          } bg-white m-2 border border-gray-100 rounded-lg`}
       >
         <View className="p-4">
           <Text
             allowFontScaling={false}
             numberOfLines={1}
-            className="text-base text-solar-blue-dark font-Poppins_700Bold pb-1.5"
+            className="text-base text-solar-blue-secondary font-roboto font-bold"
           >
             {item.cidade}
           </Text>
           <Text
             allowFontScaling={false}
             numberOfLines={1}
-            className="text-xs text-gray-500 font-Poppins_400Regular pb-1.5"
+            className="text-xs text-gray-500 font-roboto font-medium pb-1.5"
           >
             {item.endereco}
           </Text>
           <Text
             allowFontScaling={false}
             numberOfLines={1}
-            className="text-xs text-gray-500 font-Poppins_400Regular pb-1.5"
+            className="text-xs text-gray-500 font-roboto font-medium pb-1.5"
           >
             {item.email}
           </Text>
         </View>
-        <View className="flex-row items-center justify-between bg-solar-gray-dark px-2 pt-2 border-t border-white">
+        <View className="flex-row items-center justify-between bg-gray-100 px-2 pt-2 border-t border-white">
           <Text
             allowFontScaling={false}
             numberOfLines={1}
-            className="text-base text-solar-blue-dark font-Poppins_500Medium pb-1.5"
+            className="text-base text-solar-blue-primary font-roboto font-medium pb-1.5"
           >
             {item.whats}
           </Text>
           <Text
             allowFontScaling={false}
             numberOfLines={1}
-            className="text-base text-solar-yellow-dark font-Poppins_500Medium pb-1.5"
+            className="text-base text-solar-orange-primary font-roboto font-medium pb-1.5"
           >
             {item.distancia}
           </Text>
@@ -113,6 +202,10 @@ const SolarStores = () => {
       </View>
     </TouchableOpacity>
   );
+
+  if (loading) {
+    return <AppLoading />
+  }
 
   return (
     <View className='bg-solar-blue-primary flex-1'>
@@ -124,25 +217,66 @@ const SolarStores = () => {
           </View>
           <View className='flex-1'>
             <Text className='text-lg font-RobotoBold text-gray-700'>Localização</Text>
-            <Text className='text-sm font-RobotoMedium text-gray-700'>{currentCity.toUpperCase()}</Text>
+            <Text className='text-sm font-RobotoMedium text-gray-700'>{currentCity?.toUpperCase()}</Text>
           </View>
           <View>
-            <Button label={'Alterar'} variant={'default'} size={'sm'} />
+            <Button
+              label={'Alterar'}
+              variant={'default'}
+              size={'sm'}
+              onPress={onOpen}
+            />
           </View>
         </View>
 
-        <View className='flex-1 border-t-4 border-solar-green-primary items-center justify-center'>
+        <View className='flex-1 border-t-4 border-solar-green-primary items-center justify-center' style={{ flex: 1 }} >
+          <Map
+            ref={mapRef}
+            provider={PROVIDER_GOOGLE}
+            initialRegion={region}
+            showsUserLocation
+            loadingEnabled
+            style={StyleSheet.absoluteFill}
+          >
+            {locationLojasProxima.map((marker: any, index: any) => {
+              const scaleStyle = {
+                transform: [
+                  {
+                    scale: interpolations[index].scale,
+                  },
+                ],
+              };
+              return (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: parseFloat(marker.latitude),
+                    longitude: parseFloat(marker.longitude),
+                  }}
+                >
+                  <Animated.View className="items-center justify-center w-14 h-14" style={{ elevation: 2 }}>
+                    <Animated.Image
+                      source={require('@/assets/images/map_marker.png')}
+                      style={[scaleStyle]}
+                      className="w-5 h-5"
+                      resizeMode="cover"
 
-          <Text>{positionGlobal}</Text>
-
+                    />
+                  </Animated.View>
+                </Marker>
+              );
+            })}
+          </Map>
         </View>
-        <View className="absolute bottom-16">
+
+        <View className="absolute bottom-24">
           <Carousel
+            key={Math.floor(Math.random() * locationLojasProxima.length)}
             layout={'default'}
             vertical={false}
             layoutCardOffset={9}
             data={locationLojasProxima}
-            renderItem={renderItem}
+            renderItem={renderStore}
             sliderWidth={SLIDER_WIDTH}
             itemWidth={ITEM_WIDTH}
             inactiveSlideShift={0}
@@ -155,6 +289,12 @@ const SolarStores = () => {
           />
         </View>
       </View>
+
+      <StoreListModal
+        dataModal={citiesStore && citiesStore}
+        visible={modalizeRef} // Função para fechar o modal
+        onSelectCity={handleSelectCity}
+      />
     </View>
   )
 }

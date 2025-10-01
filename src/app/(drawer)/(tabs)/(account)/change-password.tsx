@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
-import ScreenHeader from '@/components/ScreenHeader'
-import { ScrollView, View, Text, KeyboardAvoidingView, Platform, Keyboard, ActivityIndicator } from 'react-native'
 import { Input } from '@/components/Input'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AlterPasswordFormType, AlterPasswordSchema } from '@/schema/app'
-import { useAuthContext } from '@/contexts/AppContext'
 import MessageAlert from '@/components/MessageAlert'
+import ScreenHeader from '@/components/ScreenHeader'
+import { useAuthContext } from '@/contexts/AppContext'
+import { AlterPasswordFormType, AlterPasswordSchema } from '@/schema/app'
 import serviceapp from '@/services/serviceapp'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { EyeClosedIcon, EyeIcon } from 'lucide-react-native'
+import React, { useEffect, useState } from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const MyAccount = () => {
   const { bottom } = useSafeAreaInsets();
@@ -36,7 +36,7 @@ const MyAccount = () => {
 
     Keyboard.dismiss();
     setLoading(true);
-    await serviceapp.get(`(WS_ALTERAR_SENHA_APP)?cpfcnpj=${user.cpfCnpj}&senha=${data.senha}&token=${user?.token}&senhaAnterior=${data.senhaAnterior}`)
+    await serviceapp.get(`(WS_ALTERAR_SENHA_APP)?cpfcnpj=${user.cpfcnpj}&senha=${data.senha}&token=${user?.token}&senhaAnterior=${data.senhaAnterior}`)
       .then((response) => {
         const { data, message, success } = response?.data?.resposta;
 
@@ -49,7 +49,7 @@ const MyAccount = () => {
 
         let userData = {
           connected: user.connected,
-          cpfCnpj: user.cpfCnpj,
+          cpfcnpj: user.cpfcnpj,
           nomeCliente: user.nomeCliente,
           token: data.token,
         } as any;

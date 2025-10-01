@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { Button } from '@/components/Button'
-import ScreenHeader from '@/components/ScreenHeader'
-import { ScrollView, View, Text, KeyboardAvoidingView, Platform } from 'react-native'
-import { Input } from '@/components/Input'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CustomerFormType, customerSchema } from '@/schema/app'
 import AppLoading from '@/components/app-loading'
-import { useAuthContext } from '@/contexts/AppContext'
-import serviceapp from '@/services/serviceapp'
-import { useIsFocused } from '@react-navigation/native'
-import { maskCep, maskCpfCnpj, maskDate, maskPhone, unMask } from '@/lib/mask'
+import { Button } from '@/components/Button'
+import { Input } from '@/components/Input'
 import MessageAlert from '@/components/MessageAlert'
+import ScreenHeader from '@/components/ScreenHeader'
+import { useAuthContext } from '@/contexts/AppContext'
+import { maskCep, maskCpfCnpj, maskDate, maskPhone, unMask } from '@/lib/mask'
+import { CustomerFormType, customerSchema } from '@/schema/app'
+import serviceapp from '@/services/serviceapp'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useIsFocused } from '@react-navigation/native'
+import React, { useEffect, useState } from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const MyAccount = () => {
   const { bottom } = useSafeAreaInsets();
@@ -26,7 +26,7 @@ const MyAccount = () => {
 
   const { control, handleSubmit, reset, formState: { errors } } = useForm<CustomerFormType>({
     defaultValues: {
-      cpfcnpj: user?.cpfCnpj,
+      cpfcnpj: user?.cpfcnpj,
       nomeCliente: customers?.nomeCliente,
       enderecoCliente: customers?.enderecoCliente,
       cepCliente: customers?.cepCliente,
@@ -100,10 +100,10 @@ const MyAccount = () => {
       })
   }
 
- if (loading) {
+  if (loading) {
     return <AppLoading />
   }
-  
+
   return (
     <View className='bg-white '>
       <MessageAlert visible={modalVisible} onClose={setModalVisible} title={modalTitle} message={modalMessage} />
@@ -119,7 +119,6 @@ const MyAccount = () => {
         >
           <View>
             <ScreenHeader title="Minha Conta" subtitle="Alterar dados da minha conta" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
-
             <View className='p-4 bg-white rounded-t-3xl'>
               <View className='flex-col gap-4 my-4'>
 
@@ -134,7 +133,7 @@ const MyAccount = () => {
                         label='CPF/CNPJ'
                         onBlur={onBlur}
                         onChangeText={onChange}
-                        value={maskCpfCnpj(value)}
+                        value={value && maskCpfCnpj(String(value))}
                         readOnly
                       />
                     </View>
@@ -193,9 +192,9 @@ const MyAccount = () => {
                         label='CEP'
                         onBlur={onBlur}
                         onChangeText={onChange}
-                        value={value && maskCep(value)}
+                        value={value && maskCep(String(value))}
                         inputClasses={`${errors.cepCliente ? '!border-solar-red-primary' : ''}`}
-                      /> 
+                      />
                     </View>
                   )}
                   name='cepCliente'
@@ -256,7 +255,7 @@ const MyAccount = () => {
                         label='Celular'
                         onBlur={onBlur}
                         onChangeText={onChange}
-                        value={maskPhone(value)}
+                        value={value && maskPhone(String(value))}
                         inputClasses={`${errors.celularCliente ? '!border-solar-red-primary' : ''}`}
                       />
                     </View>
@@ -298,7 +297,7 @@ const MyAccount = () => {
                         label='Nascimento'
                         onBlur={onBlur}
                         onChangeText={onChange}
-                        value={maskDate(value)}
+                        value={value && maskDate(String(value))}
                         keyboardType='decimal-pad'
                         inputClasses={`${errors.nascimentoCliente ? '!border-solar-red-primary' : ''}`}
                       />

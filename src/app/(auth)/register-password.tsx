@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
-import ScreenHeader from '@/components/ScreenHeader'
-import { ScrollView, View, Text, KeyboardAvoidingView, Platform, Keyboard, ActivityIndicator } from 'react-native'
 import { Input } from '@/components/Input'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { RegisterPasswordFormType, RegisterPasswordSchema } from '@/schema/app'
-import { useAuthContext } from '@/contexts/AppContext'
 import MessageAlert from '@/components/MessageAlert'
-import serviceapp from '@/services/serviceapp'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { EyeClosedIcon, EyeIcon } from 'lucide-react-native'
-import { router, useLocalSearchParams } from 'expo-router'
+import ScreenHeader from '@/components/ScreenHeader'
+import { useAuthContext } from '@/contexts/AppContext'
 import { maskPhone } from '@/lib/mask'
+import { RegisterPasswordFormType, RegisterPasswordSchema } from '@/schema/app'
+import serviceapp from '@/services/serviceapp'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { router, useLocalSearchParams } from 'expo-router'
+import { EyeClosedIcon, EyeIcon } from 'lucide-react-native'
+import React, { useState } from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const RegisterPassword = () => {
   const params = useLocalSearchParams<any>();
@@ -33,7 +33,7 @@ const RegisterPassword = () => {
 
     Keyboard.dismiss();
     setLoading(true);
-    await serviceapp.get(`(WS_ALTERAR_SENHA_APP)?cpfcnpj=${params.cpfCnpj}&senha=${data.senha}&emailCliente=${data.email}&celularCliente=${data.celular}`)
+    await serviceapp.get(`(WS_ALTERAR_SENHA_APP)?cpfcnpj=${params.cpfcnpj}&senha=${data.senha}&emailCliente=${data.email}&celularCliente=${data.celular}`)
       .then((response) => {
         const { message, success } = response?.data?.resposta;
 
@@ -56,7 +56,7 @@ const RegisterPassword = () => {
         router.replace({
           pathname: '/password-changed',
           params: {
-            cpfCnpj: params.cpfCnpj
+            cpfcnpj: params.cpfcnpj
           }
         } as any);
       })

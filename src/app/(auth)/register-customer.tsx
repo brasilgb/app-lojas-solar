@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Button } from '@/components/Button'
-import ScreenHeader from '@/components/ScreenHeader'
-import { ScrollView, View, Text, KeyboardAvoidingView, Platform, Keyboard } from 'react-native'
-import { Input } from '@/components/Input'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CustomerFormType, customerSchema } from '@/schema/app'
 import AppLoading from '@/components/app-loading'
-import { maskCep, maskCpfCnpj, maskDate, maskPhone, unMask } from '@/lib/mask'
-import { router, useLocalSearchParams } from 'expo-router'
-import serviceapp from '@/services/serviceapp'
+import { Button } from '@/components/Button'
+import { Input } from '@/components/Input'
 import MessageAlert from '@/components/MessageAlert'
+import ScreenHeader from '@/components/ScreenHeader'
+import { maskCep, maskCpfCnpj, maskDate, maskPhone, unMask } from '@/lib/mask'
+import { CustomerFormType, customerSchema } from '@/schema/app'
+import serviceapp from '@/services/serviceapp'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { router, useLocalSearchParams } from 'expo-router'
+import React, { useEffect, useState } from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const RegisterCustomer = () => {
   const params = useLocalSearchParams<any>();
@@ -31,7 +31,7 @@ const RegisterCustomer = () => {
 
   const { control, handleSubmit, formState: { errors } } = useForm<CustomerFormType>({
     defaultValues: {
-      cpfcnpj: params?.cpfCnpj
+      cpfcnpj: params?.cpfcnpj
     },
     resolver: zodResolver(customerSchema)
   });
@@ -62,7 +62,7 @@ const RegisterCustomer = () => {
       console.log(error);
     }).finally(() => {
       setLoading(false);
-      router.replace('/registered', { cpfCnpj: params?.cpfcnpj } as any);
+      router.replace('/registered', { cpfcnpj: params?.cpfcnpj } as any);
     });
   }
 

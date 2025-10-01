@@ -1,7 +1,7 @@
 import { Button } from '@/components/Button'
 import { router, useLocalSearchParams } from 'expo-router'
-import React, { useState } from 'react'
-import { View, Text, Image } from 'react-native'
+import React from 'react'
+import { Image, Text, View } from 'react-native'
 
 const NotRegistered = () => {
   const params = useLocalSearchParams();
@@ -28,7 +28,7 @@ const NotRegistered = () => {
               onPress={() => router.push({
                     pathname: '/register-customer',
                     params: {
-                        cpfCnpj: params?.cpfCnpj
+                        cpfcnpj: params?.cpfcnpj
                     }
                 })}
               labelClasses='text-xl font-medium'

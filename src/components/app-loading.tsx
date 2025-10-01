@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, Modal } from 'react-native'
+import { View, ActivityIndicator, Modal } from 'react-native'
 import React from 'react'
 const AppLoading = () => {
 
@@ -10,7 +10,7 @@ const AppLoading = () => {
         // onRequestClose={onClose}
         >
             <View className='flex-1 items-center justify-center bg-black/20'>
-                <ActivityIndicator size="small" color="#1a9cd9" />
+                <ActivityIndicator size="large" color="#1a9cd9" />
             </View>
         </Modal>
     )

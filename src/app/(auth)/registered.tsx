@@ -28,7 +28,7 @@ const Registered = () => {
               onPress={() => router.replace({
                 pathname: '/check-password',
                 params: {
-                  cpfCnpj: params?.cpfCnpj
+                  cpfcnpj: params?.cpfcnpj
                 }
               })}
               labelClasses='text-xl font-medium'
