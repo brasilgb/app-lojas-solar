@@ -57,7 +57,7 @@ const DrawerLayout = () => {
         }}
       >
         <Drawer.Screen
-          name="index" // This is the name of the page and must match the url from root
+          name="home" // This is the name of the page and must match the url from root
           options={{
             drawerLabel: 'Home',
             title: 'Home',
@@ -80,8 +80,9 @@ const DrawerLayout = () => {
         />
 
         <Drawer.Screen
-          name="crediary" // This is the name of the page and must match the url from root
+          name="(crediary)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Crediário',
             title: 'Crediário',
             drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
@@ -92,8 +93,9 @@ const DrawerLayout = () => {
         />
 
         <Drawer.Screen
-          name="sign-documents" // This is the name of the page and must match the url from root
+          name="(docsassign)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Assinar documentos',
             title: 'Assinar documentos',
             drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
@@ -163,8 +165,9 @@ const DrawerLayout = () => {
         />
 
         <Drawer.Screen
-          name="purchase-history" // This is the name of the page and must match the url from root
+          name="(history)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Histórico de compras',
             title: 'Histórico de compras',
             drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
@@ -175,8 +178,9 @@ const DrawerLayout = () => {
         />
 
         <Drawer.Screen
-          name="assistance-protocol" // This is the name of the page and must match the url from root
+          name="(assistance)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Protocolo de assistência',
             title: 'Protocolo de assistência',
             drawerItemStyle: { display: signedIn ? 'flex' : 'none' },

@@ -2,44 +2,39 @@ import React from 'react'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
 import StackHeader from '@/components/StackHeader'
 
-export default function StoresLayout() {
+export default function CrediaryLayout() {
     const params = useLocalSearchParams();
     const dataStore = params as any;
     return (
-        <Stack
-            screenOptions={{
-                // headerShown: true,
-                // header: () => <StackHeader />
-            }}
-        >
+        <Stack>
+
             <Stack.Screen
                 name='index'
                 options={{
-                    header: () => <StackHeader drawer otherRoute={() => router.push({
-                        pathname: '/store-list',
-                        params: dataStore
-                    })}
-                    />,
+                    header: () => <StackHeader drawer />,
                     headerShown: true,
-                    title: 'Lojas solar próximas',
+                    title: 'Crediário',
                 }}
             />
 
             <Stack.Screen
-                name='store-selected'
+                name='load-images'
                 options={{
                     header: () => <StackHeader back />,
                     headerShown: true,
+                    title: 'Imagens e Documentos',
                 }}
             />
 
             <Stack.Screen
-                name='store-list'
+                name='images-sent'
                 options={{
+                    header: () => <StackHeader back />,
                     headerShown: true,
-                    header: () => <StackHeader back />
+                    title: 'Imagens enviadas',
                 }}
             />
+
         </Stack>
     )
 }

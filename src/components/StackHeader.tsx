@@ -1,9 +1,9 @@
-import { Image, View } from 'react-native'
-import { DrawerActions, useNavigation } from '@react-navigation/native';
-import React from 'react'
-import { ChevronLeftIcon, ListIcon, ListTodo, MenuIcon, X } from 'lucide-react-native';
-import { Button } from './Button';
+import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
+import { ChevronLeftIcon, ListIcon, MenuIcon, X } from 'lucide-react-native';
+import React from 'react';
+import { Image, View } from 'react-native';
+import { Button } from './Button';
 
 interface StackHeaderProps {
     left?: boolean;
@@ -36,7 +36,7 @@ const StackHeader = ({ left, right, drawer, back, close, otherRoute, drstack }: 
             <Image source={require('@/assets/images/logo_lojas_solar.png')} className='h-10 w-3/5' />
             <View className='h-10 w-16 flex-row items-center justify-end pr-3'>
                 {close &&
-                    <X size={30} color={'white'} onPress={() => router.replace('/(drawer)')} />
+                    <X size={30} color={'white'} onPress={() => router.replace('/(drawer)/home')} />
                 }
                 {otherRoute &&
                     <Button

@@ -19,7 +19,7 @@ export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
 const CARD_WIDTH = width * 0.8;
 
 const SolarStores = () => {
-  const { storeList, setStoreList } = useAuthContext();
+  const { setStoreList } = useAuthContext();
   const { positionGlobal, currentCity } = useAuthContext();
   const [location, setLocation] = useState<[any, any]>([0, 0]);
   const [locationLojasProxima, setLocationLojasProxima] = useState<any>([]);

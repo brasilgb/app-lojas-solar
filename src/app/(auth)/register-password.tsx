@@ -134,7 +134,7 @@ const RegisterPassword = () => {
                         onBlur={onBlur}
                         onChangeText={onChange}
                         value={value}
-                        inputClasses={`${errors.senha ? '!border-solar-red-primary' : ''}`}
+                        inputClasses={`${errors.senha ? '!border-solar-red-primary' : ''} text-gray-800`}
                         secureTextEntry={!showPassword}
                       />
                       <View className='absolute right-4 top-9 '>
@@ -159,7 +159,7 @@ const RegisterPassword = () => {
                         onBlur={onBlur}
                         onChangeText={onChange}
                         value={value}
-                        inputClasses={`${errors.repitaSenha ? '!border-solar-red-primary' : ''}`}
+                        inputClasses={`${errors.repitaSenha ? '!border-solar-red-primary' : ''} text-gray-800`}
                         secureTextEntry={!showPassword}
                       />
                       <View className='absolute right-4 top-9 '>

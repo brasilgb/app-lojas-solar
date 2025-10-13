@@ -26,7 +26,7 @@ const StoreListModal = ({ dataModal, visible, onSelectCity }: StoreListProps) =>
             const newFilteredCities = dataModal.filter((city: any) => (city?.cidade.toLowerCase().includes(searchQuery.toLowerCase())));
             setFilteredCities(newFilteredCities);
         }
-    }, [searchQuery]); // O array de dependências faz com que este efeito rode apenas quando 'searchQuery' mudar
+    }, [searchQuery, dataModal]); // O array de dependências faz com que este efeito rode apenas quando 'searchQuery' mudar
 
     const RenderItem = ({ item, index }: any) => (
         <TouchableOpacity

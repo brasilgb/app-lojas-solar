@@ -69,7 +69,7 @@ const CheckPassword = () => {
                                     onBlur={onBlur}
                                     onChangeText={onChange}
                                     value={value}
-                                    inputClasses={`${errors.senha ? '!border-solar-red-primary' : ''} !pl-10`}
+                                    inputClasses={`${errors.senha ? '!border-solar-red-primary' : ''} !pl-12 text-gray-800`}
                                     secureTextEntry={!showPassword}
                                 />
                                 <View className='absolute left-1 top-1 '>

@@ -148,7 +148,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
             await AsyncStorage.setItem(storageUserKey, JSON.stringify(userData));
             setUser(userData);
-            router.replace('/(drawer)');
+            router.replace('/(drawer)/home');
         } catch (error) {
             console.log(`Ocorreu um erro: ${error}`);
         } finally {
@@ -160,7 +160,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             await AsyncStorage.removeItem(storageUserKey);
             setUser(null);
-            router.replace('/(drawer)');
+            router.replace('/(drawer)/home');
         } catch (error) {
             console.log(`Ocorreu um erro: ${error}`);
         }
@@ -171,7 +171,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             await AsyncStorage.multiRemove(keys)
             setUser(null);
-            router.replace('/(drawer)');
+            router.replace('/(drawer)/home');
         } catch (e) {
             console.log('Error removing keys from AsyncStorage:', e);
         }

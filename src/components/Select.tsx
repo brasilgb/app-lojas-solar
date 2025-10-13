@@ -94,7 +94,7 @@ export const Select = ({
   return (
     <View className={cn('flex flex-col gap-1.5')}>
       {label && (
-        <Text className={cn('text-base text-primary', labelClasses)}>
+        <Text className={cn('text-lg', labelClasses)}>
           {label}
         </Text>
       )}
@@ -102,7 +102,7 @@ export const Select = ({
         ref={selectButtonRef}
         className={cn(
           selectClasses,
-          'border border-input py-2.5 px-4 rounded-lg bg-white dark:bg-black'
+          'border border-gray-400 py-2.5 px-4 rounded-lg bg-white'
         )}
         onPress={openDropdown}
       >
@@ -130,7 +130,7 @@ export const Select = ({
                 shadowRadius: 8,
                 elevation: 5,
               }}
-              className="absolute bg-white shadow-sm dark:bg-black p-2 rounded-md shadow-black dark:shadow-white"
+              className="absolute bg-white shadow-sm p-2 rounded-md shadow-black"
             >
               <FlatList
                 data={new_options}
@@ -138,9 +138,9 @@ export const Select = ({
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() => handleSelect(item.value)}
-                    className="p-2 border-b border-input"
+                    className="p-2 border-b border-gray-200"
                   >
-                    <Text className="text-primary">{item.label}</Text>
+                    <Text className="text-gray-600">{item.label}</Text>
                   </TouchableOpacity>
                 )}
               />
