@@ -9,8 +9,6 @@ import * as WebBrowser from 'expo-web-browser';
 const Home = () => {
   const { signedIn } = useAuthContext();
 
-  const [loading, setLoading] = useState<boolean>(false);
-
   let colorBar = Platform.OS === 'ios' ? 'rgba(0, 162, 227, 0)' : '#1a9cd9';
   const handlePressButtonAsync = async (url: any) => {
     let result = await WebBrowser.openBrowserAsync(url, {
@@ -42,7 +40,7 @@ const Home = () => {
             colorText="text-solar-blue-secundary"
             icon={<PenLineIcon size={45} color={'#0d3b85'} />}
             label="Assinar doc."
-            url={!signedIn ? '/sign-in' : '(docsassign)'}
+            url={signedIn ? '/sign-in' : '/docsassign'}
           />
 
           <HistoryButton
@@ -50,7 +48,7 @@ const Home = () => {
             colorText="text-solar-blue-secundary"
             icon={<HandCoinsIcon size={45} color={'#0d3b85'} />}
             label="Pagamentos"
-            url={!signedIn ? '/sign-in' : '/make-payment'}
+            url={signedIn ? '/sign-in' : '/payment'}
           />
 
           <HistoryButton
@@ -58,7 +56,7 @@ const Home = () => {
             colorText="text-solar-blue-secundary"
             icon={<BanknoteArrowDownIcon size={45} color={'#0d3b85'} />}
             label="Cashback"
-            url={!signedIn ? '/sign-in' : '/cashback'}
+            url={signedIn ? '/sign-in' : '/cashback'}
           />
 
           <HistoryButton
@@ -74,7 +72,7 @@ const Home = () => {
             colorText="text-solar-blue-secundary"
             icon={<WrenchIcon size={45} color={'#0d3b85'} />}
             label="Assistência"
-            url={!signedIn ? '/sign-in' : '(assistance)'}
+            url={signedIn ? '/sign-in' : '/assistance'}
           />
 
           <HistoryButton
@@ -90,7 +88,7 @@ const Home = () => {
             colorText="text-solar-blue-secundary"
             icon={<HistoryIcon size={45} color={'#0d3b85'} />}
             label="Histórico"
-            url={!signedIn ? '/sign-in' : '(history)'}
+            url={signedIn ? '/sign-in' : '/history'}
           />
 
           <HistoryButton
@@ -98,7 +96,7 @@ const Home = () => {
             colorText="text-solar-blue-secundary"
             icon={<ScanBarcodeIcon size={45} color={'#0d3b85'} />}
             label="2ª via boleto"
-            url={!signedIn ? '/sign-in' : '/'}
+            url={signedIn ? '/sign-in' : '/'}
           />
         </View>
       </ScrollView>

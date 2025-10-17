@@ -9,9 +9,11 @@ import { CustomerFormType, customerSchema } from '@/schema/app'
 import serviceapp from '@/services/serviceapp'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useIsFocused } from '@react-navigation/native'
+import { router } from 'expo-router'
+import { UserMinus2Icon } from 'lucide-react-native'
 import React, { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const MyAccount = () => {
@@ -80,7 +82,17 @@ const MyAccount = () => {
       &emailCliente=${data.emailCliente}
       &nascimentoCliente=${data.nascimentoCliente}`)
       .then((response) => {
-        const { data, message, success } = response?.data?.resposta;
+        const { data, message, success, token } = response?.data?.resposta;
+        if (!token) {
+          Alert.alert('Atenção', message, [
+            {
+              text: 'Ok',
+              onPress: () => {
+                return router.push('/(drawer)');
+              },
+            },
+          ]);
+        }
         if (!success) {
           setModalVisible(true);
           setModalMessage(message);
@@ -104,6 +116,24 @@ const MyAccount = () => {
     return <AppLoading />
   }
 
+  const handleExcludeDataUser = () => {
+    const message =
+      'Iremos direciona-lo, para iniciar o processo de exclusão de dados.';
+    Alert.alert('Exclusão de dados', message, [
+      {
+        text: 'Cancelar',
+      },
+      {
+        text: 'Continuar',
+        onPress: () =>
+          router.push({
+            pathname: '/data-exclude',
+            params: customers
+          }),
+      },
+    ]);
+  };
+
   return (
     <View className='bg-white '>
       <MessageAlert visible={modalVisible} onClose={setModalVisible} title={modalTitle} message={modalMessage} />
@@ -120,8 +150,19 @@ const MyAccount = () => {
           <View>
             <ScreenHeader title="Minha Conta" subtitle="Alterar dados da minha conta" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
             <View className='p-4 bg-white rounded-t-3xl'>
+              <View className='flex-row items-center justify-between border-b border-gray-300 pb-4  '>
+                <Text>Solicitar a exclusão dos seus dados.</Text>
+                <Button
+                  variant={'destructive'}
+                  size={'icon'}
+                  label={<UserMinus2Icon size={30} color={'white'} />}
+                  className='bg-solar-red-primary'
+                  labelClasses='p-2'
+                  style={{ elevation: 4 }}
+                  onPress={handleExcludeDataUser}
+                />
+              </View>
               <View className='flex-col gap-4 my-4'>
-
                 <Controller
                   control={control}
                   name='cpfcnpj'

@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const MakePayment = () => {
+const methods = () => {
   return (
     <View>
-      <Text>MakePayment</Text>
+      <Text>methods</Text>
     </View>
   )
 }
 
-export default MakePayment
+export default methods

@@ -7,10 +7,13 @@ import { View, Text } from 'react-native';
 import { Link, router } from 'expo-router';
 import CustomHeader from '@/components/DrawerHeader';
 import { useAuthContext } from '@/contexts/AppContext';
+import { useEffect } from 'react';
 
 const CustomDrawerContent = (props: any) => {
   const { top, bottom } = useSafeAreaInsets();
   const { signedIn, signOut, user } = useAuthContext();
+
+
 
   return (
     <View className='flex-1'>
@@ -57,7 +60,7 @@ const DrawerLayout = () => {
         }}
       >
         <Drawer.Screen
-          name="home" // This is the name of the page and must match the url from root
+          name="index" // This is the name of the page and must match the url from root
           options={{
             drawerLabel: 'Home',
             title: 'Home',
@@ -120,7 +123,6 @@ const DrawerLayout = () => {
         <Drawer.Screen
           name="(stores)" // This is the name of the page and must match the url from root
           options={{
-            headerShown: false,
             drawerLabel: 'Lojas solar próximas',
             title: 'Lojas solar próximas',
             drawerIcon: ({ color, size }) => (
@@ -141,8 +143,9 @@ const DrawerLayout = () => {
         />
 
         <Drawer.Screen
-          name="make-payment" // This is the name of the page and must match the url from root
+          name="(payment)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Faça seu pagamento',
             title: 'Faça seu pagamento',
             drawerItemStyle: { display: signedIn ? 'flex' : 'none' },

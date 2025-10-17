@@ -10,7 +10,7 @@ const HistoryLayout = () => {
             <Stack>
 
             <Stack.Screen
-                name='index'
+                name='history'
                 options={{
                     header: () => <StackHeader drawer />,
                     headerShown: true,

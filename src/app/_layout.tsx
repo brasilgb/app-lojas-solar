@@ -1,5 +1,5 @@
 import '@/styles/global.css';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Stack } from 'expo-router'
 import { useFonts, Roboto_400Regular, Roboto_500Medium, Roboto_700Bold } from '@expo-google-fonts/roboto';
 import AppLoading from '@/components/app-loading';
@@ -24,7 +24,6 @@ const RootLayout = () => {
         <StatusBar translucent={true} />
         <AuthProvider>
           <Stack>
-            <Stack.Screen name='(stack)' options={{ headerShown: false }} />
             <Stack.Screen name='(drawer)' options={{ headerShown: false }} />
             <Stack.Screen name='(auth)' options={{ headerShown: false }} />
           </Stack>

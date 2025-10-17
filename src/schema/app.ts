@@ -18,7 +18,8 @@ export type SignInFormType = z.infer<typeof signInSchema>;
 
 // Form check password
 export const CheckPasswordSchema = z.object({
-    senha: z.string({ error: "Digite sua senha." })
+    senha: z.string({ error: "Digite sua senha." }),
+    continuarLogado: z.boolean().optional(),
 });
 export type CheckPasswordFormType = z.infer<typeof CheckPasswordSchema>;
 

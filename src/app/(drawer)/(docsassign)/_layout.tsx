@@ -8,7 +8,7 @@ const DocsAssignLayout = () => {
         <Stack>
 
             <Stack.Screen
-                name='index'
+                name='docsassign'
                 options={{
                     header: () => <StackHeader drawer />,
                     headerShown: true,

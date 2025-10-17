@@ -1,4 +1,5 @@
 import { Button } from '@/components/Button';
+import { Checkbox } from '@/components/Checkbox';
 import { Input } from '@/components/Input';
 import MessageAlert from '@/components/MessageAlert';
 import ScreenHeader from '@/components/ScreenHeader';
@@ -8,7 +9,7 @@ import { CheckPasswordFormType, CheckPasswordSchema } from '@/schema/app';
 import { UserProps } from '@/types/app-types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLocalSearchParams } from 'expo-router';
-import { ArrowRight, EyeClosedIcon, EyeIcon } from 'lucide-react-native';
+import { ArrowRight, Check, EyeClosedIcon, EyeIcon } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { ActivityIndicator, Keyboard, Text, View } from 'react-native';
@@ -23,27 +24,33 @@ const CheckPassword = () => {
     const [modalTitle, setModalTitle] = useState<string>('');
 
     const { control, handleSubmit, reset, formState: { errors } } = useForm<CheckPasswordFormType>({
-        defaultValues: {},
+        defaultValues: {
+            senha: '',
+            continuarLogado: false,
+        },
         resolver: zodResolver(CheckPasswordSchema)
     });
 
     const onSubmit: SubmitHandler<CheckPasswordFormType> = async (data: CheckPasswordFormType) => {
         setLoading(true);
         try {
-            let { senha }: any = data;
+            let { senha, continuarLogado } = data;
             let cpfcnpj = params?.cpfcnpj;
             let datacheck = {
                 cpfcnpj: cpfcnpj,
                 senha: senha,
                 nomeCliente: params?.nomeCliente,
                 codigoCliente: params?.codigoCliente,
+                continuarLogado: continuarLogado
             } as unknown as UserProps
             Keyboard.dismiss();
             const checked: any = await checkPassword(datacheck);
-            setModalVisible(true);
-            setModalMessage(checked);
-            setModalTitle('Erro!');
-            reset();
+            if(checked){
+                setModalVisible(true);
+                setModalMessage(checked);
+                setModalTitle('Erro!');
+                reset();
+            }
         } catch (error) {
             console.log(error);
         } finally {
@@ -89,6 +96,21 @@ const CheckPassword = () => {
                         onPress={handleSubmit(onSubmit)}
                         className={`absolute right-1 top-1 border border-gray-400 rounded-full ${loading ? 'pt-3' : 'pt-2'} items-center justify-center`}
                     />
+                </View>
+                <View className='mt-2 flex-row justify-between items-center'>
+                <Controller
+                        control={control}
+                        name="continuarLogado"
+                        render={({ field: { onChange, value } }) => (
+                            <Checkbox
+                                label='Continuar logado'
+                                checkboxClasses='w-5 h-5'
+                                isSelected={value}
+                                onValueChange={onChange}
+                            />
+                        )}
+                    />
+                    <Button variant={'link'} label={'Esqueci a senha'} labelClasses='text-base text-gray-500' />
                 </View>
             </View>
         </AuthLayout>

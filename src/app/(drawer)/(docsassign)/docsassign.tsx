@@ -1,11 +1,11 @@
-import { View, Text, Pressable, TouchableOpacity } from 'react-native';
-import React, { useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { useAuthContext } from '@/contexts/AppContext';
-import docscanner from '@/services/docscanner';
 import AppLoading from '@/components/app-loading';
 import ScreenHeader from '@/components/ScreenHeader';
+import { useAuthContext } from '@/contexts/AppContext';
+import docscanner from '@/services/docscanner';
+import { useIsFocused } from '@react-navigation/native';
 import { router, useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
 const DocsAssign = () => {
     const { user } = useAuthContext();
@@ -21,7 +21,17 @@ const DocsAssign = () => {
                         code: user?.codigoCliente,
                     })
                     .then(res => {
-                        const { signatures } = res.data.response;
+                        const { signatures, message, token } = res.data.response;
+                        if (!token) {
+                            Alert.alert('Atenção', message, [
+                                {
+                                    text: 'Ok',
+                                    onPress: () => {
+                                        return router.push('/(drawer)');
+                                    },
+                                },
+                            ]);
+                        }
                         if (signatures === undefined) {
                             setAssignDocs([]);
                             return;

@@ -99,25 +99,30 @@ const Crediary = () => {
                 await serviceapp
                     .get(`(WS_CARREGA_CLIENTE)?token=${tokenCli}`)
                     .then(response => {
-                        const { token, message, data } = response.data.resposta;
-                        setLoading(false);
+                        const { data, token, message } = response.data.resposta;
                         if (!token) {
                             Alert.alert('Atenção', message, [
                                 {
                                     text: 'Ok',
                                     onPress: () => {
-                                        router.push('/(drawer)/home');
-                                        disconnect();
+                                        return router.push('/(drawer)');
                                     },
                                 },
                             ]);
                         }
+                        setLoading(false);
                         setCustomers(data);
                         reset(data)
                         setSexoSelected(data.sexo);
                         setEscolaridadeSelected(data.escolaridade);
                         setEstadoCivilSelected(data.estadoCivil);
                         setProfissaoSelected(data.profissao);
+                    })
+                    .catch(error => {
+                        // The interceptor handles the alert and redirect.
+                        // We just need to handle the loading state.
+                        setLoading(false);
+                        console.log('Error fetching customer data:', error);
                     });
             };
             getCustomers();
@@ -126,37 +131,29 @@ const Crediary = () => {
 
     const onSubmit: SubmitHandler<CrediaryFormType> = async (data: CrediaryFormType) => {
         setLoading(true);
-        const response = await serviceapp.post(`(WS_CREDIARIO_CLIENTE)`, {
-            token: tokenCli,
-            nomeMae: data.nomeMae,
-            sexo: sexoSelected,
-            escolaridade: escolaridadeSelected,
-            localTrabalho: data.localTrabalho,
-            estadoCivil: estadoCivilSelected,
-            nomeConjuge: data.nomeConjuge,
-            cpfConjuge: data.cpfConjuge,
-            profissao: data.profissao,
-            renda: data.renda,
-        });
-        const { token, success, message } = response.data.resposta;
+        try {
+            await serviceapp.post(`(WS_CREDIARIO_CLIENTE)`, {
+                token: tokenCli,
+                nomeMae: data.nomeMae,
+                sexo: sexoSelected,
+                escolaridade: escolaridadeSelected,
+                localTrabalho: data.localTrabalho,
+                estadoCivil: estadoCivilSelected,
+                nomeConjuge: data.nomeConjuge,
+                cpfConjuge: data.cpfConjuge,
+                profissao: data.profissao,
+                renda: data.renda,
+            });
 
-        setLoading(false);
-        if (!token) {
-            Alert.alert('Atenção', message, [
-                {
-                    text: message,
-                    onPress: () => {
-                        router.push('/(drawer)/home');
-                        disconnect();
-                    },
-                },
-            ]);
+            setLoading(false);
+            router.push({
+                pathname: '/(drawer)/(crediary)/load-images',
+                params: { dataToken: tokenCli }
+            });
+        } catch (error) {
+            setLoading(false);
+            console.log('Error submitting crediary:', error);
         }
-
-        router.push({
-            pathname: '/(drawer)/(crediary)/load-images',
-            params: { dataToken: tokenCli }
-        });
     }
 
     if (loading) {

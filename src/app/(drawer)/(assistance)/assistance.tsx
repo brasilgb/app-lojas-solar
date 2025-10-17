@@ -1,12 +1,12 @@
-import { View, Text, Alert, Pressable } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
-import ScreenHeader from '@/components/ScreenHeader'
-import { Modalize } from 'react-native-modalize';
-import serviceapp from '@/services/serviceapp';
-import { useAuthContext } from '@/contexts/AppContext';
-import { FlashList } from '@shopify/flash-list';
 import { Card, CardContent, CardHeader } from '@/components/Card';
+import ScreenHeader from '@/components/ScreenHeader';
+import { useAuthContext } from '@/contexts/AppContext';
+import serviceapp from '@/services/serviceapp';
+import { FlashList } from '@shopify/flash-list';
 import { router } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Pressable, Text, View } from 'react-native';
+import { Modalize } from 'react-native-modalize';
 
 const AssistanceProtocol = () => {
   const { user, disconnect } = useAuthContext();
@@ -27,14 +27,14 @@ const AssistanceProtocol = () => {
       await serviceapp
         .get(`(WS_PROTOCOLO_ASSISTENCIA)?token=${user?.token}`)
         .then(response => {
-          const { success, message, data } = response.data.resposta;
+          const { message, data, token } = response.data.resposta;
           setLoading(false);
-          if (!success) {
+          if (!token) {
             Alert.alert('Atenção', message, [
               {
                 text: 'Ok',
                 onPress: () => {
-                  disconnect();
+                  return router.push('/(drawer)');
                 },
               },
             ]);

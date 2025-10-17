@@ -9,6 +9,7 @@ const serviceapp = axios.create({
     withCredentials: true,
 });
 
+
 serviceapp.interceptors.request.use(async request => {
     // request.baseURL = process.env.EXPO_PUBLIC_API_URL;
     // BASE_URL = `${process.env.EXPO_PUBLIC_API_URL}`;

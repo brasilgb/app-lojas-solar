@@ -6,14 +6,9 @@ export default function StoresLayout() {
     const params = useLocalSearchParams();
     const dataStore = params as any;
     return (
-        <Stack
-            screenOptions={{
-                // headerShown: true,
-                // header: () => <StackHeader />
-            }}
-        >
+        <Stack>
             <Stack.Screen
-                name='index'
+                name='stores'
                 options={{
                     header: () => <StackHeader drawer otherRoute={() => router.push({
                         pathname: '/store-list',

@@ -9,7 +9,7 @@ export default function CrediaryLayout() {
         <Stack>
 
             <Stack.Screen
-                name='index'
+                name='crediary'
                 options={{
                     header: () => <StackHeader drawer />,
                     headerShown: true,

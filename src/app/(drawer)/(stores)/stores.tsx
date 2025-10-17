@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { View, Text, TouchableOpacity, Platform, Dimensions, Animated, StyleSheet } from 'react-native'
-import ScreenHeader from '@/components/ScreenHeader'
-import { MapPinIcon } from 'lucide-react-native'
+import AppLoading from '@/components/app-loading'
 import { Button } from '@/components/Button'
+import ScreenHeader from '@/components/ScreenHeader'
+import StoreListModal from '@/components/StoreListModal'
 import { useAuthContext } from '@/contexts/AppContext'
 import serviceapp from '@/services/serviceapp'
 import { router } from 'expo-router'
-import Carousel from 'react-native-snap-carousel';
-import AppLoading from '@/components/app-loading'
-import Map, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import StoreListModal from '@/components/StoreListModal';
-import { Modalize } from 'react-native-modalize';
+import { MapPinIcon } from 'lucide-react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Alert, Animated, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Map, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import { Modalize } from 'react-native-modalize'
+import Carousel from 'react-native-snap-carousel'
 
 const { width, height } = Dimensions.get('window');
 export const HEIGHT = Dimensions.get('window').height;
@@ -91,8 +91,8 @@ const SolarStores = () => {
           console.log(err);
         }).finally(() => setLoading(false));
     }
-      getLocationLojasProxima();
-    
+    getLocationLojasProxima();
+
   }, [location, selectedCity]);
 
 
@@ -101,14 +101,24 @@ const SolarStores = () => {
       await serviceapp
         .get(`(WS_CARREGA_LOJAS)`)
         .then(response => {
-          const dadosCity = response.data.resposta.data;
-          setCitiesStore(dadosCity);
+          const { data, message, token } = response.data.resposta.data;
+          if (!token) {
+            Alert.alert('Atenção', message, [
+              {
+                text: 'Ok',
+                onPress: () => {
+                  return router.push('/(drawer)');
+                },
+              },
+            ]);
+          }
+          setCitiesStore(data);
         })
         .catch(err => {
           console.log(err);
         });
     }
-      getLocationLojas();
+    getLocationLojas();
   }, []);
 
 

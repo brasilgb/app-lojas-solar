@@ -9,7 +9,7 @@ export default function AssistanceLayout() {
         <Stack>
 
             <Stack.Screen
-                name='index'
+                name='assistance'
                 options={{
                     header: () => <StackHeader drawer />,
                     headerShown: true,

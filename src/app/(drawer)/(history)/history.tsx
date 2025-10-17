@@ -1,21 +1,21 @@
-import {
-    View,
-    Text,
-    Alert,
-    Image,
-    TouchableOpacity,
-    Platform,
-} from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { FlashList } from '@shopify/flash-list';
-import MonthPicker from 'react-native-month-year-picker';
-import moment from 'moment';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useAuthContext } from '@/contexts/AppContext';
-import serviceapp from '@/services/serviceapp';
-import { router } from 'expo-router';
 import ScreenHeader from '@/components/ScreenHeader';
 import AppLoading from '@/components/app-loading';
+import { useAuthContext } from '@/contexts/AppContext';
+import serviceapp from '@/services/serviceapp';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FlashList } from '@shopify/flash-list';
+import { router } from 'expo-router';
+import moment from 'moment';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+    Alert,
+    Image,
+    Platform,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import MonthPicker from 'react-native-month-year-picker';
 
 const History = () => {
     const { user, disconnect } = useAuthContext();
@@ -47,14 +47,14 @@ const History = () => {
                     )}31`,
                 )
                 .then(response => {
-                    const { success, message, data } = response.data.resposta;
+                    const { token, success, message, data } = response.data.resposta;
                     setLoading(false);
-                    if (!success) {
+                    if (!token) {
                         Alert.alert('Atenção', message, [
                             {
                                 text: 'Ok',
                                 onPress: () => {
-                                    disconnect();
+                                    return router.push('/(drawer)');
                                 },
                             },
                         ]);
@@ -69,8 +69,7 @@ const History = () => {
     }, [date]);
 
     const RenderItem = ({ item }: any) => {
-        console.log('item', item);
-        
+
         return (
             <TouchableOpacity
                 onPress={() => router.push({

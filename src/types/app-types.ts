@@ -14,7 +14,8 @@ interface UserProps {
     nomeCliente: string
     codigoCliente: string
     token: string
-    connected: boolean
+    connected: boolean,
+    continuarLogado: boolean
 }
 
 interface AuthContextData {
