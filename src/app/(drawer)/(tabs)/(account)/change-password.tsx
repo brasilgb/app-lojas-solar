@@ -82,7 +82,7 @@ const MyAccount = () => {
         >
 
           <View className='flex-1'>
-            <ScreenHeader title="Minha Conta" subtitle="Alterar minha senha" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+            <ScreenHeader title="Minha Conta" subtitle="Alterar minha senha" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
             <View className='p-4 bg-white rounded-t-3xl h-full'>
               <View className='flex-col gap-4 my-4'>
 

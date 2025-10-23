@@ -1,0 +1,300 @@
+import { Button } from '@/components/Button';
+import { Card, CardContent, CardTitle } from '@/components/Card';
+import { Input } from '@/components/Input';
+import ScreenHeader from '@/components/ScreenHeader';
+import { useAuthContext } from '@/contexts/AppContext';
+import { getCardBrandName } from '@/lib/creditcart';
+import { maskCreditCart, maskDateValidate, maskMoney, unMask } from '@/lib/mask';
+import { CartPaymentFormType, CartPaymentSchema } from '@/schema/app';
+import serviceapp from '@/services/serviceapp';
+import servicecart from '@/services/servicecart';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const CartPayment = () => {
+    const { user, disconnect } = useAuthContext();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [registeredOrder, setRegisteredOrder] = useState<any>([]);
+    const { bottom } = useSafeAreaInsets();
+    const params = useLocalSearchParams();
+    const order = JSON.parse(params?.dataOrder as any);
+    const mtoken = user?.token
+    const orderTotal = (parseFloat(String(params?.totalAmount)).toFixed(2));
+
+    console.log(user?.token);
+    console.log(order);
+    console.log(orderTotal);
+
+    const orderCartPayment = async (valueCart: CartPaymentFormType) => {
+
+        try {
+            const response = await serviceapp.post('(WS_ORDEM_PAGAMENTO)', {
+                token: `${mtoken}`,
+                valor: orderTotal,
+                parcela: order,
+                tipoPagamento: 2,
+                validaDados: 'S',
+                dadosCartao: {
+                    numeroCartao: maskCreditCart(valueCart.numeroCartao),
+                    nomeCartao: valueCart.nomeCartao,
+                    validadeCartao: maskDateValidate(valueCart.validadeCartao),
+                    cvvCartao: valueCart.cvvCartao
+                },
+            });
+
+            const { success, message, data, token } = response.data.resposta;
+
+            if (!token) {
+                Alert.alert('Atenção', message, [
+                    {
+                        text: 'Ok',
+                        onPress: () => {
+                            disconnect();
+                        },
+                    },
+                ]);
+            }
+            setRegisteredOrder(data);
+            // await paymentCart(data);
+        } catch (error) {
+            console.log(error);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+        // } else {
+        //     console.log(registeredOrder.length);
+
+        //     // await paymentCart(registeredOrder);
+        // }
+    }
+
+    const paymentCart = async (dataCart: any) => {
+        const response = await servicecart.post(`(PAG_CARTAO_CREDITO)`, {
+            MerchantOrderId: dataCart.numeroOrdem,
+            Payment: {
+                Type: "CreditCard",
+                Amount: 1 * 100,
+                Currency: "BRL",
+                Country: "BRA",
+                Provider: "Cielo",
+                ServiceTaxAmount: 0,
+                Installments: 1,
+                Interest: "ByMerchant",
+                Capture: true,
+                Authenticate: false,
+                Recurrent: false,
+                SoftDescriptor: "123456789ABCD",
+                CreditCard: {
+                    CardNumber: unMask(dataCart.numeroCartao),
+                    Holder: dataCart.nomeCartao,
+                    ExpirationDate: dataCart.validadeCartao,
+                    SecurityCode: dataCart.cvvCartao,
+                    SaveCard: false,
+                    Brand: getCardBrandName((dataCart.numeroCartao)) ? getCardBrandName((dataCart.numeroCartao)) : ''
+                }
+            }
+        });
+        const { success, ReturnMessage, ReturnCode, data } = response.data.resposta;
+
+        if (success && ReturnCode !== '00') {
+            Alert.alert('Atenção', ReturnMessage, [{ text: 'Ok' }]);
+            return;
+        }
+        setRegisteredOrder([]);
+        await sendOrderAtualize(data);
+    }
+
+    const sendOrderAtualize = async (dataCart: any) => {
+        if (dataCart) {
+            let orderResponse = {
+                numeroOrdem: dataCart.MerchantOrderId,
+                statusOrdem: 2,
+                idTransacao: dataCart.PaymentId,
+                tipoPagamento: 2,
+                urlBoleto: dataCart.AuthorizationCode,
+            };
+            const response = await serviceapp.get(`
+                (WS_ATUALIZA_ORDEM)
+                ?token=91362590064312210014616
+                &numeroOrdem=${orderResponse.numeroOrdem}
+                &statusOrdem=${orderResponse.statusOrdem}
+                &idTransacao=${orderResponse.idTransacao}
+                &tipoPagamento=${orderResponse.tipoPagamento}
+                &urlBoleto=${orderResponse.urlBoleto}
+                `);
+            const { success } = response.data.resposta;
+            if (success) {
+                router.replace('/(drawer)/(payment)/cardbillpaid');
+            }
+        }
+    }
+
+
+    const { control, handleSubmit, formState: { errors }, reset } = useForm<CartPaymentFormType>({
+        defaultValues: {
+            numeroCartao: '',
+            nomeCartao: '',
+            validadeCartao: '',
+            cvvCartao: ''
+        },
+        resolver: zodResolver(CartPaymentSchema)
+    });
+
+
+    const onSubmit = async (values: CartPaymentFormType) => {
+        await orderCartPayment(values);
+    }
+    return (
+        <View className='bg-white flex-1'>
+
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={100}
+                className='bg-solar-blue-primary'
+            >
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ paddingBottom: bottom }}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <View className='flex-1'>
+                        <ScreenHeader
+                            title="Pagamento"
+                            subtitle="Preencha corretamente os dados do cartão de crédito"
+                            classTitle='text-white text-2xl'
+                            classSubtitle='text-white text-base text-center'
+                        />
+                        <View className="p-4 bg-white rounded-t-3xl h-full">
+                            <Card className="border border-gray-300 bg-white shadow-sm shadow-slate-950 mb-4">
+                                <CardTitle className='text-center p-4 text-lg font-medium text-gray-600'>
+                                    Valor total do pagamento
+                                </CardTitle>
+                                <CardContent>
+                                    <Text className="text-center text-3xl font-bold">R$ {maskMoney((parseFloat(orderTotal as string).toFixed(2)))}</Text>
+                                </CardContent>
+                            </Card>
+                            <View className='flex-col gap-4 my-4'>
+                                <Controller
+                                    control={control}
+                                    render={({
+                                        field: { onChange, onBlur, value }
+                                    }) => (
+                                        <View>
+                                            <Input
+                                                label='Número do cartão de crédito'
+                                                onBlur={onBlur}
+                                                onChangeText={onChange}
+                                                value={maskCreditCart(value)}
+                                                inputClasses={`${errors.numeroCartao ? '!border-solar-red-primary' : ''}`}
+                                                maxLength={19}
+                                                keyboardType='numeric'
+                                            />
+                                        </View>
+                                    )}
+                                    name='numeroCartao'
+                                />
+                                {errors.numeroCartao && (
+                                    <Text className='text-solar-red-primary -mt-4'>{errors.numeroCartao?.message}</Text>
+                                )
+                                }
+
+                                <Controller
+                                    control={control}
+                                    render={({
+                                        field: { onChange, onBlur, value }
+                                    }) => (
+                                        <View>
+                                            <Input
+                                                label='Nome impresso no cartão'
+                                                onBlur={onBlur}
+                                                onChangeText={onChange}
+                                                value={value}
+                                                inputClasses={`${errors.nomeCartao ? '!border-solar-red-primary' : ''}`}
+                                                autoCapitalize='characters'
+                                            />
+                                        </View>
+                                    )}
+                                    name='nomeCartao'
+                                />
+                                {errors.nomeCartao && (
+                                    <Text className='text-solar-red-primary -mt-4'>{errors.nomeCartao?.message}</Text>
+                                )
+                                }
+
+                                <View className='flex-row items-center justify-between gap-4'>
+                                    <View className='flex-1'>
+                                        <Controller
+                                            control={control}
+                                            render={({
+                                                field: { onChange, onBlur, value }
+                                            }) => (
+                                                <View>
+                                                    <Input
+                                                        label='Validade'
+                                                        onBlur={onBlur}
+                                                        onChangeText={onChange}
+                                                        value={maskDateValidate(value)}
+                                                        inputClasses={`${errors.validadeCartao ? '!border-solar-red-primary' : ''} placeholder:text-gray-700`}
+                                                        maxLength={7}
+                                                        placeholder="12/2025"
+                                                        keyboardType='numeric'
+                                                    />
+                                                </View>
+                                            )}
+                                            name='validadeCartao'
+                                        />
+                                        {errors.validadeCartao && (
+                                            <Text className='text-solar-red-primary mt-0'>{errors.validadeCartao?.message}</Text>
+                                        )
+                                        }
+                                    </View>
+                                    <View className='flex-1'>
+
+                                        <Controller
+                                            control={control}
+                                            render={({
+                                                field: { onChange, onBlur, value }
+                                            }) => (
+                                                <View>
+                                                    <Input
+                                                        label='Código cvv'
+                                                        onBlur={onBlur}
+                                                        onChangeText={onChange}
+                                                        value={value}
+                                                        inputClasses={`${errors.cvvCartao ? '!border-solar-red-primary' : ''}`}
+                                                        maxLength={4}
+                                                        keyboardType='numeric'
+                                                    />
+                                                </View>
+                                            )}
+                                            name='cvvCartao'
+                                        />
+                                        {errors.cvvCartao && (
+                                            <Text className='text-solar-red-primary mt-0'>{errors.cvvCartao?.message}</Text>
+                                        )
+                                        }
+                                    </View>
+                                </View>
+                            </View>
+
+
+                            <Button
+                                label={loading ? <ActivityIndicator size="small" color="#bccf00" /> : 'Continuar'}
+                                variant={'secondary'}
+                                size={'lg'}
+                                onPress={handleSubmit(onSubmit)}
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </View>
+    )
+}
+
+export default CartPayment

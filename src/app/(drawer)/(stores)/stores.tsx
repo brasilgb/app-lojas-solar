@@ -219,7 +219,7 @@ const SolarStores = () => {
 
   return (
     <View className='bg-solar-blue-primary flex-1'>
-      <ScreenHeader title="Lojas Solar" subtitle="Lojas Solar mais Próximas de você" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+      <ScreenHeader title="Lojas Solar" subtitle="Lojas Solar mais Próximas de você" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
       <View className='p-0.5 bg-white rounded-t-3xl h-full'>
         <View className='bg-solar-orange-primary h-14 rounded-t-3xl p-2 flex-row items-center justify-between gap-4'>
           <View>

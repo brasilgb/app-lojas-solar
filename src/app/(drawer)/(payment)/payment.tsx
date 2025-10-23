@@ -1,4 +1,4 @@
-import Button from '@/components/Button';
+import { Button } from '@/components/Button';
 import ScreenHeader from '@/components/ScreenHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
 import { useAuthContext } from '@/contexts/AppContext';
@@ -7,9 +7,9 @@ import serviceapp from '@/services/serviceapp';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { CheckIcon } from 'lucide-react-native';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import {
     Platform,
     Text,
@@ -20,42 +20,43 @@ import {
 const OpenPayments = () => {
     const { user, disconnect } = useAuthContext();
     const [loading, setLoading] = useState<boolean>(false);
-
+    const mtoken = user?.token
     const isFocused = useIsFocused();
     const [crediarios, setCrediarios] = useState<any[]>([]);
-    const [selectedPayments, setSelectedPayments] = useState<any[]>([]);
+    const [selectedPayments, setSelectedPayments] = useState<any>([]);
     const [isAllChecked, setAllChecked] = useState(false);
 
-    const mtoken = "0851324110172025045223708175110"
+    const getCrediarios = async () => {
+        setLoading(true);
+        await serviceapp
+            .get(`(WS_CARREGA_CREDIARIO)?token=${mtoken}`)
+            .then((response: any) => {
+                const { data } = response.data.resposta;
+                setCrediarios(data.aberto || []); // Ensure crediarios is always an array
+            })
+            .catch((error: any) => {
+                // Interceptor will show an alert and redirect.
+                console.log('Failed to load crediarios:', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
-    useEffect(() => {
-        const getCrediarios = async () => {
-            setLoading(true);
-            await serviceapp
-                .get(`(WS_CARREGA_CREDIARIO)?token=${mtoken}`)
-                .then((response: any) => {
-                    const { data } = response.data.resposta;
-                    setCrediarios(data.aberto || []); // Ensure crediarios is always an array
-                })
-                .catch((error: any) => {
-                    // Interceptor will show an alert and redirect.
-                    console.log('Failed to load crediarios:', error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-        };
-        if (isFocused) {
-            getCrediarios();
-        }
-    }, [user, isFocused, mtoken]);
+    useFocusEffect(
+        useCallback(() => {
+            if (isFocused) {
+                getCrediarios();
+            }
+        }, [isFocused])
+    );
 
     // Lidar com a seleção de um único pagamento
     const handleSelectPayment = (payment: any) => {
-        setSelectedPayments(prevSelected => {
-            const isSelected = prevSelected.some(p => p.numeroCarne === payment.numeroCarne && p.parcela === payment.parcela);
+        setSelectedPayments((prevSelected: any) => {
+            const isSelected = prevSelected.some((p: any) => p.numeroCarne === payment.numeroCarne && p.parcela === payment.parcela);
             if (isSelected) {
-                return prevSelected.filter(p => !(p.numeroCarne === payment.numeroCarne && p.parcela === payment.parcela));
+                return prevSelected.filter((p: any) => !(p.numeroCarne === payment.numeroCarne && p.parcela === payment.parcela));
             } else {
                 return [...prevSelected, payment];
             }
@@ -84,7 +85,7 @@ const OpenPayments = () => {
 
     // Calcular totais dos pagamentos selecionados
     const { totalAmount, installmentsCount } = useMemo(() => {
-        const total = selectedPayments.reduce((acc, payment) => acc + parseFloat(payment.total), 0);
+        const total = selectedPayments.reduce((acc: any, payment: any) => acc + parseFloat(payment.total), 0);
         return {
             totalAmount: total,
             installmentsCount: selectedPayments.length,
@@ -93,7 +94,7 @@ const OpenPayments = () => {
 
 
     const RenderItem = ({ crediario }: any) => {
-        const isSelected = selectedPayments.some(p => p.numeroCarne === crediario.numeroCarne && p.parcela === crediario.parcela);
+        const isSelected = selectedPayments.some((p: any) => p.numeroCarne === crediario.numeroCarne && p.parcela === crediario.parcela);
 
         return (
             <TouchableOpacity
@@ -137,11 +138,11 @@ const OpenPayments = () => {
                             </View>
                             <View className="flex-1">
                                 <View className={`${crediario.status === 'P'
-                                            ? 'bg-solar-violet'
-                                            : crediario.atraso > 0
-                                                ? 'bg-solar-orange-secondary'
-                                                : ''
-                                        }  rounded items-center justify-center mb-1 ml-4`}
+                                    ? 'bg-solar-violet'
+                                    : crediario.atraso > 0
+                                        ? 'bg-solar-orange-secondary'
+                                        : ''
+                                    }  rounded items-center justify-center mb-1 ml-4`}
                                 >
                                     <Text
                                         className={`text-xs font-medium ${crediario.status === 'P' ? 'text-white' : 'text-white'
@@ -203,42 +204,40 @@ const OpenPayments = () => {
                         <TabsTrigger id="opened" title="Em aberto" value={'opened'} />
                         <TabsTrigger id="history" title="Histórico" value={'history'} />
                     </TabsList>
-                    <View className="w-full py-6">
-                        <TouchableOpacity
-                            className="flex-row items-center justify-start"
-                            onPress={handleSelectAll}
-                        >
-                            <View
-                                className={`h-6 w-6 items-center justify-center rounded-full border-2 border-solar-orange-primary ${isAllChecked ? 'bg-solar-orange-primary' : 'bg-transparent'
-                                    }`}
-                            >
-                                {isAllChecked && (
-                                    <CheckIcon size={22} color="white" />
-                                )}
-                            </View>
-                            <Text
-                                allowFontScaling={false}
-                                className="ml-2 text-base font-medium text-solar-yellow-dark"
-                            >
-                                Selecionar todos
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
 
-                    <TabsContent value="opened" className="flex-1">
+                    <TabsContent value="opened" className="flex-1 border-0">
+                        <View className="w-full py-6 px-4r">
+                            <TouchableOpacity
+                                className="flex-row items-center justify-start"
+                                onPress={handleSelectAll}
+                            >
+                                <View
+                                    className={`h-6 w-6 items-center justify-center rounded-full border-2 border-solar-orange-primary ${isAllChecked ? 'bg-solar-orange-primary' : 'bg-transparent'
+                                        }`}
+                                >
+                                    {isAllChecked && (
+                                        <CheckIcon size={22} color="white" />
+                                    )}
+                                </View>
+                                <Text
+                                    allowFontScaling={false}
+                                    className="ml-2 text-base font-medium text-solar-yellow-dark"
+                                >
+                                    Selecionar todos
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                         <FlashList
                             data={crediarios}
-                            renderItem={({ item }) => (
-                                <RenderItem crediario={item} />
-                            )}
+                            renderItem={({ item }) => (<RenderItem crediario={item} />)}
                             keyExtractor={(item: any) => item.numeroCarne + item.parcela}
-                            ItemSeparatorComponent={() => (
-                                <View className="h-0.5 bg-solar-gray-dark" />
-                            )}
+                            ItemSeparatorComponent={() => (<View className="h-0.5 bg-solar-gray-dark" />)}
                             extraData={selectedPayments}
                             showsVerticalScrollIndicator={false}
-                            // Deixe um espaço na parte inferior para o rodapé de totais
-                            contentContainerStyle={{ paddingBottom: 100 }}
+                            contentContainerStyle={installmentsCount > 0 && { paddingBottom: 90 }}
+                            keyboardShouldPersistTaps={'always'}
+                            onRefresh={getCrediarios}
+                            refreshing={loading}
                         />
                     </TabsContent>
                     <TabsContent value="history">
@@ -261,13 +260,16 @@ const OpenPayments = () => {
                                 {installmentsCount} {installmentsCount > 1 ? 'parcelas selecionadas' : 'parcela selecionada'}
                             </Text>
                             <Text className="text-2xl font-PoppinsBold text-solar-blue-dark">
-                                Total: {maskMoney(String(totalAmount))}
+                                Total: R$ {maskMoney(String((totalAmount || 0).toFixed(2)))}
                             </Text>
                         </View>
                         <View className="w-36">
                             <Button
-                                title="Pagar"
-                                onPress={() => router.push('/(drawer)/(payment)/methods')}
+                                label="Pagar"
+                                onPress={() => router.push({
+                                    pathname: '/(drawer)/(payment)/methods',
+                                    params: { dataOrder: JSON.stringify(selectedPayments), totalAmount: totalAmount }
+                                })}
                             />
                         </View>
                     </View>

@@ -1,11 +1,11 @@
-import { View, Text, Image, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import ScreenHeader from '@/components/ScreenHeader'
-import { Card } from '@/components/Card'
-import { Switch } from '@/components/Switch'
 import { Button } from '@/components/Button'
-import serviceapp from '@/services/serviceapp'
+import { Card } from '@/components/Card'
+import ScreenHeader from '@/components/ScreenHeader'
+import { Switch } from '@/components/Switch'
 import { useAuthContext } from '@/contexts/AppContext'
+import serviceapp from '@/services/serviceapp'
+import React, { useEffect, useState } from 'react'
+import { Alert, Text, View } from 'react-native'
 
 
 const PrivacySettings = () => {
@@ -88,7 +88,7 @@ const PrivacySettings = () => {
         title="Privacidade"
         subtitle="Suas configurações de privacidade podem ser alteradas abaixo"
         classTitle='text-white text-2xl'
-        classSubtitle='text-white text-lg text-center'
+        classSubtitle='text-white text-base text-center'
       />
       <View className='p-4 bg-gray-100 rounded-t-3xl h-full gap-4'>
         <Card className='w-full flex-row items-center justify-between  border-gray-200 bg-white' style={{ elevation: 2 }}>

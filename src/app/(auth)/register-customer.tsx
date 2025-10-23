@@ -84,7 +84,7 @@ const RegisterCustomer = () => {
           keyboardShouldPersistTaps="handled"
         >
           <View>
-            <ScreenHeader title="Cadastro de Cliente" subtitle="Preencha o formulário corretamente." classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+            <ScreenHeader title="Cadastro de Cliente" subtitle="Preencha o formulário corretamente." classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
             {loading && <AppLoading />}
             <View className='p-4 bg-white rounded-t-3xl'>
               <View className='flex-col gap-4 my-4'>

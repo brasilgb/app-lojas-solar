@@ -1,25 +1,27 @@
-import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { cn } from '../lib/utils';
 
-// TODO: make controlled (optional)
 interface CheckboxProps extends React.ComponentPropsWithoutRef<typeof View> {
   label?: string;
   labelClasses?: string;
   checkboxClasses?: string;
+  isSelected?: boolean;
+  onValueChange?: (value: boolean) => void;
 }
 function Checkbox({
   label,
   labelClasses,
   checkboxClasses,
   className,
+  isSelected,
+  onValueChange,
   ...props
 }: CheckboxProps) {
-  const [isChecked, setChecked] = useState(false);
-
   const toggleCheckbox = () => {
-    setChecked(prev => !prev);
+    if (onValueChange) {
+      onValueChange(!isSelected);
+    }
   };
 
   return (
@@ -32,12 +34,12 @@ function Checkbox({
           className={cn(
             'w-4 h-4 border border-gray-700 rounded bg-background flex justify-center items-center',
             {
-              'bg-foreground': isChecked,
+              'bg-foreground': isSelected,
             },
             checkboxClasses
           )}
         >
-          {isChecked && <Text className="text-background text-xs">✓</Text>}
+          {isSelected && <Text className="text-background text-xs">✓</Text>}
         </View>
       </TouchableOpacity>
       {label && (

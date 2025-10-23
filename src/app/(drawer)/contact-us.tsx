@@ -1,11 +1,11 @@
-import { View, Text, Image } from 'react-native'
-import React from 'react'
 import ScreenHeader from '@/components/ScreenHeader'
+import React from 'react'
+import { Image, Text, View } from 'react-native'
 
 const ContactUs = () => {
   return (
     <View className='bg-solar-blue-primary flex-1'>
-      <ScreenHeader title="Fale conosco" subtitle="Estamos aqui para ajudar" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+      <ScreenHeader title="Fale conosco" subtitle="Estamos aqui para ajudar" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
       <View className='flex-1 bg-white px-4 rounded-t-3xl'>
         <View className='flex-row items-center justify-center my-8'>
           <Image

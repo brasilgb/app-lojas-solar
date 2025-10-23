@@ -173,7 +173,12 @@ const Crediary = () => {
                     keyboardShouldPersistTaps="handled"
                 >
                     <View>
-                        <ScreenHeader title="Crediário" subtitle="Preencha corretamente o formulário" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+                        <ScreenHeader
+                            title="Crediário"
+                            subtitle="Preencha corretamente o formulário"
+                            classTitle='text-white text-2xl'
+                            classSubtitle='text-white text-base text-center'
+                        />
                         <View className='p-4 bg-white rounded-t-3xl'>
                             <View className='flex-col gap-4 my-4'>
 

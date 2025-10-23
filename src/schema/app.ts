@@ -43,12 +43,12 @@ export const AlterPasswordSchema = z.object({
     senha: z.string({ error: "Informe a nova senha" }),
     repitaSenha: z.string({ error: "Repita a nova asenha" }),
 })
-.refine((value: any) => value.senha === value.repitaSenha,
-    {
-        error: 'As senhas são diferentes',
-        path: ['repitaSenha']
-    }
-);
+    .refine((value: any) => value.senha === value.repitaSenha,
+        {
+            error: 'As senhas são diferentes',
+            path: ['repitaSenha']
+        }
+    );
 export type AlterPasswordFormType = z.infer<typeof AlterPasswordSchema>;
 
 // register customers
@@ -58,12 +58,12 @@ export const RegisterPasswordSchema = z.object({
     senha: z.string({ error: "Informe a senha" }),
     repitaSenha: z.string({ error: "Repita a asenha" }),
 })
-.refine((value: any) => value.senha === value.repitaSenha,
-    {
-        error: 'As senhas são diferentes',
-        path: ['repitaSenha']
-    }
-);
+    .refine((value: any) => value.senha === value.repitaSenha,
+        {
+            error: 'As senhas são diferentes',
+            path: ['repitaSenha']
+        }
+    );
 export type RegisterPasswordFormType = z.infer<typeof RegisterPasswordSchema>;
 
 // register customers
@@ -80,4 +80,11 @@ export const CrediarySchema = z.object({
 });
 export type CrediaryFormType = z.infer<typeof CrediarySchema>;
 
+export const CartPaymentSchema = z.object({
+    numeroCartao: z.string().min(1, { message: "Informe o número do cartão" }),
+    nomeCartao: z.string().min(1, { message: "Informe o nome do titular" }),
+    validadeCartao: z.string().min(1, { message: "Informe a data de vencimento" }),
+    cvvCartao: z.string().min(1, { message: "Informe o código de segurança" }),
+});
+export type CartPaymentFormType = z.infer<typeof CartPaymentSchema>;
 

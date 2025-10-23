@@ -17,7 +17,7 @@ const DrawerHeader = () => {
                     onPress={() => navigation.openDrawer()}
                 />
             </View>
-            <Image source={require('@/assets/images/logo_lojas_solar.png')} className='h-10 w-3/5' />
+            <Image source={require('@/assets/images/logo_lojas_solar.png')} style={{ width: 220, height: 40 }} />
             <Text></Text>
         </View>
     )

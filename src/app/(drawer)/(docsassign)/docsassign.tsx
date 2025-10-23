@@ -57,7 +57,7 @@ const DocsAssign = () => {
                 title="Assinatura de documentos"
                 subtitle="Documentos disponíveis para assinatura"
                 classTitle='text-white text-2xl'
-                classSubtitle='text-white text-lg text-center'
+                classSubtitle='text-white text-base text-center'
             />
             <View className='p-4 bg-gray-100 rounded-t-3xl h-full gap-4'>
                 <View className="flex-1 items-center justify-start bg-solar-gray-dark px-2">

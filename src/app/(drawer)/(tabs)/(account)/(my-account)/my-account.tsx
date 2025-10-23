@@ -148,7 +148,7 @@ const MyAccount = () => {
           keyboardShouldPersistTaps="handled"
         >
           <View>
-            <ScreenHeader title="Minha Conta" subtitle="Alterar dados da minha conta" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+            <ScreenHeader title="Minha Conta" subtitle="Alterar dados da minha conta" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
             <View className='p-4 bg-white rounded-t-3xl'>
               <View className='flex-row items-center justify-between border-b border-gray-300 pb-4  '>
                 <Text>Solicitar a exclusão dos seus dados.</Text>

@@ -68,7 +68,7 @@ const AssistanceProtocol = () => {
 
   return (
     <View className='bg-solar-blue-primary flex-1'>
-      <ScreenHeader title="Assistência Técnica" subtitle="Aqui consta todos os seu equipamentos que foram enviados para a garantia" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+      <ScreenHeader title="Assistência Técnica" subtitle="Aqui consta todos os seu equipamentos que foram enviados para a garantia" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
       <View className='p-2 bg-white rounded-t-3xl h-full'>
         <FlashList
           data={protocols}

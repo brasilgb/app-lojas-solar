@@ -3,13 +3,44 @@ import { Stack } from "expo-router";
 
 const PaymentLayout = () => {
     return (
-        <Stack>
+        <Stack
+            screenOptions={{
+                animation: 'fade'
+            }}
+            >
             <Stack.Screen
                 name='payment'
                 options={{
                     header: () => <StackHeader drawer />,
                     headerShown: true,
-                    title: 'Lojas solar próximas',
+                    title: 'Pagamentos',
+                }}
+            />
+            
+            <Stack.Screen
+                name='methods'
+                options={{
+                    header: () => <StackHeader back close />,
+                    headerShown: true,
+                    title: 'Metordos de Pagamentos',
+                }}
+            />
+
+            <Stack.Screen
+                name='pixpayment'
+                options={{
+                    header: () => <StackHeader close />,
+                    headerShown: true,
+                    title: 'Pagamento pix',
+                }}
+            />
+            
+            <Stack.Screen
+                name='cartpayment'
+                options={{
+                    header: () => <StackHeader back close />,
+                    headerShown: true,
+                    title: 'Pagamento crédito',
                 }}
             />
         </Stack>

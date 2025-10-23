@@ -155,7 +155,7 @@ const History = () => {
                 title="Histórico de compras"
                 subtitle="Selecione o mês para navegar pelo seu histórico de compras"
                 classTitle='text-white text-2xl'
-                classSubtitle='text-white text-lg text-center'
+                classSubtitle='text-white text-base text-center'
             />
             <View className='p-4 bg-gray-100 rounded-t-3xl h-full gap-4'>
                 {show && (

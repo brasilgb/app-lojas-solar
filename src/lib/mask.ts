@@ -91,6 +91,27 @@ function maskMoneyDot(value: string) {
         valorAlterado = valorAlterado;
         return value = valorAlterado;
     }
+
 }
 
-export { maskCep, maskPhone, maskDate, maskCpfCnpj, maskCnpj, unMask, maskMoney, maskMoneyDot, maskWhatsApp };
+function maskCreditCart(value: string) {
+    if (typeof value !== "undefined" && value) {
+        value = value.replace(/\D/g, "");
+        value = value.replace(
+            /^(\d{4})(\d{4})(\d{4})(\d{4})/,
+            "$1 $2 $3 $4",
+        );
+        return value;
+    }
+}
+
+function maskDateValidate(value: string) {
+    if (typeof value !== "undefined" && value) {
+        value = value.replace(/\D/g, "");
+        value = value.replace(/^(\d{2})(\d{4})/, "$1/$2");
+        return value;
+    }
+}
+
+
+export { maskCep, maskPhone, maskDate, maskCpfCnpj, maskCnpj, unMask, maskMoney, maskMoneyDot, maskWhatsApp, maskCreditCart, maskDateValidate };

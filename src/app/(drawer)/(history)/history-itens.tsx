@@ -1,11 +1,11 @@
-import { View, Text, Alert, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useAuthContext } from '@/contexts/AppContext';
-import serviceapp from '@/services/serviceapp';
 import AppLoading from '@/components/app-loading';
 import ScreenHeader from '@/components/ScreenHeader';
-import { useLocalSearchParams } from 'expo-router';
+import { useAuthContext } from '@/contexts/AppContext';
 import { maskMoney } from '@/lib/mask';
+import serviceapp from '@/services/serviceapp';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, Text, View } from 'react-native';
 
 const HistoryItens = () => {
     const params = useLocalSearchParams();
@@ -52,7 +52,7 @@ const HistoryItens = () => {
                 title="Detalhes da compra"
                 subtitle="Documentos disponíveis para assinatura"
                 classTitle='text-white text-2xl'
-                classSubtitle='text-white text-lg text-center'
+                classSubtitle='text-white text-base text-center'
             />
             <View className='p-4 bg-gray-100 rounded-t-3xl h-full gap-4'>
                 <View className="flex-1 items-center justify-start bg-solar-gray-dark px-2">

@@ -1,16 +1,16 @@
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  Dimensions,
-  Platform,
-  TouchableOpacity,
-} from 'react-native';
-import React from 'react';
-import WebView from 'react-native-webview';
-import * as WebBrowser from 'expo-web-browser';
-import { MaterialIcons } from '@expo/vector-icons';
 import ScreenHeader from '@/components/ScreenHeader';
+import { MaterialIcons } from '@expo/vector-icons';
+import * as WebBrowser from 'expo-web-browser';
+import React from 'react';
+import {
+    ActivityIndicator,
+    Dimensions,
+    Platform,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import WebView from 'react-native-webview';
 
 export const VIEW_WIDTH = Dimensions.get('window').width;
 const PrivacyPolice = () => {
@@ -41,7 +41,7 @@ const PrivacyPolice = () => {
         title="Política de privacidade"
         subtitle=""
         classTitle='text-white text-2xl'
-        classSubtitle='text-white text-lg text-center'
+        classSubtitle='text-white text-base text-center'
       />
       <View className=' bg-gray-100 rounded-t-3xl h-full gap-4'>
 

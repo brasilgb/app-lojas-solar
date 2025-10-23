@@ -46,7 +46,7 @@ const AssistanceDetail = () => {
 
     return (
         <View className='bg-solar-blue-primary flex-1'>
-            <ScreenHeader title="Detalhes da Assistência" subtitle={dataAssistance?.produto} classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+            <ScreenHeader title="Detalhes da Assistência" subtitle={dataAssistance?.produto} classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
             <View className='p-2 bg-white rounded-t-3xl h-full'>
                 <Card className="border border-white rounded-lg mb-2 bg-gray-50 p-2 shadow-md shadow-black m-2">
                     <CardHeader className='mb-4 gap-2'>

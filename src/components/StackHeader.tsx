@@ -33,7 +33,7 @@ const StackHeader = ({ left, right, drawer, back, close, otherRoute, drstack }: 
                     />
                 }
             </View>
-            <Image source={require('@/assets/images/logo_lojas_solar.png')} className='h-10 w-3/5' />
+            <Image source={require('@/assets/images/logo_lojas_solar.png')} style={{ width: 220, height: 40 }} />
             <View className='h-10 w-16 flex-row items-center justify-end pr-3'>
                 {close &&
                     <X size={30} color={'white'} onPress={() => router.replace('/(drawer)')} />

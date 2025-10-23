@@ -1,11 +1,11 @@
-import { View } from 'react-native'
-import React, { useEffect } from 'react'
-import { router, useLocalSearchParams } from 'expo-router'
-import ScreenHeader from '@/components/ScreenHeader';
-import { Controller, useForm } from 'react-hook-form';
-import { Input } from '@/components/Input';
-import { maskPhone } from '@/lib/mask';
 import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
+import ScreenHeader from '@/components/ScreenHeader';
+import { maskPhone } from '@/lib/mask';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { View } from 'react-native';
 
 interface FormProps {
     motivo: string;
@@ -41,7 +41,7 @@ const DataExclude = () => {
 
     return (
         <View className='bg-solar-blue-primary flex-1'>
-            <ScreenHeader title="Exclusão de dados" subtitle="Preencha o formuário para iniciarmos o processo de exclusão de dados" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+            <ScreenHeader title="Exclusão de dados" subtitle="Preencha o formuário para iniciarmos o processo de exclusão de dados" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
             <View className='flex-1 bg-white px-4 rounded-t-3xl'>
                 <View className='flex-1 p-2'>
 

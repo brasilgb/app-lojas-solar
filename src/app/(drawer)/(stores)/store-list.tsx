@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity, Platform } from 'react-native'
-import React from 'react'
-import { router } from 'expo-router';
-import { FlashList } from '@shopify/flash-list';
-import { useAuthContext } from '@/contexts/AppContext';
 import ScreenHeader from '@/components/ScreenHeader';
+import { useAuthContext } from '@/contexts/AppContext';
+import { FlashList } from '@shopify/flash-list';
+import { router } from 'expo-router';
+import React from 'react';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 
 export default function StoreList() {
   const { storeList } = useAuthContext();
@@ -69,7 +69,7 @@ export default function StoreList() {
 
   return (
     <View className='bg-solar-blue-primary flex-1'>
-      <ScreenHeader title="Lojas Solar" subtitle="Lojas Solar mais Próximas de você" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+      <ScreenHeader title="Lojas Solar" subtitle="Lojas Solar mais Próximas de você" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
       <View className='p-2 bg-white rounded-t-3xl h-full'>
         <FlashList
           data={storeList}

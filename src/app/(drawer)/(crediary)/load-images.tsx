@@ -1,13 +1,13 @@
-import { View, Text, Image, Alert, Pressable, TouchableOpacity, Platform, Modal } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import ScreenHeader from '@/components/ScreenHeader'
+import AppLoading from '@/components/app-loading';
+import ScreenHeader from '@/components/ScreenHeader';
+import { useAuthContext } from '@/contexts/AppContext';
 import serviceapp from '@/services/serviceapp';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-import { useAuthContext } from '@/contexts/AppContext';
 import { router, useLocalSearchParams } from 'expo-router';
-import AppLoading from '@/components/app-loading';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, Modal, Platform, Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 const LoadImages = () => {
     const { disconnect } = useAuthContext();
@@ -302,7 +302,7 @@ const LoadImages = () => {
                 </View>
             </Modal>
             <View className='bg-solar-blue-primary flex-1'>
-                <ScreenHeader title="Enviar Documentos" subtitle="Enviar uma selfie e uma foto dos documentos" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+                <ScreenHeader title="Enviar Documentos" subtitle="Enviar uma selfie e uma foto dos documentos" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
                 <View className='p-3 bg-white rounded-t-3xl flex-1'>
 
                     <View className="flex-1">

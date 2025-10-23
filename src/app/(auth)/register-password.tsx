@@ -64,7 +64,6 @@ const RegisterPassword = () => {
 
   return (
     <View className='bg-white flex-1'>
-      <MessageAlert visible={modalVisible} onClose={setModalVisible} title={modalTitle} message={modalMessage} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={100}
@@ -77,7 +76,7 @@ const RegisterPassword = () => {
         >
 
           <View className='flex-1'>
-            <ScreenHeader title="Minha Conta" subtitle="Alterar minha senha" classTitle='text-white text-2xl' classSubtitle='text-white text-lg text-center' />
+            <ScreenHeader title="Minha Conta" subtitle="Alterar minha senha" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
             <View className='p-4 bg-white rounded-t-3xl h-full'>
               <View className='flex-col gap-4 my-4'>
 
