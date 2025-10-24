@@ -4,12 +4,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
 import { useAuthContext } from '@/contexts/AppContext';
 import { maskMoney } from '@/lib/mask';
 import serviceapp from '@/services/serviceapp';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
 import { router, useFocusEffect } from 'expo-router';
-import { CheckIcon } from 'lucide-react-native';
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { CheckIcon, ClockIcon } from 'lucide-react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     Platform,
     Text,
@@ -18,7 +17,7 @@ import {
 } from 'react-native';
 
 const OpenPayments = () => {
-    const { user, disconnect } = useAuthContext();
+    const { user } = useAuthContext();
     const [loading, setLoading] = useState<boolean>(false);
     const mtoken = user?.token
     const isFocused = useIsFocused();
@@ -45,10 +44,8 @@ const OpenPayments = () => {
 
     useFocusEffect(
         useCallback(() => {
-            if (isFocused) {
                 getCrediarios();
-            }
-        }, [isFocused])
+        }, [])
     );
 
     // Lidar com a seleção de um único pagamento
@@ -99,14 +96,13 @@ const OpenPayments = () => {
         return (
             <TouchableOpacity
                 onPress={() => handleSelectPayment(crediario)}
-                className={`flex-row items-center justify-between my-1 px-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm ${Platform.OS === 'ios' ? 'shadow-gray-200' : 'shadow-gray-400'
-                    } py-4 `}
+                className={`flex-row items-center justify-between my-1 px-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm ${Platform.OS === 'ios' ? 'shadow-gray-200' : 'shadow-gray-400'} py-4 `}
                 disabled={crediario.status === 'P'}
             >
                 <View className="flex-row items-center justify-center w-full">
                     <View className="flex-none items-center justify-start w-8">
                         {crediario.status === 'P' ? (
-                            <MaterialIcons name="schedule" size={28} color={'#5d71af'} />
+                            <ClockIcon size={24} color={'#5d71af'} />
                         ) : (
                             <View
                                 className={`h-6 w-6 border-2 border-solar-orange-primary ${isSelected ? 'bg-solar-orange-primary' : 'bg-transparent'} items-center justify-center rounded-full`}
@@ -231,7 +227,6 @@ const OpenPayments = () => {
                             data={crediarios}
                             renderItem={({ item }) => (<RenderItem crediario={item} />)}
                             keyExtractor={(item: any) => item.numeroCarne + item.parcela}
-                            ItemSeparatorComponent={() => (<View className="h-0.5 bg-solar-gray-dark" />)}
                             extraData={selectedPayments}
                             showsVerticalScrollIndicator={false}
                             contentContainerStyle={installmentsCount > 0 && { paddingBottom: 90 }}

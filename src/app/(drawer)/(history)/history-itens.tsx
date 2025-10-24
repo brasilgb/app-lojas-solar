@@ -8,9 +8,10 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Image, Text, View } from 'react-native';
 
 const HistoryItens = () => {
+    const { user } = useAuthContext();
     const params = useLocalSearchParams();
-    const dataItem = params as any;
-    const { user, disconnect } = useAuthContext();
+    const { dataHistory } = params as any;
+    const history = JSON.parse(dataHistory);
     const [historicoItems, setHistoricoItems] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -18,21 +19,11 @@ const HistoryItens = () => {
         const getHistoricoItems = async () => {
             setLoading(true);
             await serviceapp.get(
-                `(WS_HISTORICO_ITENS)?token=${user?.token}&numero=${dataItem?.numero}&filial=${dataItem?.filial}&serie=${dataItem?.serie}`,
+                `(WS_HISTORICO_ITENS)?token=${user?.token}&numero=${history?.numero}&filial=${history?.filial}&serie=${history?.serie}`,
             )
                 .then(response => {
                     const { success, message, data } = response.data.resposta;
                     setLoading(false);
-                    if (!success) {
-                        Alert.alert('Atenção', message, [
-                            {
-                                text: 'Ok',
-                                onPress: () => {
-                                    disconnect();
-                                },
-                            },
-                        ]);
-                    }
                     setHistoricoItems(data);
                 })
                 .catch(err => {
@@ -40,94 +31,80 @@ const HistoryItens = () => {
                 });
         };
         getHistoricoItems();
-    }, [user, dataItem]);
+    }, [user]);
 
     if (loading) {
         <AppLoading />;
     }
 
     return (
-        <View className='bg-solar-blue-primary flex-1'>
+        <View className='bg-solar-blue-primary '>
             <ScreenHeader
                 title="Detalhes da compra"
-                subtitle="Documentos disponíveis para assinatura"
+                subtitle={`Detalhes da compra ${history?.numero}`}
                 classTitle='text-white text-2xl'
                 classSubtitle='text-white text-base text-center'
             />
             <View className='p-4 bg-gray-100 rounded-t-3xl h-full gap-4'>
-                <View className="flex-1 items-center justify-start bg-solar-gray-dark px-2">
-                    <View className="flex-col items-center justify-center w-full px-2">
-
-                        <View className="flex-1 bg-solar-gray-dark pt-8 px-4">
+                <View className=" bg-solar-gray-dark pt-8 px-4">
+                    <View
+                        className={`flex-col items-center justify-between bg-gray-white my-1 px-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm`}
+                    >
+                        <View className="flex-row items-center justify-between mb-2 w-full">
+                            <Text
+                                allowFontScaling={false}
+                                className=" text-xl font-PoppinsRegular"
+                            >
+                                N° da compra:{' '}
+                            </Text>
+                            <Text
+                                allowFontScaling={false}
+                                className="text-lg font-bold text-right"
+                            >
+                                {history?.numero}
+                            </Text>
+                        </View>
+                        <View className="flex-row items-center justify-between w-full">
+                            <Text
+                                allowFontScaling={false}
+                                className="text-base font-PoppinsRegular"
+                            >
+                                Data: {history?.data}
+                            </Text>
+                            <Text
+                                allowFontScaling={false}
+                                className="text-xl font-bold text-solar-blue-dark  text-right"
+                            >
+                                {maskMoney((history?.valor))}
+                            </Text>
+                        </View>
+                    </View>
+                    {historicoItems &&
+                        historicoItems.map((item: any, idx: number) => (
                             <View
-                                className={`flex-row items-center justify-between bg-gray-white my-1 px-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm`}
-                >
-                                <View className="w-full flex-row items-center justify-between mb-2">
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="flex-1 text-xl font-PoppinsRegular"
-                                    >
-                                        N° da compra:{' '}
-                                    </Text>
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="flex-1 text-lg font-PoppinsBold text-right"
-                                    >
-                                        {dataItem?.numero}
-                                    </Text>
+                                key={idx}
+                                className={`flex-row items-center justify-between bg-gray-white my-1 p-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm`}
+                            >
+                                <View className='border border-gray-300 rounded-lg'>
+                                    <Image
+                                        source={{ uri: item?.linkImagem }}
+                                        className="h-40 w-40 rounded-l-lg"
+                                    />
                                 </View>
-                                <View className="w-full flex-row items-center justify-between">
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="text-base font-PoppinsRegular flex-1"
-                                    >
-                                        Data: {dataItem?.data}
+                                <View className="pl-2 flex-1 flex-col">
+                                    <Text className="text-base font-bold">
+                                        {item?.descricao}
                                     </Text>
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="text-xl font-PoppinsBold text-solar-blue-dark flex-1 text-right"
-                                    >
-                                        {maskMoney((dataItem?.valor))}
+                                    <Text className="my-1 font-PoppinsMedium text-gray-500 py-1">
+                                        {parseInt(item?.quantidade)} un x{' '}
+                                        R$ {maskMoney(String(parseFloat(item?.unitario).toFixed(2 )))}
+                                    </Text>
+                                    <Text className="text-2xl text-center text-solar-blue-secondary font-bold">
+                                        R$ {maskMoney(item?.total)}
                                     </Text>
                                 </View>
                             </View>
-                            {historicoItems &&
-                                historicoItems.map((item: any, idx: number) => (
-                                    <View
-                                        key={idx}
-                                        className={`flex-row items-center justify-between bg-gray-white my-1 px-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm`}
-                >
-                                        <View className="flex-1">
-                                            <Image
-                                                source={{ uri: item?.linkImagem }}
-                                                className="h-40 w-40 rounded-l-lg"
-                                            />
-                                        </View>
-                                        <View className="flex-1 pl-2">
-                                            <Text
-                                                allowFontScaling={false}
-                                                className="text-base font-PoppinsBold"
-                                            >
-                                                {item?.descricao}
-                                            </Text>
-                                            <Text
-                                                allowFontScaling={false}
-                                                className="text-right my-1 font-PoppinsMedium text-gray-500 py-1"
-                                            >
-                                                {parseInt(item?.quantidade)} un x{' '}
-                                                {maskMoney((item?.unitario))}
-                                            </Text>
-                                            <Text
-                                                allowFontScaling={false}
-                                                className="text-right text-lg text-solar-blue-dark font-PoppinsBold"
-                                            >
-                                                {maskMoney((item?.total))}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                ))}
-                        </View>
-                    </View>
+                        ))}
                 </View>
             </View>
         </View>

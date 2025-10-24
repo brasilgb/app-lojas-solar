@@ -48,13 +48,6 @@ const MyAccount = () => {
         .then((response) => {
           const { data, message, token } = response?.data?.resposta;
 
-          if (!token) {
-            setModalVisible(true);
-            setModalMessage(message);
-            setModalTitle('Erro!');
-            disconnect();
-          }
-
           setCustomers(data);
           reset(data);
         })
@@ -83,16 +76,7 @@ const MyAccount = () => {
       &nascimentoCliente=${data.nascimentoCliente}`)
       .then((response) => {
         const { data, message, success, token } = response?.data?.resposta;
-        if (!token) {
-          Alert.alert('Atenção', message, [
-            {
-              text: 'Ok',
-              onPress: () => {
-                return router.push('/(drawer)');
-              },
-            },
-          ]);
-        }
+
         if (!success) {
           setModalVisible(true);
           setModalMessage(message);

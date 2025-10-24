@@ -29,16 +29,7 @@ const AssistanceProtocol = () => {
         .then(response => {
           const { message, data, token } = response.data.resposta;
           setLoading(false);
-          if (!token) {
-            Alert.alert('Atenção', message, [
-              {
-                text: 'Ok',
-                onPress: () => {
-                  return router.push('/(drawer)');
-                },
-              },
-            ]);
-          }
+
           setProtocols(data);
         })
         .catch(err => {

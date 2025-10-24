@@ -214,16 +214,7 @@ const LoadImages = () => {
             .then(response => {
                 const { success, message, token } = response.data.resposta;
                 setLoading(false);
-                if (!token) {
-                    Alert.alert('Atenção', message, [
-                        {
-                            text: 'Ok',
-                            onPress: () => {
-                                disconnect();
-                            },
-                        },
-                    ]);
-                }
+                
                 if (success) {
                     Alert.alert('Sucesso', 'Imagem enviada com sucesso');
                 }

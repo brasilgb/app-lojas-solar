@@ -30,17 +30,7 @@ const PrivacySettings = () => {
         .then(response => {
           const { token, message, data } = response.data.resposta;
           setLoading(false);
-          if (!token) {
-            Alert.alert('Atenção', message, [
-              {
-                text: 'Ok',
-                onPress: () => {
-                  disconnect();
-                },
-              },
-            ]);
-          }
-
+          
           setAutorizaCliente(data?.pergunta);
           setIsNotification(
             data?.pergunta[0]?.resposta === 'S' ? true : false,

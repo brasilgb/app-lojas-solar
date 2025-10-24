@@ -26,7 +26,7 @@ const CartPayment = () => {
     const orderTotal = (parseFloat(String(params?.totalAmount)).toFixed(2));
 
     const orderCartPayment = async (valueCart: CartPaymentFormType) => {
-
+        setLoading(true);
         if (registeredOrder.length === 0) {
             const response = await serviceapp.post('(WS_ORDEM_PAGAMENTO)', {
                 token: `${mtoken}`,
@@ -35,33 +35,22 @@ const CartPayment = () => {
                 tipoPagamento: 2,
                 validaDados: 'S',
                 dadosCartao: {
-                    numeroCartao: `${maskCreditCart(valueCart.numeroCartao)}`,
-                    nomeCartao: `${valueCart.nomeCartao}`,
-                    validadeCartao: `${maskDateValidate(valueCart.validadeCartao)}`,
-                    cvvCartao: `${valueCart.cvvCartao}`
+                    numeroCartao: `${maskCreditCart(valueCart?.numeroCartao)}`,
+                    nomeCartao: `${valueCart?.nomeCartao}`,
+                    validadeCartao: `${maskDateValidate(valueCart?.validadeCartao)}`,
+                    cvvCartao: `${valueCart?.cvvCartao}`
                 },
             });
-
-            const { success, message, data, token } = response.data.resposta;
-
-            if (!token) {
-                Alert.alert('Atenção', message, [
-                    {
-                        text: 'Ok',
-                        onPress: () => {
-                            disconnect();
-                        },
-                    },
-                ]);
-            }
+            const { success, message, data } = response.data.resposta;
+            console.log('Aqui é o registra ordem', response.data.resposta);
+            setRegisteredOrder(data);
             if (!success) {
                 Alert.alert('Atenção deu erro', message, [{ text: 'Ok' }]);
-                return;
             }
-            setRegisteredOrder(data);
             await paymentCart(data);
         } else {
             // Caso o cartão tenha dado erro de comunicação guarda os dados do formuláio e reenvia
+            console.log('registerorder ok', registeredOrder);
             await paymentCart(registeredOrder)
         }
     }
@@ -71,7 +60,8 @@ const CartPayment = () => {
             MerchantOrderId: dataCart.numeroOrdem,
             Payment: {
                 Type: "CreditCard",
-                Amount: Number(orderTotal) * 100,
+                Amount: Number(dataCart.valorOrdem) * 100,
+                // Amount: 1,
                 Currency: "BRL",
                 Country: "BRA",
                 Provider: "Cielo",
@@ -83,48 +73,30 @@ const CartPayment = () => {
                 Recurrent: false,
                 SoftDescriptor: "123456789ABCD",
                 CreditCard: {
-                    CardNumber: unMask(dataCart.numeroCartao),
-                    Holder: dataCart.nomeCartao,
-                    ExpirationDate: dataCart.validadeCartao,
-                    SecurityCode: dataCart.cvvCartao,
+                    CardNumber: unMask(dataCart.dadosCartao.numeroCartao),
+                    Holder: dataCart.dadosCartao.nomeCartao,
+                    ExpirationDate: dataCart.dadosCartao.validadeCartao,
+                    SecurityCode: dataCart.dadosCartao.cvvCartao,
                     SaveCard: false,
-                    Brand: getCardBrandName(dataCart.numeroCartao)
+                    Brand: getCardBrandName((dataCart.dadosCartao.numeroCartao))
                 }
             }
         });
-        const { success, ReturnMessage, ReturnCode, data } = response.data.resposta;
-
+        const { success, ReturnMessage, ReturnCode, data } = response.data.response;
+        console.log('Aqui é o cartão', response.data.response);
         if (success && ReturnCode !== '00') {
             Alert.alert('Atenção', ReturnMessage, [{ text: 'Ok' }]);
-            return;
         }
-        setRegisteredOrder([]);
         // Aqui atualiza a ordem de pagamento caso de certo
-        await sendOrderAtualize(data);
+        await sendOrderAtualize(response.data.response);
     }
 
     const sendOrderAtualize = async (dataCart: any) => {
-        if (dataCart) {
-            let orderResponse = {
-                numeroOrdem: dataCart.MerchantOrderId,
-                statusOrdem: 2,
-                idTransacao: dataCart.PaymentId,
-                tipoPagamento: 2,
-                urlBoleto: dataCart.AuthorizationCode,
-            };
-            const response = await serviceapp.get(`
-                (WS_ATUALIZA_ORDEM)
-                ?token=91362590064312210014616
-                &numeroOrdem=${orderResponse.numeroOrdem}
-                &statusOrdem=${orderResponse.statusOrdem}
-                &idTransacao=${orderResponse.idTransacao}
-                &tipoPagamento=${orderResponse.tipoPagamento}
-                &urlBoleto=${orderResponse.urlBoleto}
-                `);
-            const { success } = response.data.resposta;
-            if (success) {
-                router.replace('/(drawer)/(payment)/cardbillpaid');
-            }
+        const response = await serviceapp.get(`(WS_ATUALIZA_ORDEM)?token=91362590064312210014616&numeroOrdem=${dataCart.MerchantOrderId}&statusOrdem=2&idTransacao=${dataCart.PaymentId}&tipoPagamento=2&urlBoleto=${dataCart.AuthorizationCode}`);
+        const { success } = response.data.resposta;
+        console.log('Aqui atualiza a ordem', response.data.resposta);
+        if (success) {
+            router.replace('/cardbillpaid');
         }
     }
 
@@ -140,6 +112,7 @@ const CartPayment = () => {
 
     const onSubmit = async (values: CartPaymentFormType) => {
         await orderCartPayment(values);
+        setLoading(false);
     }
 
     return (

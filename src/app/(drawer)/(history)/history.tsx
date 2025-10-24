@@ -4,9 +4,9 @@ import { useAuthContext } from '@/contexts/AppContext';
 import serviceapp from '@/services/serviceapp';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlashList } from '@shopify/flash-list';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     Alert,
     Image,
@@ -18,11 +18,11 @@ import {
 import MonthPicker from 'react-native-month-year-picker';
 
 const History = () => {
-    const { user, disconnect } = useAuthContext();
+    const { user } = useAuthContext();
     const [historicos, setHistoricos] = useState<any>([]);
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const showPicker = useCallback((value: any) => setShow(value), []);
 
     const onValueChange = useCallback(
@@ -35,38 +35,32 @@ const History = () => {
         [date, showPicker],
     );
 
-    useEffect(() => {
-        const getHistoricos = async () => {
-            setLoading(true);
-            await serviceapp
-                .get(
-                    `(WS_HISTORICO_COMPRAS)?token=${user?.token}&dataInicial=${moment(
-                        date,
-                    ).format('YYYYMM')}01&dataFinal=${moment(date).format(
-                        'YYYYMM',
-                    )}31`,
-                )
-                .then(response => {
-                    const { token, success, message, data } = response.data.resposta;
-                    setLoading(false);
-                    if (!token) {
-                        Alert.alert('Atenção', message, [
-                            {
-                                text: 'Ok',
-                                onPress: () => {
-                                    return router.push('/(drawer)');
-                                },
-                            },
-                        ]);
-                    }
+    useFocusEffect(
+        useCallback(() => {
+            const getHistoricos = async () => {
+                setLoading(true);
+                try {
+                    const response = await serviceapp.get(
+                        `(WS_HISTORICO_COMPRAS)?token=${user?.token}&dataInicial=${moment(
+                            date,
+                        ).format('YYYYMM')}01&dataFinal=${moment(date).format(
+                            'YYYYMM',
+                        )}31`,
+                    );
+                    const { data } = response.data.resposta;
                     setHistoricos(data);
-                })
-                .catch(err => {
+                } catch (err) {
                     console.log(err);
-                });
-        };
-        getHistoricos();
-    }, [date]);
+                    Alert.alert("Erro", "Não foi possível carregar o histórico.");
+                    setHistoricos([]);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            getHistoricos();
+        }, [date, user]),
+    );
 
     const RenderItem = ({ item }: any) => {
 
@@ -74,9 +68,9 @@ const History = () => {
             <TouchableOpacity
                 onPress={() => router.push({
                     pathname: '/history-itens',
-                    params: item
+                    params: { dataHistory: JSON.stringify(item) }
                 })}
-                className={`flex-row items-center justify-between bg-gray-white my-1 px-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm`}
+                className={`flex-row items-center justify-between my-1 px-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm ${Platform.OS === 'ios' ? 'shadow-gray-200' : 'shadow-gray-400'} py-4 `}
                 style={{ elevation: 2 }}
             >
                 <View className="p-2 w-full">
@@ -145,10 +139,7 @@ const History = () => {
         );
     };
 
-    if (loading) {
-        <AppLoading />
-    }
-
+    
     return (
         <View className='bg-solar-blue-primary flex-1'>
             <ScreenHeader
@@ -168,7 +159,7 @@ const History = () => {
                         cancelButton="Cancelar"
                     />
                 )}
-                <View className="flex-1 items-center justify-start bg-solar-gray-dark px-4">
+                <View className="flex-1 items-center justify-start bg-solar-gray-dark">
                     <View className="flex-col items-center justify-center">
                         <TouchableOpacity
                             onPress={() => showPicker(true)}
@@ -178,10 +169,7 @@ const History = () => {
                                 }`}
                             style={{ elevation: 2 }}
                         >
-                            <Text
-                                allowFontScaling={false}
-                                className="flex-1 text-lg text-center text-solar-blue-secondary font-PoppinsMedium"
-                            >
+                            <Text className="flex-1 text-lg text-center text-solar-blue-secondary font-PoppinsMedium">
                                 {moment(date).format('MM/YYYY')}
                             </Text>
                             <MaterialCommunityIcons
@@ -191,12 +179,9 @@ const History = () => {
                             />
                         </TouchableOpacity>
 
-                        {historicos.length === 0 && (
+                        {!loading && historicos.length === 0 && (
                             <>
-                                <Text
-                                    allowFontScaling={false}
-                                    className="text-base text-solar-blue-secondary font-medium mb-4 px-8 text-center"
-                                >
+                                <Text className="text-base text-solar-blue-secondary font-medium mb-4 px-8 text-center">
                                     Você não possui nenhum histórico de compras no
                                     momento
                                 </Text>
@@ -211,8 +196,11 @@ const History = () => {
                         <FlashList
                             data={historicos}
                             renderItem={({ item }: any) => <RenderItem item={item} />}
+                            keyExtractor={(item: any) => item.numero}
                             keyboardShouldPersistTaps={'always'}
                             showsVerticalScrollIndicator={false}
+                            onRefresh={historicos}
+                            refreshing={loading}
                         />
                     </View>
                 </View>

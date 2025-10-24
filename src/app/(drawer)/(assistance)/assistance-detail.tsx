@@ -23,16 +23,7 @@ const AssistanceDetail = () => {
                 )
                 .then(response => {
                     const { token, message, data } = response.data.resposta;
-                    if (!token) {
-                        Alert.alert('Atenção', message, [
-                            {
-                                text: 'Ok',
-                                onPress: () => {
-                                    return router.push('/(drawer)');
-                                },
-                            },
-                        ]);
-                    }
+                    
                     setDetails(data);
                 })
                 .catch(err => {

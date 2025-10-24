@@ -22,16 +22,7 @@ const DocsAssign = () => {
                     })
                     .then(res => {
                         const { signatures, message, token } = res.data.response;
-                        if (!token) {
-                            Alert.alert('Atenção', message, [
-                                {
-                                    text: 'Ok',
-                                    onPress: () => {
-                                        return router.push('/(drawer)');
-                                    },
-                                },
-                            ]);
-                        }
+                        
                         if (signatures === undefined) {
                             setAssignDocs([]);
                             return;

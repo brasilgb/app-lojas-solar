@@ -102,16 +102,7 @@ const SolarStores = () => {
         .get(`(WS_CARREGA_LOJAS)`)
         .then(response => {
           const { data, message, token } = response.data.resposta.data;
-          if (!token) {
-            Alert.alert('Atenção', message, [
-              {
-                text: 'Ok',
-                onPress: () => {
-                  return router.push('/(drawer)');
-                },
-              },
-            ]);
-          }
+          
           setCitiesStore(data);
         })
         .catch(err => {

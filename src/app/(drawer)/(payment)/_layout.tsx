@@ -43,6 +43,15 @@ const PaymentLayout = () => {
                     title: 'Pagamento crédito',
                 }}
             />
+            
+            <Stack.Screen
+                name='cardbillpaid'
+                options={{
+                    header: () => <StackHeader close />,
+                    headerShown: true,
+                    title: 'Pagamento crédito',
+                }}
+            />
         </Stack>
     );
 };

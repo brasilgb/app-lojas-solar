@@ -35,16 +35,6 @@ const methods = () => {
       });
       const { success, message, data, token } = response.data.resposta;
 
-      if (!token) {
-        Alert.alert('Atenção', message, [
-          {
-            text: 'Ok',
-            onPress: () => {
-              router.push('/');
-            },
-          },
-        ]);
-      }
       router.push({
         pathname: '/(drawer)/(payment)/pixpayment',
         params: { valueOrder: totalAmount }

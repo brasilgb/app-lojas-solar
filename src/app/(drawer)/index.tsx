@@ -1,12 +1,10 @@
 import HistoryButton from "@/components/HistoryButton";
 import { useAuthContext } from "@/contexts/AppContext";
-import { BanknoteArrowDownIcon, CopyIcon, HandCoinsIcon, HistoryIcon, MapPinIcon, PenLineIcon, PhoneCallIcon, QrCodeIcon, ScanBarcodeIcon, Share2Icon, ShoppingBasket, WrenchIcon } from "lucide-react-native";
+import { BanknoteArrowDownIcon, HandCoinsIcon, HistoryIcon, MapPinIcon, PenLineIcon, PhoneCallIcon, ScanBarcodeIcon, ShoppingBasket, WrenchIcon } from "lucide-react-native";
 import React from "react";
 import { Image, Platform, TouchableOpacity, View, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import * as WebBrowser from 'expo-web-browser';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/Card";
-import { maskMoney } from "@/lib/mask";
 
 const Home = () => {
   const { signedIn } = useAuthContext();
@@ -26,36 +24,6 @@ const Home = () => {
       </View>
 
       <ScrollView className="bg-white">
-        {/* <View className="p-4">
-          <Card className="items-center bg-white border-gray-300 shadow-sm shadow-slate-900">
-            <CardHeader>
-              <Text className="text-5xl font-extrabold text-solar-blue-secondary/80">R$ {maskMoney('1562.25')}</Text>
-            </CardHeader>
-            <CardTitle className="text-xl text-gray-500 font-normal pb-2">
-              Validade do QRCode 1h(uma hora)
-            </CardTitle>
-            <CardContent>
-              <QrCodeIcon size={150} color={'#0d3b85'} />
-            </CardContent>
-            <CardFooter>
-              <Text className="text-center text-solar-blue-primary">Use o leitor de QRCode para fazer a transação ou escolha uma opção abaixo.</Text>
-            </CardFooter>
-          </Card>
-          <View className="flex-row items-center justify-around gap-4 mt-8">
-            <Card className="items-center bg-white border-gray-300 shadow-sm shadow-slate-900 p-2">
-              <CardHeader>
-                <CopyIcon size={60} color={'#0d3b85d5'} />
-              </CardHeader>
-              <CardTitle className="text-base text-gray-500 font-normal">PIX copia e cola</CardTitle>
-            </Card>
-            <Card className="items-center bg-white border-gray-300 shadow-sm shadow-slate-900 p-2">
-              <CardHeader>
-                <Share2Icon size={60} color={'#0d3b85d5'} />
-              </CardHeader>
-              <CardTitle className="text-base text-gray-500 font-normal">Compartilhar PIX</CardTitle>
-            </Card>
-          </View>
-        </View> */}
 
         <View className="flex-row flex-wrap items-start justify-start gap-4 p-4">
 

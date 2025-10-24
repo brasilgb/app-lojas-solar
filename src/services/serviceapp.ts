@@ -1,9 +1,20 @@
 import axios from 'axios';
+import { Alert } from 'react-native';
 
 let BASE_URL = '';
 
 let requestCustom: any;
 let data: any;
+
+
+// 1. Variável para guardar a função de callback
+let onSessionExpired: (() => void) | null = null;
+
+// 2. Função para registrar o callback
+export const setSessionExpiredCallback = (callback: () => void) => {
+    onSessionExpired = callback;
+};
+
 
 const serviceapp = axios.create({
     withCredentials: true,
@@ -25,7 +36,27 @@ serviceapp.interceptors.request.use(async request => {
 });
 
 serviceapp.interceptors.response.use(
-    response => response,
+    response => {
+        const { success, message, token } = response.data.resposta;
+        // A verificação é `token === false` para evitar casos onde o token não está presente na resposta
+        if (token === false) {
+            if (onSessionExpired) {
+                Alert.alert('Atenção', message, [
+                    {
+                        text: 'Ok',
+                        onPress: () => {
+                            if (onSessionExpired) {
+                                onSessionExpired();
+                            }
+                        },
+                    },
+                ]);
+            }
+            // Rejeita a promessa para que a chamada original não continue
+            return Promise.reject(new Error(message || 'Sessão inválida.'));
+        }
+        return response;
+    },
     async _error => {
         console.log('Abrindo sessão com o servidor novamente');
 

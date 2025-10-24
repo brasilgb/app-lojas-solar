@@ -5,9 +5,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from 'expo-location';
 import * as SecureStore from 'expo-secure-store';
 import { router } from "expo-router";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import DeviceInfo from 'react-native-device-info';
-import serviceapp from "../services/serviceapp";
+import serviceapp, { setSessionExpiredCallback } from "../services/serviceapp";
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
@@ -169,7 +169,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
-    async function disconnect() {
+    const disconnect = useCallback(async () => {
         try {
             await SecureStore.deleteItemAsync(storageUserKey);
             await SecureStore.deleteItemAsync(storageKeepLoggedInKey);
@@ -179,7 +179,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } catch (e) {
             console.log('Error removing keys from AsyncStorage:', e);
         }
-    }
+    }, []);
+
+    useEffect(() => {
+        setSessionExpiredCallback(disconnect);
+    }, [disconnect]);
+
 
     return (
         <AuthContext.Provider
