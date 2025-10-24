@@ -100,7 +100,7 @@ const Crediary = () => {
                     .get(`(WS_CARREGA_CLIENTE)?token=${tokenCli}`)
                     .then(response => {
                         const { data, token, message } = response.data.resposta;
-                        if (!token) {
+                        if (!user?.token) {
                             Alert.alert('Atenção', message, [
                                 {
                                     text: 'Ok',

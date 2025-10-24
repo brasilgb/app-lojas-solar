@@ -25,13 +25,9 @@ const CartPayment = () => {
     const mtoken = user?.token
     const orderTotal = (parseFloat(String(params?.totalAmount)).toFixed(2));
 
-    console.log(user?.token);
-    console.log(order);
-    console.log(orderTotal);
-
     const orderCartPayment = async (valueCart: CartPaymentFormType) => {
 
-        try {
+        if (registeredOrder.length === 0) {
             const response = await serviceapp.post('(WS_ORDEM_PAGAMENTO)', {
                 token: `${mtoken}`,
                 valor: orderTotal,
@@ -39,10 +35,10 @@ const CartPayment = () => {
                 tipoPagamento: 2,
                 validaDados: 'S',
                 dadosCartao: {
-                    numeroCartao: maskCreditCart(valueCart.numeroCartao),
-                    nomeCartao: valueCart.nomeCartao,
-                    validadeCartao: maskDateValidate(valueCart.validadeCartao),
-                    cvvCartao: valueCart.cvvCartao
+                    numeroCartao: `${maskCreditCart(valueCart.numeroCartao)}`,
+                    nomeCartao: `${valueCart.nomeCartao}`,
+                    validadeCartao: `${maskDateValidate(valueCart.validadeCartao)}`,
+                    cvvCartao: `${valueCart.cvvCartao}`
                 },
             });
 
@@ -58,19 +54,16 @@ const CartPayment = () => {
                     },
                 ]);
             }
+            if (!success) {
+                Alert.alert('Atenção deu erro', message, [{ text: 'Ok' }]);
+                return;
+            }
             setRegisteredOrder(data);
-            // await paymentCart(data);
-        } catch (error) {
-            console.log(error);
-            return false;
-        } finally {
-            setLoading(false);
+            await paymentCart(data);
+        } else {
+            // Caso o cartão tenha dado erro de comunicação guarda os dados do formuláio e reenvia
+            await paymentCart(registeredOrder)
         }
-        // } else {
-        //     console.log(registeredOrder.length);
-
-        //     // await paymentCart(registeredOrder);
-        // }
     }
 
     const paymentCart = async (dataCart: any) => {
@@ -78,7 +71,7 @@ const CartPayment = () => {
             MerchantOrderId: dataCart.numeroOrdem,
             Payment: {
                 Type: "CreditCard",
-                Amount: 1 * 100,
+                Amount: Number(orderTotal) * 100,
                 Currency: "BRL",
                 Country: "BRA",
                 Provider: "Cielo",
@@ -95,7 +88,7 @@ const CartPayment = () => {
                     ExpirationDate: dataCart.validadeCartao,
                     SecurityCode: dataCart.cvvCartao,
                     SaveCard: false,
-                    Brand: getCardBrandName((dataCart.numeroCartao)) ? getCardBrandName((dataCart.numeroCartao)) : ''
+                    Brand: getCardBrandName(dataCart.numeroCartao)
                 }
             }
         });
@@ -106,6 +99,7 @@ const CartPayment = () => {
             return;
         }
         setRegisteredOrder([]);
+        // Aqui atualiza a ordem de pagamento caso de certo
         await sendOrderAtualize(data);
     }
 
@@ -134,7 +128,6 @@ const CartPayment = () => {
         }
     }
 
-
     const { control, handleSubmit, formState: { errors }, reset } = useForm<CartPaymentFormType>({
         defaultValues: {
             numeroCartao: '',
@@ -145,10 +138,10 @@ const CartPayment = () => {
         resolver: zodResolver(CartPaymentSchema)
     });
 
-
     const onSubmit = async (values: CartPaymentFormType) => {
         await orderCartPayment(values);
     }
+
     return (
         <View className='bg-white flex-1'>
 
@@ -262,7 +255,7 @@ const CartPayment = () => {
                                             }) => (
                                                 <View>
                                                     <Input
-                                                        label='Código cvv'
+                                                        label='Código CVV'
                                                         onBlur={onBlur}
                                                         onChangeText={onChange}
                                                         value={value}
@@ -282,13 +275,13 @@ const CartPayment = () => {
                                 </View>
                             </View>
 
-
                             <Button
                                 label={loading ? <ActivityIndicator size="small" color="#bccf00" /> : 'Continuar'}
                                 variant={'secondary'}
                                 size={'lg'}
                                 onPress={handleSubmit(onSubmit)}
                             />
+
                         </View>
                     </View>
                 </ScrollView>
