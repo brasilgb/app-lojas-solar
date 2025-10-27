@@ -46,7 +46,7 @@ const HistoryItens = () => {
                 classSubtitle='text-white text-base text-center'
             />
             <View className='p-4 bg-gray-100 rounded-t-3xl h-full gap-4'>
-                <View className=" bg-solar-gray-dark pt-8 px-4">
+                <View className=" bg-solar-gray-dark pt-8 px-2">
                     <View
                         className={`flex-col items-center justify-between bg-gray-white my-1 px-2 rounded-xl text-lg leading-6 font-medium bg-white border border-gray-300 shadow-sm`}
                     >
