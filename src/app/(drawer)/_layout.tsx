@@ -123,6 +123,7 @@ const DrawerLayout = () => {
         <Drawer.Screen
           name="(stores)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Lojas solar próximas',
             title: 'Lojas solar próximas',
             drawerIcon: ({ color, size }) => (
@@ -156,8 +157,9 @@ const DrawerLayout = () => {
         />
 
         <Drawer.Screen
-          name="cashback" // This is the name of the page and must match the url from root
+          name="(cashback)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Cashback',
             title: 'Cashback',
             drawerItemStyle: { display: signedIn ? 'flex' : 'none' },

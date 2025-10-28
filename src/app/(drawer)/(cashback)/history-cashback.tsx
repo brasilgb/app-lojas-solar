@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const Cashback = () => {
+const HistoryCashback = () => {
   return (
     <View>
-      <Text>Cashback</Text>
+      <Text>HistoryCashback</Text>
     </View>
   )
 }
 
-export default Cashback
+export default HistoryCashback

@@ -18,7 +18,8 @@
       "config": {
         "googleMapsApiKey": "AIzaSyDs-4JCmCL-HG9r99SIvNWs6b4Lt4Tw_PI",
         "usesNonExemptEncryption": false
-      }
+      },
+      "bundleIdentifier": "com.loja.solar"
     },
     "android": {
       "adaptiveIcon": {

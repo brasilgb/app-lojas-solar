@@ -21,7 +21,7 @@ const RootLayout = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView className='flex-1 bg-solar-blue-primary'>
-        <StatusBar translucent={true} />
+        <StatusBar translucent={true} style='light' />
         <AuthProvider>
           <Stack>
             <Stack.Screen name='(drawer)' options={{ headerShown: false }} />
