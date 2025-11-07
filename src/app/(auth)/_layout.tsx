@@ -1,73 +1,93 @@
-import React from 'react'
-import { router, Stack } from 'expo-router'
-import StackHeader from '@/components/StackHeader'
+import React from 'react';
+import {router, Stack} from 'expo-router';
+import StackHeader from '@/components/StackHeader';
 
 const AuthLayout = () => {
-  return (
-    <Stack
-      initialRouteName='not-registered'
-      screenOptions={{ 
-        headerShown: false,
-        animation: 'slide_from_bottom'
-      }}
-    >
+    return (
+        <Stack
+            initialRouteName="not-registered"
+            screenOptions={{
+                headerShown: false,
+                animation: 'slide_from_bottom',
+            }}
+        >
+            <Stack.Screen
+                name="sign-in"
+                options={{
+                    headerShown: false,
+                }}
+            />
 
-      <Stack.Screen
-        name="sign-in"
-        options={{
-          headerShown: false
-        }}
-      />
+            <Stack.Screen
+                name="check-password"
+                options={{
+                    headerShown: false,
+                }}
+            />
 
-      <Stack.Screen
-        name="check-password"
-        options={{
-          headerShown: false
-        }}
-      />
+            <Stack.Screen
+                name="register-customer"
+                options={{
+                    headerShown: true,
+                    header: () => (
+                        <StackHeader left={true} lurl={() => router.back()} />
+                    ),
+                }}
+            />
 
-      <Stack.Screen
-        name="register-customer"
-        options={{
-          headerShown: true,
-          header: () => <StackHeader left={true} lurl={() => router.back()} />
-        }}
-      />
+            <Stack.Screen
+                name="not-registered"
+                options={{
+                    headerShown: true,
+                    header: () => (
+                        <StackHeader
+                            right={true}
+                            rurl={() => router.push('/')}
+                        />
+                    ),
+                }}
+            />
 
-      <Stack.Screen
-        name="not-registered"
-        options={{
-          headerShown: true,
-          header: () => <StackHeader right={true} rurl={() => router.push('/')} />
-        }}
-      />
+            <Stack.Screen
+                name="register-password"
+                options={{
+                    headerShown: true,
+                    header: () => (
+                        <StackHeader
+                            right={true}
+                            rurl={() => router.push('/')}
+                        />
+                    ),
+                }}
+            />
 
-      <Stack.Screen
-        name="register-password"
-        options={{
-          headerShown: true,
-          header: () => <StackHeader right={true} rurl={() => router.push('/')} />
-        }}
-      />
+            <Stack.Screen
+                name="registered"
+                options={{
+                    headerShown: true,
+                    header: () => (
+                        <StackHeader
+                            right={true}
+                            rurl={() => router.push('/')}
+                        />
+                    ),
+                }}
+            />
 
-      <Stack.Screen
-        name="registered"
-        options={{
-          headerShown: true,
-          header: () => <StackHeader right={true} rurl={() => router.push('/')} />
-        }}
-      />
+            <Stack.Screen
+                name="password-changed"
+                options={{
+                    headerShown: true,
+                    header: () => (
+                        <StackHeader
+                            right={true}
+                            rurl={() => router.push('/')}
+                        />
+                    ),
+                }}
+            />
+        </Stack>
+    );
+};
 
-      <Stack.Screen
-        name="password-changed"
-        options={{
-          headerShown: true,
-          header: () => <StackHeader right={true} rurl={() => router.push('/')} />
-        }}
-      />
-
-    </Stack>
-  )
-}
-
-export default AuthLayout
+export default AuthLayout;

@@ -1,28 +1,35 @@
-import { View, Text, Alert, Share, Pressable } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import {View, Text, Alert, Share, Pressable} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useLocalSearchParams} from 'expo-router';
 
 import * as Clipboard from 'expo-clipboard';
 import QRCode from 'react-native-qrcode-svg';
 import serviceapp from '@/services/serviceapp';
 import ScreenHeader from '@/components/ScreenHeader';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/Card';
-import { CopyIcon, Share2Icon } from 'lucide-react-native';
-import { maskMoney } from '@/lib/mask';
-import { useAuthContext } from '@/contexts/AppContext';
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/Card';
+import {CopyIcon, Share2Icon} from 'lucide-react-native';
+import {maskMoney} from '@/lib/mask';
+import {useAuthContext} from '@/contexts/AppContext';
 
 const PixPayment = () => {
-    const { user } = useAuthContext();
+    const {user} = useAuthContext();
     const params = useLocalSearchParams();
     const valueOrder = params.valueOrder;
-    const mtoken = user?.token
+    const mtoken = user?.token;
     const [pixOperations, setPixOpertions] = useState<string>('');
 
     useEffect(() => {
         const getPayPix = async () => {
-            const response = await serviceapp.get(`(WS_TRANSACAO_PIX)?token=${mtoken}&tempoPix=3600&valorPix=${valueOrder}&mensagemPix=Pagamento Pix Grupo Solar`,
+            const response = await serviceapp.get(
+                `(WS_TRANSACAO_PIX)?token=${mtoken}&tempoPix=3600&valorPix=${valueOrder}&mensagemPix=Pagamento Pix Grupo Solar`,
             );
-            const { success, message, txid, banco, copiaColaPix } =
+            const {success, message, txid, banco, copiaColaPix} =
                 response.data.resposta;
             if (success) {
                 let dataPay = {
@@ -32,7 +39,7 @@ const PixPayment = () => {
                 sendOrderAtualize(valueOrder, dataPay);
                 setPixOpertions(copiaColaPix);
             } else {
-                Alert.alert('Atenção no pay pix', message, [{ text: 'Ok' }]);
+                Alert.alert('Atenção no pay pix', message, [{text: 'Ok'}]);
                 return;
             }
         };
@@ -74,7 +81,7 @@ const PixPayment = () => {
         const response = await serviceapp.get(
             `(WS_ATUALIZA_ORDEM)?token=91362590064312210014616&numeroOrdem=${orderResponse.numeroOrdem}&statusOrdem=${orderResponse.statusOrdem}&idTransacao=${orderResponse.idTransacao}&tipoPagamento=${orderResponse.tipoPagamento}&urlBoleto=${orderResponse.urlBoleto}`,
         );
-        const { success } = response.data.resposta
+        const {success} = response.data.resposta;
         console.log('pix pago ', success);
         return;
     };
@@ -90,7 +97,12 @@ const PixPayment = () => {
             <View className="p-4 bg-white rounded-t-3xl flex-1">
                 <Card className="items-center bg-white border-gray-300 shadow-sm shadow-slate-900">
                     <CardHeader>
-                        <Text className="text-5xl font-extrabold text-solar-blue-secondary/80">R$ {maskMoney((parseFloat(valueOrder as string).toFixed(2)))}</Text>
+                        <Text className="text-5xl font-extrabold text-solar-blue-secondary/80">
+                            R${' '}
+                            {maskMoney(
+                                parseFloat(valueOrder as string).toFixed(2),
+                            )}
+                        </Text>
                     </CardHeader>
                     <CardTitle className="text-xl text-gray-500 font-normal pb-2">
                         Validade do QRCode 1h(uma hora)
@@ -105,7 +117,10 @@ const PixPayment = () => {
                         )}
                     </CardContent>
                     <CardFooter>
-                        <Text className="text-center text-solar-blue-primary">Use o leitor de QRCode para fazer a transação ou escolha uma opção abaixo.</Text>
+                        <Text className="text-center text-solar-blue-primary">
+                            Use o leitor de QRCode para fazer a transação ou
+                            escolha uma opção abaixo.
+                        </Text>
                     </CardFooter>
                 </Card>
                 <View className="flex-row items-center justify-around gap-4 mt-8">
@@ -114,7 +129,9 @@ const PixPayment = () => {
                             <CardHeader>
                                 <CopyIcon size={60} color={'#0d3b85d5'} />
                             </CardHeader>
-                            <CardTitle className="text-base text-gray-500 font-normal">PIX copia e cola</CardTitle>
+                            <CardTitle className="text-base text-gray-500 font-normal">
+                                PIX copia e cola
+                            </CardTitle>
                         </Card>
                     </Pressable>
                     <Pressable onPress={sharingUrl}>
@@ -122,13 +139,15 @@ const PixPayment = () => {
                             <CardHeader>
                                 <Share2Icon size={60} color={'#0d3b85d5'} />
                             </CardHeader>
-                            <CardTitle className="text-base text-gray-500 font-normal">Compartilhar PIX</CardTitle>
+                            <CardTitle className="text-base text-gray-500 font-normal">
+                                Compartilhar PIX
+                            </CardTitle>
                         </Card>
                     </Pressable>
                 </View>
             </View>
         </View>
-    )
-}
+    );
+};
 
-export default PixPayment
+export default PixPayment;

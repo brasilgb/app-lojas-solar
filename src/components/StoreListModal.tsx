@@ -1,45 +1,52 @@
-import { Text, TouchableOpacity, View, Dimensions, Keyboard } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Input } from './Input';
-import { Modalize } from 'react-native-modalize';
+import {Text, TouchableOpacity, View, Dimensions, Keyboard} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Input} from './Input';
+import {Modalize} from 'react-native-modalize';
 
 interface StoreListProps {
-    dataModal: any;
-    onSelectCity: any;
-    visible: any;
+    dataModal: any[];
+    onSelectCity: (city: string) => void;
+    modalizeRef: React.RefObject<Modalize>;
 }
 
-const StoreListModal = ({ dataModal, visible, onSelectCity }: StoreListProps) => {
-
+const StoreListModal = ({
+    dataModal,
+    modalizeRef,
+    onSelectCity,
+}: StoreListProps) => {
     // Estado para o texto da busca
     const [searchQuery, setSearchQuery] = useState('');
     // Estado para a lista de cidades filtradas
-    const [filteredCities, setFilteredCities] = useState<any>(dataModal);
+    const [filteredCities, setFilteredCities] = useState<any[]>([]);
 
     // useEffect para filtrar a lista sempre que o texto da busca mudar
     useEffect(() => {
-        // Se a busca estiver vazia, mostramos todas as cidades
-        if (searchQuery.trim() === '') {
-            setFilteredCities(dataModal);
-        } else {
-            // Filtra o array CITIES original
-            const newFilteredCities = dataModal.filter((city: any) => (city?.cidade.toLowerCase().includes(searchQuery.toLowerCase())));
-            setFilteredCities(newFilteredCities);
+        if (dataModal) {
+            if (searchQuery.trim() === '') {
+                setFilteredCities(dataModal);
+            } else {
+                const newFilteredCities = dataModal.filter((city: string) =>
+                    city.toLowerCase().includes(searchQuery.toLowerCase()),
+                );
+                setFilteredCities(newFilteredCities);
+            }
         }
-    }, [searchQuery, dataModal]); // O array de dependências faz com que este efeito rode apenas quando 'searchQuery' mudar
+    }, [searchQuery, dataModal]);
 
-    const RenderItem = ({ item, index }: any) => (
+    const RenderItem = ({item, index}: {item: any; index: number}) => (
         <TouchableOpacity
-        key={index}
+            key={index}
             onPress={() => {
-                onSelectCity(item)
-                Keyboard.dismiss()
-                setSearchQuery('')
+                onSelectCity(item);
+                Keyboard.dismiss();
+                setSearchQuery('');
             }}
             className={`flex-row items-center justify-start bg-gray-50 mx-2 border-b border-gray-200`}
         >
             <View className="p-2 w-full">
-                <Text className={`text-sm text-solar-blue-secondary font-roboto font-bold`}>
+                <Text
+                    className={`text-sm text-solar-blue-secondary font-roboto font-bold`}
+                >
                     {item?.cidade}
                 </Text>
             </View>
@@ -50,11 +57,11 @@ const StoreListModal = ({ dataModal, visible, onSelectCity }: StoreListProps) =>
         <Modalize
             modalHeight={Dimensions.get('window').height - 150}
             modalTopOffset={80}
-            ref={visible}
+            ref={modalizeRef}
             HeaderComponent={
-                <View className='py-4 px-3'>
+                <View className="py-4 px-3">
                     <Input
-                        className=''
+                        className=""
                         placeholder="Buscar loja..."
                         placeholderTextColor="#888"
                         value={searchQuery}
@@ -64,10 +71,12 @@ const StoreListModal = ({ dataModal, visible, onSelectCity }: StoreListProps) =>
             }
             flatListProps={{
                 data: filteredCities,
-                keyExtractor: (item: any, index: any) => index,
-                renderItem: ({ item }: { item: any }) => <RenderItem item={item} />,
-                keyboardShouldPersistTaps: "handled",
-                showsVerticalScrollIndicator: false
+                keyExtractor: (item: any, index: any) => `${item}-${index}`,
+                renderItem: ({item, index}: {item: any; index: number}) => (
+                    <RenderItem item={item} index={index} />
+                ),
+                keyboardShouldPersistTaps: 'handled',
+                showsVerticalScrollIndicator: false,
             }}
         />
     );

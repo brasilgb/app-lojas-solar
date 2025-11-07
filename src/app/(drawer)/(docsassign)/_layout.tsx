@@ -1,32 +1,30 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { Stack } from 'expo-router'
-import StackHeader from '@/components/StackHeader'
+import {View, Text} from 'react-native';
+import React from 'react';
+import {Stack} from 'expo-router';
+import StackHeader from '@/components/StackHeader';
 
 const DocsAssignLayout = () => {
     return (
         <Stack>
-
             <Stack.Screen
-                name='docsassign'
+                name="docsassign"
                 options={{
                     header: () => <StackHeader drawer />,
                     headerShown: true,
-                    title: 'Assinar Documentos'
+                    title: 'Assinar Documentos',
                 }}
             />
 
             <Stack.Screen
-                name='view-doc'
+                name="view-doc"
                 options={{
-                    header: () => <StackHeader drawer />,
+                    header: () => <StackHeader close="/docsassign" />,
                     headerShown: true,
-                    title: 'Visualizar Documento'
+                    title: 'Visualizar Documento',
                 }}
             />
-
         </Stack>
-    )
-}
+    );
+};
 
-export default DocsAssignLayout
+export default DocsAssignLayout;

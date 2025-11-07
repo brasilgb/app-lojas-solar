@@ -1,16 +1,21 @@
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { CalendarDaysIcon } from 'lucide-react-native';
+import DateTimePicker, {
+    DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
+import {CalendarDaysIcon} from 'lucide-react-native';
 import moment from 'moment';
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-import { Button } from './Button';
+import React, {useState} from 'react';
+import {Text, View} from 'react-native';
+import {Button} from './Button';
 
 interface AppDateTimePickerProps {
     value: Date;
     onChange: (date: Date) => void;
 }
 
-const AppDateTimePicker = ({ value, onChange: onValueChange }: AppDateTimePickerProps) => {
+const AppDateTimePicker = ({
+    value,
+    onChange: onValueChange,
+}: AppDateTimePickerProps) => {
     const [mode, setMode] = useState<'date' | 'time'>('date');
     const [show, setShow] = useState(false);
 
@@ -27,19 +32,21 @@ const AppDateTimePicker = ({ value, onChange: onValueChange }: AppDateTimePicker
     };
 
     const showDatepicker = () => {
-        showMode("date");
+        showMode('date');
     };
 
     return (
         <>
-            <View className='flex-row items-center gap-4 p-2 bg-white rounded-lg shadow shadow-black'>
-                <Text className='text-lg text-solar-blue-secondary'>{moment(value).format('DD/MM/YYYY')}</Text>
+            <View className="flex-row items-center gap-4 p-2 bg-white rounded-lg shadow shadow-black">
+                <Text className="text-lg text-solar-blue-secondary">
+                    {moment(value).format('DD/MM/YYYY')}
+                </Text>
                 <Button
                     variant={'default'}
                     size={'icon'}
                     onPress={showDatepicker}
                     label={<CalendarDaysIcon size={24} color={'white'} />}
-                    labelClasses='p-0.5'
+                    labelClasses="p-0.5"
                 />
             </View>
             {show && (
@@ -54,7 +61,7 @@ const AppDateTimePicker = ({ value, onChange: onValueChange }: AppDateTimePicker
                 />
             )}
         </>
-    )
-}
+    );
+};
 
-export default AppDateTimePicker
+export default AppDateTimePicker;

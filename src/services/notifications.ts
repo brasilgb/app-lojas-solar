@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 import messaging, {
     FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
-import notifee, { EventType } from '@notifee/react-native';
-import { Linking } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import notifee, {EventType} from '@notifee/react-native';
+import {Linking} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PushNotificationController = (props: any) => {
     const [firebaseToken, setToken] = useState<string | null>(null);
 
     const requestFCMPermission = async () => {
         const authResponse = await messaging().requestPermission();
-        const enabled = authResponse === messaging.AuthorizationStatus.AUTHORIZED;
+        const enabled =
+            authResponse === messaging.AuthorizationStatus.AUTHORIZED;
 
         if (enabled) {
             // Register the device with FCM
             await messaging().registerDeviceForRemoteMessages();
             // Get the token
             const fcmToken = await messaging().getToken();
-            await AsyncStorage.setItem("fcmToken", fcmToken)
+            await AsyncStorage.setItem('fcmToken', fcmToken);
         }
     };
     const onMessageHandler = async (
         remoteMessage: FirebaseMessagingTypes.RemoteMessage,
     ) => {
-        const { notification, data } = remoteMessage;
-
+        const {notification, data} = remoteMessage;
 
         const channelId = await notifee.createChannel({
             id: 'rnpushnotifi-id',
@@ -54,9 +54,9 @@ const PushNotificationController = (props: any) => {
     }, []);
 
     useEffect(() => {
-        const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
+        const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
             if (type === EventType.PRESS) {
-                const { link = null } = detail.notification?.data || {};
+                const {link = null} = detail.notification?.data || {};
 
                 if (link) {
                     Linking.openURL(link as string);
@@ -70,7 +70,7 @@ const PushNotificationController = (props: any) => {
 
     useEffect(() => {
         messaging().onNotificationOpenedApp((remoteMessage: any) => {
-            const { link = null } = remoteMessage.data || {};
+            const {link = null} = remoteMessage.data || {};
 
             if (link) {
                 Linking.openURL(link);
@@ -82,7 +82,7 @@ const PushNotificationController = (props: any) => {
             .getInitialNotification()
             .then((remoteMessage: any) => {
                 if (remoteMessage) {
-                    const { link = null } = remoteMessage.data || {};
+                    const {link = null} = remoteMessage.data || {};
 
                     if (link) {
                         Linking.openURL(link);

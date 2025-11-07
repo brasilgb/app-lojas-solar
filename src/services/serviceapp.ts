@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 
 let BASE_URL = '';
 
 let requestCustom: any;
 let data: any;
-
 
 // 1. Variável para guardar a função de callback
 let onSessionExpired: (() => void) | null = null;
@@ -15,7 +14,6 @@ export const setSessionExpiredCallback = (callback: () => void) => {
     onSessionExpired = callback;
 };
 
-
 const serviceapp = axios.create({
     withCredentials: true,
 });
@@ -23,6 +21,7 @@ const serviceapp = axios.create({
 serviceapp.interceptors.request.use(async request => {
     request.baseURL = process.env.EXPO_PUBLIC_API_URL;
     BASE_URL = `${process.env.EXPO_PUBLIC_API_URL}`;
+
     // request.baseURL = "http://172.16.1.215:9090/servicecomercial/servlet/isCobol/";
     // BASE_URL = "http://172.16.1.215:9090/servicecomercial/servlet/isCobol/";
 
@@ -36,9 +35,33 @@ serviceapp.interceptors.request.use(async request => {
 
 serviceapp.interceptors.response.use(
     response => {
-        const { success, message, token } = response.data.resposta;
-        // A verificação é `token === false` para evitar casos onde o token não está presente na resposta
-        if (token === false) {
+        if (response.data && response.data.resposta) {
+            const {message, token} = response.data.resposta;
+            // A verificação é `token === false` para evitar casos onde o token não está presente na resposta
+            if (token === false) {
+                if (onSessionExpired) {
+                    Alert.alert('Atenção', message, [
+                        {
+                            text: 'Ok',
+                            onPress: () => {
+                                if (onSessionExpired) {
+                                    onSessionExpired();
+                                }
+                            },
+                        },
+                    ]);
+                }
+                // Rejeita a promessa para que a chamada original não continue
+                return Promise.reject(new Error(message || 'Sessão inválida.'));
+            }
+        }
+        return response;
+    },
+    async _error => {
+        if (_error.response && _error.response.status === 401) {
+            const message =
+                _error.response.data.resposta.message ||
+                'Sessão expirada. Faça o login novamente.';
             if (onSessionExpired) {
                 Alert.alert('Atenção', message, [
                     {
@@ -51,12 +74,9 @@ serviceapp.interceptors.response.use(
                     },
                 ]);
             }
-            // Rejeita a promessa para que a chamada original não continue
-            return Promise.reject(new Error(message || 'Sessão inválida.'));
+            return Promise.reject(new Error(message));
         }
-        return response;
-    },
-    async _error => {
+
         console.log('Abrindo sessão com o servidor novamente');
 
         const axiosNew = axios.create({

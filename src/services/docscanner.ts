@@ -12,8 +12,10 @@ const docscanner = axios.create({
 docscanner.interceptors.request.use(async request => {
     // request.baseURL = process.env.EXPO_PUBLIC_API_URL;
     // BASE_URL = `${process.env.EXPO_PUBLIC_API_URL}`;
-    request.baseURL ='https://services.gruposolar.com.br:8086/servicesgruposolar/servlet/isCobol/';
-    BASE_URL ='https://services.gruposolar.com.br:8086/servicesgruposolar/servlet/isCobol/';
+    request.baseURL =
+        'https://services.gruposolar.com.br:8086/servicesgruposolar/servlet/isCobol/';
+    BASE_URL =
+        'https://services.gruposolar.com.br:8086/servicesgruposolar/servlet/isCobol/';
 
     requestCustom = request;
     data = request.data;

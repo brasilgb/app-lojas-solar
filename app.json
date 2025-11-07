@@ -8,11 +8,6 @@
     "scheme": "comlojasolar",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true,
       "config": {
@@ -41,12 +36,35 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "2.0.0"
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "backgroundColor": "#1a9cd9",
+          "imageWidth": 250
+        }
+      ],
       "expo-web-browser",
       "expo-router",
       "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "52d35a9c-4dab-4fe2-9519-1c32bba74e17"
+      }
+    },
+    "owner": "andersonbrodrigues"
   }
 }

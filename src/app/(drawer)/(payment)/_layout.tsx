@@ -1,53 +1,53 @@
-import StackHeader from "@/components/StackHeader";
-import { Stack } from "expo-router";
+import StackHeader from '@/components/StackHeader';
+import {Stack} from 'expo-router';
 
 const PaymentLayout = () => {
     return (
         <Stack
             screenOptions={{
-                animation: 'fade'
+                animation: 'fade',
             }}
-            >
+        >
             <Stack.Screen
-                name='payment'
+                name="payment"
                 options={{
                     header: () => <StackHeader drawer />,
                     headerShown: true,
                     title: 'Pagamentos',
                 }}
             />
-            
+
             <Stack.Screen
-                name='methods'
+                name="methods"
                 options={{
-                    header: () => <StackHeader back close />,
+                    header: () => <StackHeader back close="/payment" />,
                     headerShown: true,
                     title: 'Metordos de Pagamentos',
                 }}
             />
 
             <Stack.Screen
-                name='pixpayment'
+                name="pixpayment"
                 options={{
-                    header: () => <StackHeader close />,
+                    header: () => <StackHeader close="/payment" />,
                     headerShown: true,
                     title: 'Pagamento pix',
                 }}
             />
-            
+
             <Stack.Screen
-                name='cartpayment'
+                name="cartpayment"
                 options={{
-                    header: () => <StackHeader back close />,
+                    header: () => <StackHeader back close="/payment" />,
                     headerShown: true,
                     title: 'Pagamento crédito',
                 }}
             />
-            
+
             <Stack.Screen
-                name='cardbillpaid'
+                name="cardbillpaid"
                 options={{
-                    header: () => <StackHeader close />,
+                    header: () => <StackHeader close="/payment" />,
                     headerShown: true,
                     title: 'Pagamento crédito',
                 }}

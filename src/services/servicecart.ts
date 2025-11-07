@@ -10,8 +10,10 @@ const servicecart = axios.create({
 });
 
 servicecart.interceptors.request.use(async request => {
-    request.baseURL = "https://services.gruposolar.com.br:8086/servicesgruposolar/servlet/isCobol";
-    BASE_URL = "https://services.gruposolar.com.br:8086/servicesgruposolar/servlet/isCobol";
+    request.baseURL =
+        'https://services.gruposolar.com.br:8086/servicesgruposolar/servlet/isCobol';
+    BASE_URL =
+        'https://services.gruposolar.com.br:8086/servicesgruposolar/servlet/isCobol';
 
     requestCustom = request;
     data = request.data;

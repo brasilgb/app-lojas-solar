@@ -1,11 +1,11 @@
-import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
+import {Button} from '@/components/Button';
+import {Input} from '@/components/Input';
 import ScreenHeader from '@/components/ScreenHeader';
-import { maskPhone } from '@/lib/mask';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { View } from 'react-native';
+import {maskPhone} from '@/lib/mask';
+import {router, useLocalSearchParams} from 'expo-router';
+import React, {useEffect} from 'react';
+import {Controller, useForm} from 'react-hook-form';
+import {View} from 'react-native';
 
 interface FormProps {
     motivo: string;
@@ -16,7 +16,13 @@ interface FormProps {
 const DataExclude = () => {
     const params = useLocalSearchParams();
 
-    const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm<FormProps>({
+    const {
+        control,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: {errors},
+    } = useForm<FormProps>({
         defaultValues: {
             motivo: '',
             emailCliente: '',
@@ -35,71 +41,69 @@ const DataExclude = () => {
         reset();
         router.replace({
             pathname: '/data-analise',
-            params: { emailCliente: data.emailCliente }
+            params: {emailCliente: data.emailCliente},
         });
-    }
+    };
 
     return (
-        <View className='bg-solar-blue-primary flex-1'>
-            <ScreenHeader title="Exclusão de dados" subtitle="Preencha o formuário para iniciarmos o processo de exclusão de dados" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
-            <View className='flex-1 bg-white px-4 rounded-t-3xl'>
-                <View className='flex-1 p-2'>
-
-                    <View className='flex-col gap-4 my-4 w-full'>
+        <View className="bg-solar-blue-primary flex-1">
+            <ScreenHeader
+                title="Exclusão de dados"
+                subtitle="Preencha o formuário para iniciarmos o processo de exclusão de dados"
+                classTitle="text-white text-2xl"
+                classSubtitle="text-white text-base text-center"
+            />
+            <View className="flex-1 bg-white px-4 rounded-t-3xl">
+                <View className="flex-1 p-2">
+                    <View className="flex-col gap-4 my-4 w-full">
                         <Controller
                             control={control}
-                            name='motivo'
-                            render={({
-                                field: { onChange, onBlur, value }
-                            }) => (
+                            name="motivo"
+                            render={({field: {onChange, onBlur, value}}) => (
                                 <View>
                                     <Input
-                                        label='Motivo para a exclusão'
+                                        label="Motivo para a exclusão"
                                         onBlur={onBlur}
                                         onChangeText={onChange}
-                                        value={(value)}
+                                        value={value}
                                         multiline
                                         numberOfLines={4}
-                                        textAlignVertical='top'
-                                        inputClasses='h-36'
+                                        textAlignVertical="top"
+                                        inputClasses="h-36"
                                     />
                                 </View>
                             )}
                         />
                     </View>
 
-                    <View className='flex-col gap-4 my-4 w-full'>
+                    <View className="flex-col gap-4 my-4 w-full">
                         <Controller
                             control={control}
-                            name='emailCliente'
-                            render={({
-                                field: { onChange, onBlur, value }
-                            }) => (
+                            name="emailCliente"
+                            render={({field: {onChange, onBlur, value}}) => (
                                 <View>
                                     <Input
-                                        label='E-mail do cliente'
+                                        label="E-mail do cliente"
                                         onBlur={onBlur}
                                         onChangeText={onChange}
                                         value={value}
                                         readOnly
-                                        inputClasses='!text-gray-800'
-                                        labelClasses=''
+                                        inputClasses="!text-gray-800"
+                                        labelClasses=""
                                     />
                                 </View>
                             )}
                         />
                     </View>
 
-                    <View className='flex-col gap-4 my-4 w-full'>
+                    <View className="flex-col gap-4 my-4 w-full">
                         <Controller
                             control={control}
-                            name='celularCliente'
-                            render={({
-                                field: { onChange, onBlur, value }
-                            }) => (
+                            name="celularCliente"
+                            render={({field: {onChange, onBlur, value}}) => (
                                 <View>
                                     <Input
-                                        label='Celular do cliente'
+                                        label="Celular do cliente"
                                         onBlur={onBlur}
                                         onChangeText={onChange}
                                         value={value ? maskPhone(value) : ''}
@@ -108,10 +112,9 @@ const DataExclude = () => {
                                 </View>
                             )}
                         />
-
                     </View>
                 </View>
-                <View className='p-2 py-4 bg-white'>
+                <View className="p-2 py-4 bg-white">
                     <Button
                         label={'Continuar'}
                         variant={'secondary'}
@@ -121,6 +124,6 @@ const DataExclude = () => {
                 </View>
             </View>
         </View>
-    )
-}
-export default DataExclude
+    );
+};
+export default DataExclude;

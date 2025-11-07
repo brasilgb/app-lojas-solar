@@ -1,9 +1,14 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {MaterialIcons} from '@expo/vector-icons';
 import serviceapp from '@/services/serviceapp';
 import AppLoading from '../app-loading';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../accordion';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from '../accordion';
 
 const Comercial = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -37,7 +42,7 @@ const Comercial = () => {
     }, []);
 
     if (loading) {
-        return <AppLoading />
+        return <AppLoading />;
     }
 
     return (
@@ -46,14 +51,22 @@ const Comercial = () => {
                 type="single"
                 collapsible
                 mode={'light'} // 'light' or 'dark' based on system preference
+                key={'comercial'}
             >
                 {comerciais.map((comercial: any) =>
                     comercial.perguntas
                         .filter((com: any) => com.resposta != '')
                         .map((per: any, idx: any) => (
-                            <AccordionItem id={idx} className={`${idx === comerciais.length + 1 ? 'border-0' : 'border-gray-200'}`}>
-                                <AccordionTrigger textClassName='text-sm px-2'>{per?.pergunta}</AccordionTrigger>
-                                <AccordionContent contentClassName='px-2'>{per?.resposta}</AccordionContent>
+                            <AccordionItem
+                                id={idx}
+                                className={`${idx === comerciais.length + 1 ? 'border-0' : 'border-gray-200'}`}
+                            >
+                                <AccordionTrigger textClassName="text-sm px-2">
+                                    {per?.pergunta}
+                                </AccordionTrigger>
+                                <AccordionContent contentClassName="px-2">
+                                    {per?.resposta}
+                                </AccordionContent>
                             </AccordionItem>
                         )),
                 )}

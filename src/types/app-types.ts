@@ -9,13 +9,13 @@ interface CheckPasswordProps {
 }
 
 interface UserProps {
-    cpfcnpj: string
-    senha: string
-    nomeCliente: string
-    codigoCliente: string
-    token: string
-    connected: boolean,
-    continuarLogado: boolean
+    cpfcnpj: string;
+    senha: string;
+    nomeCliente: string;
+    codigoCliente: string;
+    token: string;
+    connected: boolean;
+    continuarLogado: boolean;
 }
 
 interface AuthContextData {
@@ -35,6 +35,4 @@ interface AuthContextData {
     setLoading: any;
 }
 
-export {
-    AuthContextData, CheckPasswordProps, SignInProps, UserProps
-};
+export {AuthContextData, CheckPasswordProps, SignInProps, UserProps};

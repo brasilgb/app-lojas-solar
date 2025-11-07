@@ -1,34 +1,30 @@
-
-
-import { View, Text } from 'react-native'
-import React from 'react'
-import { Stack } from 'expo-router'
-import StackHeader from '@/components/StackHeader'
+import {View, Text} from 'react-native';
+import React from 'react';
+import {Stack} from 'expo-router';
+import StackHeader from '@/components/StackHeader';
 
 const HistoryLayout = () => {
-  return (
-            <Stack>
-
+    return (
+        <Stack>
             <Stack.Screen
-                name='history'
+                name="history"
                 options={{
                     header: () => <StackHeader drawer />,
                     headerShown: true,
-                    title: 'Assinar Documentos'
+                    title: 'Assinar Documentos',
                 }}
             />
 
             <Stack.Screen
-                name='history-itens'
+                name="history-itens"
                 options={{
                     header: () => <StackHeader back />,
                     headerShown: true,
-                    title: 'Visualizar Documento'
+                    title: 'Visualizar Documento',
                 }}
             />
-
         </Stack>
-  )
-}
+    );
+};
 
-export default HistoryLayout
+export default HistoryLayout;

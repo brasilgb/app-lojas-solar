@@ -1,16 +1,26 @@
 import AppLoading from '@/components/app-loading';
+import {Button} from '@/components/Button';
 import ScreenHeader from '@/components/ScreenHeader';
-import { useAuthContext } from '@/contexts/AppContext';
+import {useAuthContext} from '@/contexts/AppContext';
 import serviceapp from '@/services/serviceapp';
-import { Ionicons } from '@expo/vector-icons';
+import {Ionicons} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Alert, Image, Modal, Platform, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import {router, useLocalSearchParams} from 'expo-router';
+import React, {useEffect, useState} from 'react';
+import {
+    Alert,
+    Image,
+    Modal,
+    Platform,
+    Pressable,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 
 const LoadImages = () => {
-    const { disconnect } = useAuthContext();
+    const {disconnect} = useAuthContext();
     const params = useLocalSearchParams();
     const dataToken = params as any;
     const [imageType, setImageType] = useState<string>('');
@@ -23,7 +33,7 @@ const LoadImages = () => {
     const [imageFinance, setImageFinance] = useState<any>('');
 
     const getPermission = async () => {
-        const { granted } = await ImagePicker.requestCameraPermissionsAsync();
+        const {granted} = await ImagePicker.requestCameraPermissionsAsync();
 
         if (!granted) {
             alert('Você precisa dar permissão!');
@@ -35,7 +45,7 @@ const LoadImages = () => {
             setTimeout(async () => {
                 const result = await ImagePicker.launchCameraAsync({
                     base64: true,
-                    mediaTypes: ImagePicker.MediaTypeOptions.All,
+                    mediaTypes: ['images'],
                     allowsEditing: true,
                     aspect: [1, 1],
                     quality: 1,
@@ -47,7 +57,7 @@ const LoadImages = () => {
         if (type === 'gallery') {
             const result = await ImagePicker.launchImageLibraryAsync({
                 base64: true,
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                mediaTypes: ['images'],
                 allowsEditing: true,
                 aspect: [1, 1],
                 quality: 1,
@@ -199,8 +209,8 @@ const LoadImages = () => {
         loadStorage();
     });
 
-    async function storageDocs({ key, imageName, base64 }: any) {
-        storageImages({ key: key, imageName: imageName });
+    async function storageDocs({key, imageName, base64}: any) {
+        storageImages({key: key, imageName: imageName});
         setLoading(true);
         await serviceapp
             .post(`(WS_IMAGENS_CLIENTE)`, {
@@ -212,9 +222,9 @@ const LoadImages = () => {
                 Renda: key == 'imaRenda' ? base64 : '',
             })
             .then(response => {
-                const { success, message, token } = response.data.resposta;
+                const {success, message, token} = response.data.resposta;
                 setLoading(false);
-                
+
                 if (success) {
                     Alert.alert('Sucesso', 'Imagem enviada com sucesso');
                 }
@@ -225,7 +235,7 @@ const LoadImages = () => {
     }
 
     if (loading) {
-        return <AppLoading />
+        return <AppLoading />;
     }
 
     return (
@@ -245,16 +255,14 @@ const LoadImages = () => {
                     onTouchEnd={() => setModalVisible(false)}
                 >
                     <View className="bg-[#f1f1f1eb] w-full rounded-t-3xl border border-white pb-8">
-                        <Text
-                            allowFontScaling={false}
-                            className="text-xl py-2 text-center"
-                        >
+                        <Text className="text-xl py-2 text-center">
                             Selecione a fonte
                         </Text>
                         <View className="border-b border-gray-300 mb-4 mx-4" />
                         <View
-                            className={`flex-row items-center justify-around ${Platform.OS === 'ios' ? 'pb-8' : 'pb-6'
-                                }`}
+                            className={`flex-row items-center justify-around ${
+                                Platform.OS === 'ios' ? 'pb-8' : 'pb-6'
+                            }`}
                         >
                             <TouchableOpacity
                                 className="flex-col items-center p-2 bg-solar-gray-dark rounded-lg"
@@ -265,12 +273,7 @@ const LoadImages = () => {
                                     size={45}
                                     color="#024D9F"
                                 />
-                                <Text
-                                    allowFontScaling={false}
-                                    className="text-xs"
-                                >
-                                    Câmera
-                                </Text>
+                                <Text className="text-xs">Câmera</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 className="flex-col items-center p-2 bg-solar-gray-dark rounded-lg"
@@ -281,21 +284,20 @@ const LoadImages = () => {
                                     size={45}
                                     color="#024D9F"
                                 />
-                                <Text
-                                    allowFontScaling={false}
-                                    className="text-xs"
-                                >
-                                    Galeria
-                                </Text>
+                                <Text className="text-xs">Galeria</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </Modal>
-            <View className='bg-solar-blue-primary flex-1'>
-                <ScreenHeader title="Enviar Documentos" subtitle="Enviar uma selfie e uma foto dos documentos" classTitle='text-white text-2xl' classSubtitle='text-white text-base text-center' />
-                <View className='p-3 bg-white rounded-t-3xl flex-1'>
-
+            <View className="bg-solar-blue-primary flex-1">
+                <ScreenHeader
+                    title="Enviar Documentos"
+                    subtitle="Enviar uma selfie e uma foto dos documentos"
+                    classTitle="text-white text-2xl"
+                    classSubtitle="text-white text-base text-center"
+                />
+                <View className="p-3 bg-white rounded-t-3xl flex-1">
                     <View className="flex-1">
                         <Pressable
                             onPress={() => {
@@ -307,10 +309,7 @@ const LoadImages = () => {
                                 className={`flex-row items-center justify-between py-3 pl-2 text-sm font-medium text-gray-500 border-b border-gray-300`}
                             >
                                 <View className="w-[80%]">
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="text-base font-PoppinsMedium"
-                                    >
+                                    <Text className="text-base font-PoppinsMedium">
                                         {contentUpload[0].Description}
                                     </Text>
                                 </View>
@@ -318,14 +317,12 @@ const LoadImages = () => {
                                     {imageSelfie ? (
                                         <Image
                                             className="w-12 h-12"
-                                            source={{ uri: imageSelfie }}
+                                            source={{uri: imageSelfie}}
                                         />
                                     ) : (
                                         <Image
                                             className="w-12 h-12"
-                                            source={
-                                                contentUpload[0].Icon
-                                            }
+                                            source={contentUpload[0].Icon}
                                         />
                                     )}
                                 </View>
@@ -342,10 +339,7 @@ const LoadImages = () => {
                                 className={`flex-row items-center justify-between py-3 pl-2 text-sm font-medium text-gray-500 border-b border-gray-300`}
                             >
                                 <View className="w-[80%]">
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="text-base font-PoppinsMedium"
-                                    >
+                                    <Text className="text-base font-PoppinsMedium">
                                         {contentUpload[1].Description}
                                     </Text>
                                 </View>
@@ -360,9 +354,7 @@ const LoadImages = () => {
                                     ) : (
                                         <Image
                                             className="w-12 h-12"
-                                            source={
-                                                contentUpload[1].Icon
-                                            }
+                                            source={contentUpload[1].Icon}
                                         />
                                     )}
                                 </View>
@@ -379,10 +371,7 @@ const LoadImages = () => {
                                 className={`flex-row items-center justify-between py-3 pl-2 text-sm font-medium text-gray-500 border-b border-gray-300`}
                             >
                                 <View className="w-[80%]">
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="text-base font-PoppinsMedium"
-                                    >
+                                    <Text className="text-base font-PoppinsMedium">
                                         {contentUpload[2].Description}
                                     </Text>
                                 </View>
@@ -397,9 +386,7 @@ const LoadImages = () => {
                                     ) : (
                                         <Image
                                             className="w-12 h-12"
-                                            source={
-                                                contentUpload[2].Icon
-                                            }
+                                            source={contentUpload[2].Icon}
                                         />
                                     )}
                                 </View>
@@ -416,10 +403,7 @@ const LoadImages = () => {
                                 className={`flex-row items-center justify-between py-3 pl-2 text-sm font-medium text-gray-500 border-b border-gray-300`}
                             >
                                 <View className="w-[80%]">
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="text-base font-PoppinsMedium"
-                                    >
+                                    <Text className="text-base font-PoppinsMedium">
                                         {contentUpload[3].Description}
                                     </Text>
                                 </View>
@@ -427,14 +411,12 @@ const LoadImages = () => {
                                     {imageAddress ? (
                                         <Image
                                             className="w-12 h-12"
-                                            source={{ uri: imageAddress }}
+                                            source={{uri: imageAddress}}
                                         />
                                     ) : (
                                         <Image
                                             className="w-12 h-12"
-                                            source={
-                                                contentUpload[3].Icon
-                                            }
+                                            source={contentUpload[3].Icon}
                                         />
                                     )}
                                 </View>
@@ -451,10 +433,7 @@ const LoadImages = () => {
                                 className={`flex-row items-center justify-between py-3 pl-2 text-sm font-medium text-gray-500 border-b border-gray-300`}
                             >
                                 <View className="w-[80%]">
-                                    <Text
-                                        allowFontScaling={false}
-                                        className="text-base font-PoppinsMedium"
-                                    >
+                                    <Text className="text-base font-PoppinsMedium">
                                         {contentUpload[4].Description}
                                     </Text>
                                 </View>
@@ -462,61 +441,37 @@ const LoadImages = () => {
                                     {imageFinance ? (
                                         <Image
                                             className="w-12 h-12"
-                                            source={{ uri: imageFinance }}
+                                            source={{uri: imageFinance}}
                                         />
                                     ) : (
                                         <Image
                                             className="w-12 h-12"
-                                            source={
-                                                contentUpload[4].Icon
-                                            }
+                                            source={contentUpload[4].Icon}
                                         />
                                     )}
                                 </View>
                             </View>
                         </Pressable>
                     </View>
-                    <TouchableOpacity
-                        className={`flex items-center justify-center my-6 ${Platform.OS == 'ios'
-                            ? 'shadow-sm shadow-gray-300'
-                            : 'shadow-sm shadow-black'
-                            } py-3 rounded-full border-2 border-white  ${imageSelfie &&
-                                imageDocument &&
-                                imageAssignature &&
-                                imageAddress &&
-                                imageFinance
-                                ? ' bg-solar-orange-primary'
-                                : 'bg-gray-200'
-                            }`}
-                        onPress={() => router.push('/images-sent')
-                        }
+                    <Button
+                        label="Continuar"
+                        size={'default'}
+                        variant={'secondary'}
+                        onPress={() => router.push('/images-sent')}
                         disabled={
                             imageSelfie &&
-                                imageDocument &&
-                                imageAssignature &&
-                                imageAddress &&
-                                imageFinance
+                            imageDocument &&
+                            imageAssignature &&
+                            imageAddress &&
+                            imageFinance
                                 ? false
                                 : true
                         }
-                    >
-                        <Text
-                            className={`text-lg  ${imageSelfie &&
-                                imageDocument &&
-                                imageAssignature &&
-                                imageAddress &&
-                                imageFinance
-                                ? ''
-                                : 'text-gray-400'
-                                }`}
-                        >
-                            Continuar
-                        </Text>
-                    </TouchableOpacity>
+                    />
                 </View>
             </View>
         </>
-    )
-}
+    );
+};
 
-export default LoadImages
+export default LoadImages;
