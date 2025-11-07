@@ -1,13 +1,13 @@
-import {Card, CardHeader} from '@/components/Card';
+import { Card, CardHeader } from '@/components/Card';
 import ScreenHeader from '@/components/ScreenHeader';
-import {useAuthContext} from '@/contexts/AppContext';
+import { useAuthContext } from '@/contexts/AppContext';
 import serviceapp from '@/services/serviceapp';
-import {useLocalSearchParams} from 'expo-router';
-import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 
 const AssistanceDetail = () => {
-    const {user, disconnect} = useAuthContext();
+    const { user, disconnect } = useAuthContext();
     const [loading, setLoading] = useState<boolean>(false);
     const params = useLocalSearchParams();
     const dataAssistance = params as any;
@@ -22,7 +22,7 @@ const AssistanceDetail = () => {
                     `(WS_PROTOCOLO_DETALHE)?token=${user?.token}&filial=${dataAssistance.filial}&nProtocolo=${dataAssistance.nProtocolo}`,
                 )
                 .then(response => {
-                    const {token, message, data} = response.data.resposta;
+                    const { token, message, data } = response.data.resposta;
 
                     setDetails(data);
                 })
@@ -77,18 +77,16 @@ const AssistanceDetail = () => {
                                     (e: any, i: number, row: any) => (
                                         <View
                                             key={i}
-                                            className={`flex-col items-left ${
-                                                i + 1 === row.length
+                                            className={`flex-col items-left ${i + 1 === row.length
                                                     ? ''
                                                     : 'mb-8'
-                                            } ml-4`}
+                                                } ml-4`}
                                         >
                                             <View
-                                                className={`absolute w-6 h-6 rounded-full top-0 -left-7 ${
-                                                    i + 1 === row.length
+                                                className={`absolute w-6 h-6 rounded-full top-0 -left-7 ${i + 1 === row.length
                                                         ? 'bg-solar-orange-primary'
                                                         : 'bg-gray-400'
-                                                } border-2 border-gray-200`}
+                                                    } border-2 border-gray-200`}
                                             />
                                             <Text className="text-sm font-medium text-solar-blue-secondary ml-2">
                                                 {e?.xEventos}

@@ -20,7 +20,7 @@ const ContactUs = () => {
                 </View>
 
                 <View className="flex-1 items-center">
-                    <Text className="text-lg text-solar-blue-secondary font-PoppinsRegular my-4">
+                    <Text className="text-lg text-solar-blue-secondary my-4">
                         Para dúvidas, reclamações ou observações
                     </Text>
 
@@ -30,18 +30,18 @@ const ContactUs = () => {
                     <Text className="text-lg font-medium text-solar-blue-secondary py-5">
                         sac@lojasolar.com.br
                     </Text>
-                    <Text className="text-lg font-PoppinsRegular text-solar-blue-secondary">
+                    <Text className="text-lg text-solar-blue-secondary">
                         Av. Duque de Caxias,385
                     </Text>
-                    <Text className="text-lg font-PoppinsRegular text-solar-blue-secondary">
+                    <Text className="text-lg text-solar-blue-secondary">
                         Centro - Salvador do Sul - RS
                     </Text>
-                    <Text className="text-lg font-PoppinsRegular text-solar-blue-secondary">
+                    <Text className="text-lg text-solar-blue-secondary">
                         CEP: 95750-000
                     </Text>
                 </View>
 
-                <Text className="text-2xl font-medium text-solar-blue-secondary pt-4 text-center pb-2">
+                <Text className="text-sm font-medium text-solar-blue-secondary pt-4 text-center pb-2">
                     v{process.env.EXPO_PUBLIC_APP_VERSION}
                 </Text>
             </View>

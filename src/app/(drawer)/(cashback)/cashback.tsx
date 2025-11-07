@@ -1,19 +1,19 @@
 import AppDateTimePicker from '@/components/AppDateTimePicker';
-import {Button} from '@/components/Button';
+import { Button } from '@/components/Button';
 import ScreenHeader from '@/components/ScreenHeader';
-import {useAuthContext} from '@/contexts/AppContext';
-import {maskMoney} from '@/lib/mask';
+import { useAuthContext } from '@/contexts/AppContext';
+import { maskMoney } from '@/lib/mask';
 import serviceapp from '@/services/serviceapp';
-import {FlashList} from '@shopify/flash-list';
-import {router, useFocusEffect} from 'expo-router';
-import {X} from 'lucide-react-native';
+import { FlashList } from '@shopify/flash-list';
+import { router, useFocusEffect } from 'expo-router';
+import { X } from 'lucide-react-native';
 import moment from 'moment';
-import React, {use, useCallback, useEffect, useRef, useState} from 'react';
-import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
-import {Modalize} from 'react-native-modalize';
+import React, { use, useCallback, useEffect, useRef, useState } from 'react';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import { Modalize } from 'react-native-modalize';
 
 const Cashback = () => {
-    const {user} = useAuthContext();
+    const { user } = useAuthContext();
     const [loading, setLoading] = useState<boolean>(false);
     const [historicoCashback, setHisoricoCashback] = useState<any>([]);
     const [itemsModal, setItemsModal] = useState<any>([]);
@@ -91,7 +91,7 @@ const Cashback = () => {
         getItensNota();
     }, [itemsModal]);
 
-    const renderItem = ({item}: any) => (
+    const renderItem = ({ item }: any) => (
         <>
             {item.debcre === 'C' && (
                 <TouchableOpacity
@@ -100,7 +100,7 @@ const Cashback = () => {
                         setItemsModal(item);
                     }}
                     className="flex-1 m-1 rounded-lg py-0.5 px-2 my-1 z-[1000] border border-solar-green-primary bg-white"
-                    style={{maxWidth: '100%'}}
+                    style={{ maxWidth: '100%' }}
                 >
                     <View className="flex-row items-center justify-between">
                         <View className="bg-solar-green-primary w-5 h-5 rounded-full" />
@@ -122,7 +122,7 @@ const Cashback = () => {
             {item.debcre === 'D' && (
                 <View
                     className="flex-1 m-1 rounded-lg py-0.5 px-2 my-1 border border-solar-red-primary bg-white"
-                    style={{maxWidth: '100%'}}
+                    style={{ maxWidth: '100%' }}
                 >
                     <View className="flex-row items-center justify-between">
                         <View className="bg-solar-red-primary w-5 h-5 rounded-full" />
@@ -144,7 +144,7 @@ const Cashback = () => {
         </>
     );
 
-    const RenderItemsNota = ({item}: any) => (
+    const RenderItemsNota = ({ item }: any) => (
         <View className="flex-col bg-solar-blue-primary rounded-md p-2 my-1 mx-4">
             <View className="flex-row items-center justify-between mb-1 border-b border-white/20 pb-1">
                 <Text className="flex-1 text-sm font-semibold text-white border-r border-white/20 pr-1.5">
@@ -220,7 +220,7 @@ const Cashback = () => {
                     <FlashList
                         data={historicoCashback?.data}
                         renderItem={renderItem}
-                        contentContainerStyle={{paddingBottom: 10}}
+                        contentContainerStyle={{ paddingBottom: 10 }}
                         keyboardShouldPersistTaps={'always'}
                         showsVerticalScrollIndicator={false}
                         onRefresh={getHistoricoCashback}
@@ -247,12 +247,7 @@ const Cashback = () => {
                 ref={modalizeRef}
                 HeaderComponent={
                     <View className="flex-col items-center justify-between mb-4 border-b border-gray-300 py-4">
-                        <Button
-                            label={<X size={25} color={'white'} />}
-                            onPress={() => modalizeRef.current?.close()}
-                            className="bg-solar-red-primary items-center justify-center rounded-full"
-                            labelClasses="!text-white"
-                        />
+
                         <Text className="text-2xl text-solar-blue-secondary py-4">
                             Itens da nota fiscal
                         </Text>
@@ -269,10 +264,20 @@ const Cashback = () => {
                         </View>
                     </View>
                 }
+                FooterComponent={
+                    <View className='flex-row justify-center p-2'>
+                        <Button
+                            variant={'secondary'}
+                            label={<X size={25} color={'white'} />}
+                            onPress={() => modalizeRef.current?.close()}
+                            className="bg-solar-red-primary items-center justify-center rounded-full w-14 h-14"
+                        />
+                    </View>
+                }
                 flatListProps={{
                     data: itensNota,
                     keyExtractor: (item: any, index: any) => `${item}-${index}`,
-                    renderItem: ({item, index}: {item: any; index: number}) => (
+                    renderItem: ({ item, index }: { item: any; index: number }) => (
                         <RenderItemsNota item={item} index={index} />
                     ),
                     keyboardShouldPersistTaps: 'handled',
