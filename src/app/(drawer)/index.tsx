@@ -1,5 +1,5 @@
 import HistoryButton from '@/components/HistoryButton';
-import {useAuthContext} from '@/contexts/AppContext';
+import { useAuthContext } from '@/contexts/AppContext';
 import {
     BanknoteArrowDownIcon,
     HandCoinsIcon,
@@ -12,7 +12,7 @@ import {
     UserIcon,
     WrenchIcon,
 } from 'lucide-react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
     Image,
     Platform,
@@ -22,13 +22,14 @@ import {
     Dimensions,
     ActivityIndicator,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
-import Carousel, {Pagination} from 'react-native-snap-carousel-v4';
+import Carousel, { Pagination } from 'react-native-snap-carousel-v4';
 import serviceapp from '@/services/serviceapp';
 import AppLoading from '@/components/app-loading';
+import { useFocusEffect } from 'expo-router';
 
-const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 interface CarouselRenderItemProps {
     item: any;
@@ -36,7 +37,7 @@ interface CarouselRenderItemProps {
 }
 
 const Home = () => {
-    const {signedIn} = useAuthContext();
+    const { signedIn } = useAuthContext();
     const isCarousel: any = useRef(null);
     const [index, setIndex] = useState(0);
     const [carrocelData, setCarrocelData] = useState<any>([]);
@@ -50,24 +51,27 @@ const Home = () => {
         });
     };
 
-    useEffect(() => {
-        async function getCarrocel() {
-            setLoading(true);
-            await serviceapp
-                .get(`(WS_CARROCEL_PROMOCAO)`)
-                .then(response => {
-                    const {data} = response.data.resposta;
-                    setCarrocelData(data.carrocel);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-                .finally(() => setLoading(false));
-        }
-        getCarrocel();
-    }, []);
+    async function getCarrocel() {
+        setLoading(true);
+        await serviceapp
+            .get(`(WS_CARROCEL_PROMOCAO)`)
+            .then(response => {
+                const { data } = response.data.resposta;
+                setCarrocelData(data.carrocel);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => setLoading(false));
+    }
 
-    const CarouselCardItem = ({item}: CarouselRenderItemProps) => (
+    useFocusEffect(
+        useCallback(() => {
+            getCarrocel();
+        }, []),
+    );
+
+    const CarouselCardItem = ({ item }: CarouselRenderItemProps) => (
         <View className="flex-1 items-center justify-center w-full">
             <View className="bg-solar-gray-dark w-full">
                 <TouchableOpacity
@@ -75,7 +79,7 @@ const Home = () => {
                     onPress={() => handlePressButtonAsync(item.carLink)}
                 >
                     <Image
-                        source={{uri: item.carLinkImagem}}
+                        source={{ uri: item.carLinkImagem }}
                         className="h-full w-full"
                         resizeMode="contain"
                     />
@@ -91,14 +95,15 @@ const Home = () => {
                     <ActivityIndicator size="large" color="#1a9cd9" />
                 </View>
             ) : (
-                <View className="z-50 h-[calc(100vh_-_39.9vh)] border-t border-y-solar-green-primary items-center justify-center">
+                <View className="z-50 h-[calc(100vh_-_39.9vh)] border-t border-y-solar-green-primary items-center justify-center bg-solar-green-primary">
+
                     <Carousel
                         vertical={false}
                         layout="default"
                         layoutCardOffset={9}
                         ref={isCarousel}
                         data={carrocelData as any}
-                        renderItem={({item, index}) => (
+                        renderItem={({ item, index }) => (
                             <CarouselCardItem item={item} index={index} />
                         )}
                         sliderWidth={viewportWidth}
@@ -114,6 +119,7 @@ const Home = () => {
                         loop
                         hasParallaxImages={true}
                     />
+
                     <View className="w-full z-50 border-y border-y-solar-green-primary shadow-md shadow-gray-800">
                         <Pagination
                             dotsLength={carrocelData}
@@ -141,7 +147,7 @@ const Home = () => {
             <ScrollView className="bg-white">
                 <View className="flex-row flex-wrap items-start justify-between gap-3 p-3">
                     <TouchableOpacity
-                        style={{elevation: 2}}
+                        style={{ elevation: 2 }}
                         onPress={() =>
                             handlePressButtonAsync(
                                 'https://www.lojasolar.com.br/',

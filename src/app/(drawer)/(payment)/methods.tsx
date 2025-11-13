@@ -6,21 +6,21 @@ import {
     Alert,
     TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
-import {router, useLocalSearchParams} from 'expo-router';
+import React, { useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
 import ScreenHeader from '@/components/ScreenHeader';
-import {Card, CardContent, CardTitle} from '@/components/Card';
-import {maskMoney} from '@/lib/mask';
-import {CreditCardIcon} from 'lucide-react-native';
+import { Card, CardContent, CardTitle } from '@/components/Card';
+import { maskMoney } from '@/lib/mask';
+import { CreditCardIcon } from 'lucide-react-native';
 import serviceapp from '@/services/serviceapp';
-import {useAuthContext} from '@/contexts/AppContext';
+import { useAuthContext } from '@/contexts/AppContext';
 
 const methods = () => {
-    const {user} = useAuthContext();
+    const { user } = useAuthContext();
     const params = useLocalSearchParams();
     const [loading, setLoading] = useState<boolean>(false);
 
-    const {dataOrder, totalAmount} = params;
+    const { dataOrder, totalAmount } = params;
     const order = JSON.parse(dataOrder as any);
     const mtoken = user?.token;
 
@@ -40,11 +40,11 @@ const methods = () => {
                     cvvCartao: '',
                 },
             });
-            const {success, message, data, token} = response.data.resposta;
+            const { success, message, data, token } = response.data.resposta;
 
             router.push({
                 pathname: '/(drawer)/(payment)/pixpayment',
-                params: {valueOrder: totalAmount},
+                params: { valueOrder: totalAmount },
             });
         } catch (error) {
             console.log(error);
