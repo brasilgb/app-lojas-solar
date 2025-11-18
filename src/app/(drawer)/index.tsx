@@ -81,7 +81,8 @@ const Home = () => {
                     <Image
                         source={{ uri: item.carLinkImagem }}
                         className="h-full w-full"
-                        resizeMode="contain"
+                        defaultSource={require('@/assets/images/default-slide.png')}
+                        style={{ width: viewportWidth, height: 410, resizeMode: 'contain' }}
                     />
                 </TouchableOpacity>
             </View>
@@ -91,11 +92,11 @@ const Home = () => {
     return (
         <View className="flex-1 bg-white">
             {loading && carrocelData.length === 0 ? (
-                <View className="z-50 h-[calc(100vh_-_39.9vh)] border-t border-y-solar-green-primary items-center justify-center">
+                <View className="z-50 h-[410] border-t border-t-solar-green-primary items-center justify-center">
                     <ActivityIndicator size="large" color="#1a9cd9" />
                 </View>
             ) : (
-                <View className="z-50 h-[calc(100vh_-_39.9vh)] border-t border-y-solar-green-primary items-center justify-center bg-solar-green-primary">
+                <View className="z-50 h-[410] border-t border-t-solar-green-primary items-center justify-center bg-solar-green-primary">
 
                     <Carousel
                         vertical={false}
@@ -120,23 +121,19 @@ const Home = () => {
                         hasParallaxImages={true}
                     />
 
-                    <View className="w-full z-50 border-y border-y-solar-green-primary shadow-md shadow-gray-800">
+                    <View className="w-full hidden z-50 border-y border-y-solar-green-primary shadow-md shadow-gray-800">
                         <Pagination
                             dotsLength={carrocelData}
                             activeDotIndex={index}
                             carouselRef={isCarousel}
                             dotStyle={{
                                 width: 20,
-                                height: 20,
                                 borderRadius: 50,
                                 marginTop: 15,
                                 backgroundColor: '#bccf00',
                             }}
-                            inactiveDotOpacity={0.4}
-                            inactiveDotScale={0.6}
-                            tappableDots={true}
                             containerStyle={{
-                                height: 15,
+                                height: 5,
                                 backgroundColor: '#0380b9',
                             }}
                         />
@@ -144,7 +141,7 @@ const Home = () => {
                 </View>
             )}
 
-            <ScrollView className="bg-white">
+            <ScrollView className="bg-white border-t border-y-solar-green-primary">
                 <View className="flex-row flex-wrap items-start justify-between gap-3 p-3">
                     <TouchableOpacity
                         style={{ elevation: 2 }}

@@ -19,14 +19,14 @@ const serviceapp = axios.create({
 });
 
 serviceapp.interceptors.request.use(async request => {
-    request.baseURL = process.env.EXPO_PUBLIC_API_URL;
-    BASE_URL = `${process.env.EXPO_PUBLIC_API_URL}`;
+    // request.baseURL = process.env.EXPO_PUBLIC_API_URL;
+    // BASE_URL = `${process.env.EXPO_PUBLIC_API_URL}`;
 
     // request.baseURL = "http://172.16.1.215:9090/servicecomercial/servlet/isCobol/";
     // BASE_URL = "http://172.16.1.215:9090/servicecomercial/servlet/isCobol/";
 
-    // request.baseURL = "http://172.16.1.67:9090/servicecomercial/servlet/isCobol/";
-    // BASE_URL = "http://172.16.1.67:9090/servicecomercial/servlet/isCobol/";
+    request.baseURL = "http://172.16.1.67:9090/servicecomercial/servlet/isCobol/";
+    BASE_URL = "http://172.16.1.67:9090/servicecomercial/servlet/isCobol/";
 
     requestCustom = request;
     data = request.data;

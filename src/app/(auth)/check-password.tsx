@@ -19,9 +19,6 @@ const CheckPassword = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const {checkPassword} = useAuthContext();
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [modalMessage, setModalMessage] = useState<string>('');
-    const [modalTitle, setModalTitle] = useState<string>('');
 
     const {
         control,
@@ -53,9 +50,6 @@ const CheckPassword = () => {
             Keyboard.dismiss();
             const checked: any = await checkPassword(datacheck);
             if (checked) {
-                setModalVisible(true);
-                setModalMessage(checked);
-                setModalTitle('Erro!');
                 reset();
             }
         } catch (error) {
@@ -67,12 +61,6 @@ const CheckPassword = () => {
 
     return (
         <AuthLayout>
-            <MessageAlert
-                visible={modalVisible}
-                onClose={setModalVisible}
-                title={modalTitle}
-                message={modalMessage}
-            />
             <ScreenHeader
                 title={params?.nomeCliente as string}
                 subtitle="Falta pouco, agora digite sua senha."
