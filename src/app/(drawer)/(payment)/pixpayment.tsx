@@ -1,11 +1,7 @@
-import {View, Text, Alert, Share, Pressable} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useLocalSearchParams} from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Alert, Pressable, Share, Text, View } from 'react-native';
 
-import * as Clipboard from 'expo-clipboard';
-import QRCode from 'react-native-qrcode-svg';
-import serviceapp from '@/services/serviceapp';
-import ScreenHeader from '@/components/ScreenHeader';
 import {
     Card,
     CardContent,
@@ -13,15 +9,20 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/Card';
-import {CopyIcon, Share2Icon} from 'lucide-react-native';
-import {maskMoney} from '@/lib/mask';
-import {useAuthContext} from '@/contexts/AppContext';
+import ScreenHeader from '@/components/ScreenHeader';
+import { useAuthContext } from '@/contexts/AppContext';
+import { maskMoney } from '@/lib/mask';
+import serviceapp from '@/services/serviceapp';
+import * as Clipboard from 'expo-clipboard';
+import { CopyIcon, Share2Icon } from 'lucide-react-native';
+import QRCode from 'react-native-qrcode-svg';
 
 const PixPayment = () => {
     const {user} = useAuthContext();
     const params = useLocalSearchParams();
     const valueOrder = params.valueOrder;
     const mtoken = user?.token;
+
     const [pixOperations, setPixOpertions] = useState<string>('');
 
     useEffect(() => {

@@ -2,6 +2,7 @@ import {useAuthContext} from '@/contexts/AppContext';
 import {useLocalSearchParams} from 'expo-router';
 import {PhoneCall, RouteIcon} from 'lucide-react-native';
 import React, {useRef, useState} from 'react';
+
 import {
     Alert,
     Image,

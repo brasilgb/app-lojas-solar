@@ -1,5 +1,8 @@
 import HistoryButton from '@/components/HistoryButton';
 import { useAuthContext } from '@/contexts/AppContext';
+import serviceapp from '@/services/serviceapp';
+import { useFocusEffect } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import {
     BanknoteArrowDownIcon,
     HandCoinsIcon,
@@ -7,34 +10,25 @@ import {
     MapPinIcon,
     PenLineIcon,
     PhoneCallIcon,
-    ScanBarcodeIcon,
     ShoppingBasket,
     UserIcon,
-    WrenchIcon,
+    WrenchIcon
 } from 'lucide-react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
+    ActivityIndicator,
+    Dimensions,
     Image,
     Platform,
+    Text,
     TouchableOpacity,
     View,
-    Text,
-    Dimensions,
-    ActivityIndicator,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import * as WebBrowser from 'expo-web-browser';
-import Carousel, { Pagination } from 'react-native-snap-carousel-v4';
-import serviceapp from '@/services/serviceapp';
-import AppLoading from '@/components/app-loading';
-import { useFocusEffect } from 'expo-router';
+import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
-interface CarouselRenderItemProps {
-    item: any;
-    index: number;
-}
 
 const Home = () => {
     const { signedIn } = useAuthContext();
@@ -42,6 +36,7 @@ const Home = () => {
     const [index, setIndex] = useState(0);
     const [carrocelData, setCarrocelData] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const carouselRef = useRef<ICarouselInstance>(null);
 
     let colorBar = Platform.OS === 'ios' ? 'rgba(0, 162, 227, 0)' : '#1a9cd9';
     const handlePressButtonAsync = async (url: any) => {
@@ -71,7 +66,7 @@ const Home = () => {
         }, []),
     );
 
-    const CarouselCardItem = ({ item }: CarouselRenderItemProps) => (
+    const CarouselCardItem = ({ item }: { item: any }) => (
         <View className="flex-1 items-center justify-center w-full">
             <View className="bg-solar-gray-dark w-full">
                 <TouchableOpacity
@@ -80,7 +75,6 @@ const Home = () => {
                 >
                     <Image
                         source={{ uri: item.carLinkImagem }}
-                        className="h-full w-full"
                         defaultSource={require('@/assets/images/default-slide.png')}
                         style={{ width: viewportWidth, height: 410, resizeMode: 'contain' }}
                     />
@@ -96,48 +90,17 @@ const Home = () => {
                     <ActivityIndicator size="large" color="#1a9cd9" />
                 </View>
             ) : (
-                <View className="z-50 h-[410] border-t border-t-solar-green-primary items-center justify-center bg-solar-green-primary">
-
+                <View className="h-[410] border-t border-t-solar-green-primary items-center justify-center bg-solar-green-primary">
                     <Carousel
-                        vertical={false}
-                        layout="default"
-                        layoutCardOffset={9}
-                        ref={isCarousel}
-                        data={carrocelData as any}
-                        renderItem={({ item, index }) => (
-                            <CarouselCardItem item={item} index={index} />
-                        )}
-                        sliderWidth={viewportWidth}
-                        itemWidth={viewportWidth}
-                        inactiveSlideShift={0}
-                        useScrollView={true}
+                        loop={true}
+                        width={viewportWidth}
+                        height={410}
+                        autoPlay={true}
+                        autoPlayInterval={3000}
+                        data={carrocelData}
                         onSnapToItem={(index: any) => setIndex(index)}
-                        autoplay={true}
-                        autoplayDelay={1500}
-                        autoplayInterval={4000}
-                        inactiveSlideScale={1}
-                        inactiveSlideOpacity={1}
-                        loop
-                        hasParallaxImages={true}
+                        renderItem={({ item }) => <CarouselCardItem item={item} />}
                     />
-
-                    <View className="w-full hidden z-50 border-y border-y-solar-green-primary shadow-md shadow-gray-800">
-                        <Pagination
-                            dotsLength={carrocelData}
-                            activeDotIndex={index}
-                            carouselRef={isCarousel}
-                            dotStyle={{
-                                width: 20,
-                                borderRadius: 50,
-                                marginTop: 15,
-                                backgroundColor: '#bccf00',
-                            }}
-                            containerStyle={{
-                                height: 5,
-                                backgroundColor: '#0380b9',
-                            }}
-                        />
-                    </View>
                 </View>
             )}
 
@@ -150,7 +113,7 @@ const Home = () => {
                                 'https://www.lojasolar.com.br/',
                             )
                         }
-                        className={`w-[112px] h-[90px] bg-solar-green-primary rounded-lg items-center justify-around shadow-md shadow-gray-800 border border-solar-blue-secundary`}
+                        className={`w-[112px] h-[90px] bg-solar-green-primary rounded-lg items-center justify-around shadow-md shadow-gray-800 border border-solar-blue-secondary`}
                     >
                         <Text
                             className={`text-sm text-solar-blue-secundary font-RobotoRegular`}
@@ -162,7 +125,7 @@ const Home = () => {
 
                     <HistoryButton
                         bgButton="bg-solar-green-primary"
-                        colorText="text-solar-blue-secundary"
+                        colorText="text-solar-blue-secondary"
                         icon={<PenLineIcon size={45} color={'#0d3b85'} />}
                         label="Assinar doc."
                         url={!signedIn ? '/sign-in' : '/docsassign'}
@@ -170,7 +133,7 @@ const Home = () => {
 
                     <HistoryButton
                         bgButton="bg-solar-green-primary"
-                        colorText="text-solar-blue-secundary"
+                        colorText="text-solar-blue-secondary"
                         icon={<HandCoinsIcon size={45} color={'#0d3b85'} />}
                         label="Pagamentos"
                         url={!signedIn ? '/sign-in' : '/payment'}
@@ -178,7 +141,7 @@ const Home = () => {
 
                     <HistoryButton
                         bgButton="bg-solar-green-primary"
-                        colorText="text-solar-blue-secundary"
+                        colorText="text-solar-blue-secondary"
                         icon={
                             <BanknoteArrowDownIcon
                                 size={45}
@@ -191,7 +154,7 @@ const Home = () => {
 
                     <HistoryButton
                         bgButton="bg-solar-green-primary"
-                        colorText="text-solar-blue-secundary"
+                        colorText="text-solar-blue-secondary"
                         icon={<MapPinIcon size={45} color={'#0d3b85'} />}
                         label="Lojas"
                         url={'(stores)'}
@@ -199,7 +162,7 @@ const Home = () => {
 
                     <HistoryButton
                         bgButton="bg-solar-green-primary"
-                        colorText="text-solar-blue-secundary"
+                        colorText="text-solar-blue-secondary"
                         icon={<WrenchIcon size={45} color={'#0d3b85'} />}
                         label="Assistência"
                         url={!signedIn ? '/sign-in' : '/assistance'}
@@ -207,7 +170,7 @@ const Home = () => {
 
                     <HistoryButton
                         bgButton="bg-solar-green-primary"
-                        colorText="text-solar-blue-secundary"
+                        colorText="text-solar-blue-secondary"
                         icon={<PhoneCallIcon size={45} color={'#0d3b85'} />}
                         label="Fale conosco"
                         url={'/contact-us'}
@@ -215,7 +178,7 @@ const Home = () => {
 
                     <HistoryButton
                         bgButton="bg-solar-green-primary"
-                        colorText="text-solar-blue-secundary"
+                        colorText="text-solar-blue-secondary"
                         icon={<HistoryIcon size={45} color={'#0d3b85'} />}
                         label="Histórico"
                         url={!signedIn ? '/sign-in' : '/history'}

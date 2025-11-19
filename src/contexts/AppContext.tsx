@@ -1,8 +1,8 @@
-import {AuthContextData, SignInProps, UserProps} from '@/types/app-types';
+import { AuthContextData, SignInProps, UserProps } from '@/types/app-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
+import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import {router} from 'expo-router';
 import {
     createContext,
     ReactNode,
@@ -11,8 +11,9 @@ import {
     useEffect,
     useState,
 } from 'react';
+import { Alert } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import serviceapp, {setSessionExpiredCallback} from '../services/serviceapp';
+import serviceapp, { setSessionExpiredCallback } from '../services/serviceapp';
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
@@ -57,19 +58,42 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
                 }
 
                 // 3. Get location if not logged in
-                let {status} =
-                    await Location.requestForegroundPermissionsAsync();
-                if (status !== 'granted') {
-                    console.log('Permission to access location was denied');
-                } else {
-                    const location = await Location.getCurrentPositionAsync({});
+                try {
+                    const {status} =
+                        await Location.requestForegroundPermissionsAsync();
+                    if (status !== 'granted') {
+                        Alert.alert(
+                            'Permissão de Localização',
+                            'A permissão de localização é necessária para encontrar lojas próximas. Por favor, habilite nas configurações do seu dispositivo.',
+                        );
+                        return;
+                    }
+
+                    const isLocationEnabled =
+                        await Location.hasServicesEnabledAsync();
+                    if (!isLocationEnabled) {
+                        Alert.alert(
+                            'Serviço de Localização',
+                            'O serviço de localização está desativado. Por favor, ative-o para continuar.',
+                        );
+                        return;
+                    }
+
+                    const location = await Location.getCurrentPositionAsync({
+                        accuracy: Location.Accuracy.High,
+                    });
                     const {latitude, longitude} = location.coords;
                     setPositionGlobal([latitude, longitude]);
-                    let resp: any = await Location.reverseGeocodeAsync({
-                        latitude,
-                        longitude,
-                    });
-                    setCurrentCity(resp[0]?.subregion);
+                    const resp = await Location.reverseGeocodeAsync({latitude, longitude});
+                    if (resp.length > 0) {
+                        setCurrentCity(resp[0].subregion);
+                    }
+                } catch (locationError) {
+                    console.error('Erro ao obter localização:', locationError);
+                    Alert.alert(
+                        'Erro de Localização',
+                        'Não foi possível obter sua localização. Verifique suas configurações de GPS e conexão com a internet.',
+                    );
                 }
             } catch (error) {
                 console.error('Falha na inicialização do app', error);
@@ -131,6 +155,7 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
     };
 
     const checkPassword = async (datacheck: UserProps) => {
+        
         setLoading(true);
         try {
             const response = await serviceapp.get(

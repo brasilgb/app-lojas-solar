@@ -1,6 +1,6 @@
 import '@/styles/global.css';
-import React, {useEffect} from 'react';
-import {Stack} from 'expo-router';
+import React, { useEffect } from 'react';
+import { Stack } from 'expo-router';
 import {
     useFonts,
     Roboto_400Regular,
@@ -8,9 +8,10 @@ import {
     Roboto_700Bold,
 } from '@expo-google-fonts/roboto';
 import AppLoading from '@/components/app-loading';
-import {AuthProvider} from '@/contexts/AppContext';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import {StatusBar} from 'expo-status-bar';
+import { AuthProvider } from '@/contexts/AppContext';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import SafeAreaView from 'react-native-safe-area-view';
+import { StatusBar } from 'expo-status-bar';
 const RootLayout = () => {
     const [fontsLoaded] = useFonts({
         Roboto_400Regular,
@@ -24,17 +25,17 @@ const RootLayout = () => {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView className="flex-1 bg-solar-blue-primary">
+            <SafeAreaView  forceInset={{ top: 'always' }} className="flex-1 bg-solar-blue-primary">
                 <StatusBar translucent={true} style="light" />
                 <AuthProvider>
                     <Stack>
                         <Stack.Screen
                             name="(drawer)"
-                            options={{headerShown: false}}
+                            options={{ headerShown: false }}
                         />
                         <Stack.Screen
                             name="(auth)"
-                            options={{headerShown: false}}
+                            options={{ headerShown: false }}
                         />
                     </Stack>
                 </AuthProvider>

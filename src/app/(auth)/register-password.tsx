@@ -1,16 +1,16 @@
-import {Button} from '@/components/Button';
-import {Input} from '@/components/Input';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
 import MessageAlert from '@/components/MessageAlert';
 import ScreenHeader from '@/components/ScreenHeader';
-import {useAuthContext} from '@/contexts/AppContext';
-import {maskPhone} from '@/lib/mask';
-import {RegisterPasswordFormType, RegisterPasswordSchema} from '@/schema/app';
+import { useAuthContext } from '@/contexts/AppContext';
+import { maskPhone } from '@/lib/mask';
+import { RegisterPasswordFormType, RegisterPasswordSchema } from '@/schema/app';
 import serviceapp from '@/services/serviceapp';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {router, useLocalSearchParams} from 'expo-router';
-import {EyeClosedIcon, EyeIcon} from 'lucide-react-native';
-import React, {useState} from 'react';
-import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { router, useLocalSearchParams } from 'expo-router';
+import { EyeClosedIcon, EyeIcon } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import {
     ActivityIndicator,
     Keyboard,
@@ -20,13 +20,13 @@ import {
     Text,
     View,
 } from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const RegisterPassword = () => {
     const params = useLocalSearchParams<any>();
-    const {bottom} = useSafeAreaInsets();
+    const { bottom } = useSafeAreaInsets();
     const [loading, setLoading] = useState<boolean>(false);
-    const {user, setUser, disconnect} = useAuthContext();
+    const { user, setUser, disconnect } = useAuthContext();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalMessage, setModalMessage] = useState<string>('');
     const [modalTitle, setModalTitle] = useState<string>('');
@@ -36,7 +36,7 @@ const RegisterPassword = () => {
         control,
         handleSubmit,
         reset,
-        formState: {errors},
+        formState: { errors },
     } = useForm<RegisterPasswordFormType>({
         defaultValues: {},
         resolver: zodResolver(RegisterPasswordSchema),
@@ -52,7 +52,7 @@ const RegisterPassword = () => {
                 `(WS_ALTERAR_SENHA_APP)?cpfcnpj=${params.cpfcnpj}&senha=${data.senha}&emailCliente=${data.email}&celularCliente=${data.celular}`,
             )
             .then(response => {
-                const {message, success} = response?.data?.resposta;
+                const { message, success } = response?.data?.resposta;
 
                 if (!success) {
                     setModalVisible(true);
@@ -89,7 +89,7 @@ const RegisterPassword = () => {
             >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{paddingBottom: bottom}}
+                    style={{ paddingBottom: bottom }}
                     keyboardShouldPersistTaps="handled"
                 >
                     <View className="flex-1">
@@ -104,7 +104,7 @@ const RegisterPassword = () => {
                                 <Controller
                                     control={control}
                                     render={({
-                                        field: {onChange, onBlur, value},
+                                        field: { onChange, onBlur, value },
                                     }) => (
                                         <View>
                                             <Input
@@ -127,7 +127,7 @@ const RegisterPassword = () => {
                                 <Controller
                                     control={control}
                                     render={({
-                                        field: {onChange, onBlur, value},
+                                        field: { onChange, onBlur, value },
                                     }) => (
                                         <View>
                                             <Input
@@ -150,7 +150,7 @@ const RegisterPassword = () => {
                                 <Controller
                                     control={control}
                                     render={({
-                                        field: {onChange, onBlur, value},
+                                        field: { onChange, onBlur, value },
                                     }) => (
                                         <View className="relative">
                                             <Input
@@ -197,7 +197,7 @@ const RegisterPassword = () => {
                                 <Controller
                                     control={control}
                                     render={({
-                                        field: {onChange, onBlur, value},
+                                        field: { onChange, onBlur, value },
                                     }) => (
                                         <View className="relative">
                                             <Input

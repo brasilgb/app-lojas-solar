@@ -1,33 +1,32 @@
 import AppLoading from '@/components/app-loading';
-import {Button} from '@/components/Button';
+import { Button } from '@/components/Button';
 import ScreenHeader from '@/components/ScreenHeader';
 import StoreListModal from '@/components/StoreListModal';
-import {useAuthContext} from '@/contexts/AppContext';
+import { useAuthContext } from '@/contexts/AppContext';
 import serviceapp from '@/services/serviceapp';
-import {router, useFocusEffect} from 'expo-router';
-import {MapPinHouseIcon, MapPinIcon} from 'lucide-react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { MapPinHouseIcon, MapPinIcon } from 'lucide-react-native';
+import React, { useCallback, useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
     Image,
-    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
-import Map, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import Carousel from 'react-native-snap-carousel-v4';
+import Map, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Carousel from "react-native-reanimated-carousel";
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 export const HEIGHT = Dimensions.get('window').height;
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
 const CARD_WIDTH = width * 0.8;
 
 const SolarStores = () => {
-    const {positionGlobal, currentCity, setStoreList} = useAuthContext();
+    const { positionGlobal, currentCity, setStoreList } = useAuthContext();
     const [location, setLocation] = useState<[any, any]>([0, 0]);
     const [locationLojasProxima, setLocationLojasProxima] = useState<any>([]);
     const [citiesStore, setCitiesStore] = useState<any>([]);
@@ -58,6 +57,7 @@ const SolarStores = () => {
         longitudeDelta: 0.0034,
     });
 
+
     useFocusEffect(
         useCallback(() => {
             async function getLocationLojasProxima() {
@@ -71,18 +71,17 @@ const SolarStores = () => {
                         `(${lojas})?latitude=${latitudel}&longitude=${longitudel}`,
                     )
                     .then(response => {
-                        const {data, message, token} = response.data.resposta;
                         if (selectedCity) {
                             let result = response.data.resposta.data.filter(
                                 (l: any) =>
                                     l.cidade.split('-')[0] ===
-                                        selectedCity?.cidade?.split('-')[0] &&
+                                    selectedCity?.cidade?.split('-')[0] &&
                                     l.latitude !== '' &&
                                     l.longitude !== '',
                             );
                             setLocationLojasProxima(result);
                             setStoreList(result);
-                            const {latitude, longitude} = result[0];
+                            const { latitude, longitude } = result[0];
                             setTimeout(() => {
                                 const setregion = {
                                     latitude: parseFloat(latitude),
@@ -109,7 +108,7 @@ const SolarStores = () => {
                     });
             }
             getLocationLojasProxima();
-        }, [location, selectedCity]),
+        }, [selectedCity])
     );
 
     useFocusEffect(
@@ -118,7 +117,7 @@ const SolarStores = () => {
                 await serviceapp
                     .get(`(WS_CARREGA_LOJAS)`)
                     .then(response => {
-                        const {data, message, token} = response.data.resposta;
+                        const { data, message, token } = response.data.resposta;
                         setCitiesStore(data);
                     })
                     .catch(err => {
@@ -131,7 +130,7 @@ const SolarStores = () => {
     );
 
     const onCaroucelItemChange = (index: number) => {
-        const {latitude, longitude} = locationLojasProxima[index];
+        const { latitude, longitude } = locationLojasProxima[index];
 
         const setregion = {
             latitude: parseFloat(latitude),
@@ -158,62 +157,69 @@ const SolarStores = () => {
                 extrapolate: 'clamp',
             });
 
-            return {scale};
+            return { scale };
         },
     );
 
-    const renderStore = ({item, index}: any) => (
-        <TouchableOpacity
-            key={index}
-            activeOpacity={1}
-            onPress={() =>
-                router.push({
-                    pathname: '/store-selected',
-                    params: item,
-                })
-            }
-        >
-            <View
+    const renderStore = ({ item, index }: any) => (
+        <View className="flex-1 justify-start items-center">
+            <TouchableOpacity
                 key={index}
-                className="shadow-sm shadow-gray-800 bg-white m-2 border border-gray-100 rounded-lg"
+                activeOpacity={1}
+                onPress={() =>
+                    router.push({
+                        pathname: '/store-selected',
+                        params: item,
+                    })
+                }
             >
-                <View className="p-4">
-                    <Text
-                        numberOfLines={1}
-                        className="text-base text-solar-blue-secondary font-roboto font-bold"
-                    >
-                        {item.cidade}
-                    </Text>
-                    <Text
-                        numberOfLines={1}
-                        className="text-xs text-gray-500 font-roboto font-medium pb-1.5"
-                    >
-                        {item.endereco}
-                    </Text>
-                    <Text
-                        numberOfLines={1}
-                        className="text-xs text-gray-500 font-roboto font-medium pb-1.5"
-                    >
-                        {item.email}
-                    </Text>
+                <View
+                    key={index}
+                    style={{ width: ITEM_WIDTH }}
+                    className="shadow-sm shadow-gray-800 bg-white border border-gray-100 rounded-lg"
+                >
+                    <View className="p-4">
+                        <Text
+                            numberOfLines={1}
+                            className="text-base text-solar-blue-secondary font-roboto font-bold"
+                        >
+                            {item.cidade}
+                        </Text>
+
+                        <Text
+                            numberOfLines={1}
+                            className="text-xs text-gray-500 font-roboto font-medium pb-1.5"
+                        >
+                            {item.endereco}
+                        </Text>
+
+                        <Text
+                            numberOfLines={1}
+                            className="text-xs text-gray-500 font-roboto font-medium pb-1.5"
+                        >
+                            {item.email}
+                        </Text>
+                    </View>
+
+                    <View className="flex-row items-center justify-between bg-gray-100 px-2 pt-2 border-t border-white">
+                        <Text
+                            numberOfLines={1}
+                            className="text-base text-solar-blue-primary font-roboto font-medium pb-1.5"
+                        >
+                            {item.whats}
+                        </Text>
+                        <Text
+                            numberOfLines={1}
+                            className="text-base text-solar-orange-primary font-roboto font-medium pb-1.5"
+                        >
+                            {item.distancia}
+                        </Text>
+                    </View>
                 </View>
-                <View className="flex-row items-center justify-between bg-gray-100 px-2 pt-2 border-t border-white">
-                    <Text
-                        numberOfLines={1}
-                        className="text-base text-solar-blue-primary font-roboto font-medium pb-1.5"
-                    >
-                        {item.whats}
-                    </Text>
-                    <Text
-                        numberOfLines={1}
-                        className="text-base text-solar-orange-primary font-roboto font-medium pb-1.5"
-                    >
-                        {item.distancia}
-                    </Text>
-                </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </View>
     );
+
 
     if (loading) {
         return <AppLoading />;
@@ -294,25 +300,25 @@ const SolarStores = () => {
                             );
                         })}
                     </Map>
-                </View>
 
-                <View className="absolute bottom-24">
-                    <Carousel
-                        layout={'default'}
-                        vertical={false}
-                        layoutCardOffset={9}
-                        data={locationLojasProxima}
-                        renderItem={renderStore}
-                        sliderWidth={SLIDER_WIDTH}
-                        itemWidth={ITEM_WIDTH}
-                        inactiveSlideShift={0}
-                        useScrollView={true}
-                        onSnapToItem={index => onCaroucelItemChange(index)}
-                        autoplay={false}
-                        inactiveSlideScale={1}
-                        inactiveSlideOpacity={1}
-                        callbackOffsetMargin={5}
-                    />
+                    <View className="z-50 absolute bottom-0 h-60 w-full">
+                        <Carousel
+                            loop={true}
+                            width={SLIDER_WIDTH}
+                            height={220}
+                            snapEnabled={true}
+                            autoPlay={false}
+                            autoPlayInterval={3000}
+                            mode={'parallax'}
+                            modeConfig={{
+                                parallaxScrollingScale: 0.9,
+                                parallaxScrollingOffset: 90,
+                            }}
+                            data={locationLojasProxima}
+                            onSnapToItem={index => onCaroucelItemChange(index)}
+                            renderItem={renderStore}
+                        />
+                    </View>
                 </View>
             </View>
 

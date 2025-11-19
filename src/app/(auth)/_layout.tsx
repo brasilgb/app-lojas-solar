@@ -30,7 +30,7 @@ const AuthLayout = () => {
                 options={{
                     headerShown: true,
                     header: () => (
-                        <StackHeader left={true} lurl={() => router.back()} />
+                        <StackHeader left={true} />
                     ),
                 }}
             />
@@ -42,7 +42,6 @@ const AuthLayout = () => {
                     header: () => (
                         <StackHeader
                             right={true}
-                            rurl={() => router.push('/')}
                         />
                     ),
                 }}
@@ -55,7 +54,6 @@ const AuthLayout = () => {
                     header: () => (
                         <StackHeader
                             right={true}
-                            rurl={() => router.push('/')}
                         />
                     ),
                 }}
@@ -68,7 +66,6 @@ const AuthLayout = () => {
                     header: () => (
                         <StackHeader
                             right={true}
-                            rurl={() => router.push('/')}
                         />
                     ),
                 }}
@@ -81,7 +78,6 @@ const AuthLayout = () => {
                     header: () => (
                         <StackHeader
                             right={true}
-                            rurl={() => router.push('/')}
                         />
                     ),
                 }}
