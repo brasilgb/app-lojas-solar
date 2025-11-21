@@ -9,12 +9,13 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.loja.solar",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": "AIzaSyDs-4JCmCL-HG9r99SIvNWs6b4Lt4Tw_PI",
         "usesNonExemptEncryption": false
-      },
-      "bundleIdentifier": "com.loja.solar"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,8 +28,9 @@
         }
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
-      "package": "com.loja.solar"
+      "package": "com.loja.solar",
+      "googleServicesFile": "./google-services.json",
+      "predictiveBackGestureEnabled": false
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +38,8 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging",
       [
         "expo-build-properties",
         {

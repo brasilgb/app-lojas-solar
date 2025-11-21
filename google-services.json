@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "639262521508",
+    "project_id": "applojassolar",
+    "storage_bucket": "applojassolar.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639262521508:android:44673f8e66c17610318e31",
+        "android_client_info": {
+          "package_name": "com.loja.solar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD14A5LlDzF8AFYceiPXhgaFvNWW2I4-L8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
