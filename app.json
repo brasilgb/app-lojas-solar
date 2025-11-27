@@ -1,0 +1,85 @@
+{
+  "expo": {
+    "name": "Lojas Solar",
+    "slug": "comlojasolar",
+    "version": "2.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "comlojasolar",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.loja.solar",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyDs-4JCmCL-HG9r99SIvNWs6b4Lt4Tw_PI",
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "permissions": [
+        "POST_NOTIFICATIONS"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDs-4JCmCL-HG9r99SIvNWs6b4Lt4Tw_PI"
+        }
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.loja.solar",
+      "googleServicesFile": "./google-services.json",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraMavenRepos": [
+              "../../node_modules/@notifee/react-native/android/libs"
+            ],
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "kotlinVersion": "2.0.0",
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "backgroundColor": "#1a9cd9",
+          "imageWidth": 250
+        }
+      ],
+      "expo-notifications",
+      "expo-web-browser",
+      "expo-router",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "52d35a9c-4dab-4fe2-9519-1c32bba74e17"
+      }
+    },
+    "owner": "andersonbrodrigues"
+  }
+}
