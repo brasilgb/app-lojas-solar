@@ -22,6 +22,42 @@ import {
     useFonts,
 } from '@expo-google-fonts/roboto';
 
+/**
+ * Este handler é executado quando o app está em background ou fechado (quit).
+ * Ele é registrado aqui, no ponto de entrada do app (index.ts), para garantir
+ * que o Firebase possa executá-lo mesmo sem a UI do React Native estar ativa.
+ */
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Firebase: Notificação FCM recebida (Background/Quit):', remoteMessage);
+
+  if (remoteMessage.data) {
+    // Extrai os dados do payload "data-only"
+    const { title, body, imageUrl, url } = remoteMessage.data as any;
+
+    await displayNotification({
+      title,
+      body,
+      imageUrl,
+      url,
+      messageId: remoteMessage.messageId,
+    });
+  }
+});
+
+/**
+ * Este handler é executado quando o usuário interage com uma notificação
+ * e o app está em background ou fechado (quit).
+ */
+notifee.onBackgroundEvent(async ({ type, detail }) => {
+  const { notification } = detail;
+
+  // Evento de clique na notificação
+  if (type === EventType.PRESS && notification?.data?.url) {
+    // Abre o link associado
+    await Linking.openURL(notification.data.url as string);
+  }
+});
+
 const RootLayout: React.FC = () => {
     const [fontsLoaded] = useFonts({
         Roboto_400Regular,
@@ -85,7 +121,7 @@ const useNotifications = () => {
             console.log('Firebase: Notificação FCM recebida (Foreground):', remoteMessage);
             if (remoteMessage.data) {
                 // Extrai os dados do payload "data-only"
-                const { title, body, imageUrl, url } = remoteMessage.data;
+                const { title, body, imageUrl, url } = remoteMessage.data as any;
                 await displayNotification({ title, body, imageUrl, url, messageId: remoteMessage.messageId });
             }
         });

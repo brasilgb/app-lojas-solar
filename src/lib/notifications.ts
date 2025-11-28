@@ -42,7 +42,7 @@ export async function displayNotification(payload: NotificationPayload) {
     data: {
       url,
       messageId,
-    },
+    } as any,
     android: {
       channelId,
       importance: AndroidImportance.HIGH,
