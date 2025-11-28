@@ -24,25 +24,39 @@ import {
 } from '@expo-google-fonts/roboto';
 
 /**
+ * Retorna a hora atual formatada como "[HH:MM]".
+ */
+const getCurrentTimeFormatted = () => {
+    const now = new Date();
+    // Obtém horas e minutos e garante que tenham dois dígitos (ex: 09:05)
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+};
+
+/**
  * Este handler é executado quando o app está em background ou fechado (quit).
  * Ele é registrado aqui, no ponto de entrada do app (index.ts), para garantir
  * que o Firebase possa executá-lo mesmo sem a UI do React Native estar ativa.
  */
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Firebase: Notificação FCM recebida (Background/Quit):', remoteMessage);
+    console.log('Firebase: Notificação FCM recebida (Background/Quit):', remoteMessage);
 
-  if (remoteMessage.data) {
-    // Extrai os dados do payload "data-only"
-    const { title, body, imageUrl, url } = remoteMessage.data as any;
+    if (remoteMessage.data) {
+        // Extrai os dados do payload "data-only"
+        const { title, body, imageUrl, url } = remoteMessage.data as any;
 
-    await displayNotification({
-      title,
-      body,
-      imageUrl,
-      url,
-      messageId: remoteMessage.messageId,
-    });
-  }
+        const notificationSubtitle = getCurrentTimeFormatted();
+
+        await displayNotification({
+            title,
+            subtitle: notificationSubtitle,
+            body,
+            imageUrl,
+            url,
+            messageId: remoteMessage.messageId,
+        });
+    }
 });
 
 /**
@@ -50,13 +64,13 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
  * e o app está em background ou fechado (quit).
  */
 notifee.onBackgroundEvent(async ({ type, detail }) => {
-  const { notification } = detail;
+    const { notification } = detail;
 
-  // Evento de clique na notificação
-  if (type === EventType.PRESS && notification?.data?.url) {
-    // Abre o link associado
-    await Linking.openURL(notification.data.url as string);
-  }
+    // Evento de clique na notificação
+    if (type === EventType.PRESS && notification?.data?.url) {
+        // Abre o link associado
+        await Linking.openURL(notification.data.url as string);
+    }
 });
 
 const RootLayout: React.FC = () => {
@@ -113,7 +127,7 @@ const useNotifications = () => {
             if (initialNotification && initialNotification.notification.data?.url) {
                 Linking.openURL(initialNotification.notification.data.url as string);
             }
-        };  
+        };
 
         initializeNotifications();
 
@@ -123,7 +137,10 @@ const useNotifications = () => {
             if (remoteMessage.data) {
                 // Extrai os dados do payload "data-only"
                 const { title, body, imageUrl, url } = remoteMessage.data as any;
-                await displayNotification({ title, body, imageUrl, url, messageId: remoteMessage.messageId });
+
+                const notificationSubtitle = getCurrentTimeFormatted();
+                
+                await displayNotification({ title, subtitle: notificationSubtitle, body, imageUrl, url, messageId: remoteMessage.messageId });
             }
         });
 
@@ -153,13 +170,13 @@ const useNotifications = () => {
 
 // registerDevice: envia deviceId + pushToken ao backend
 async function registerDevice(deviceId: string, pushToken: any) {
-    
-        const deviceos = Platform.OS;
-        const versaoapp = process.env.EXPO_PUBLIC_APP_VERSION?.replace(/\./g, '');
 
-        const response = await serviceapp.get(
-            `(WS_GRAVA_DEVICE)?deviceId=${deviceId}&pushToken=${pushToken}&deviceOs=${deviceos}&versaoApp=${versaoapp}`,
-        );
+    const deviceos = Platform.OS;
+    const versaoapp = process.env.EXPO_PUBLIC_APP_VERSION?.replace(/\./g, '');
+
+    const response = await serviceapp.get(
+        `(WS_GRAVA_DEVICE)?deviceId=${deviceId}&pushToken=${pushToken}&deviceOs=${deviceos}&versaoApp=${versaoapp}`,
+    );
 }
 
 export default RootLayout;

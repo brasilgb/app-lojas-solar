@@ -85,7 +85,7 @@ const Home = () => {
 
     return (
         <View className="flex-1 bg-white">
-            {loading && carrocelData.length === 0 ? (
+            {loading && carrocelData?.length === 0 ? (
                 <View className="z-50 h-[410] border-t border-t-solar-green-primary items-center justify-center">
                     <ActivityIndicator size="large" color="#1a9cd9" />
                 </View>
@@ -95,7 +95,7 @@ const Home = () => {
                         loop={true}
                         width={viewportWidth}
                         height={410}
-                        autoPlay={carrocelData.length > 1 ? true : false}
+                        autoPlay={carrocelData?.length > 1 ? true : false}
                         autoPlayInterval={3000}
                         data={carrocelData}
                         onSnapToItem={(index: any) => setIndex(index)}

@@ -1,11 +1,12 @@
 import notifee, {
-    AndroidImportance,
-    AndroidStyle,
-    AndroidVisibility,
+  AndroidImportance,
+  AndroidStyle,
+  AndroidVisibility,
 } from '@notifee/react-native';
 
 export interface NotificationPayload {
   title?: string;
+  subtitle?: string;
   body?: string;
   imageUrl?: string;
   url?: string;
@@ -31,20 +32,22 @@ export async function createNotificationChannel() {
  * Esta função é usada tanto para foreground quanto para background.
  */
 export async function displayNotification(payload: NotificationPayload) {
-  const { title, body, imageUrl, url, messageId } = payload;
+  const { title, subtitle, body, imageUrl, url, messageId } = payload;
 
   // Garante que o canal existe antes de exibir a notificação
   const channelId = await createNotificationChannel();
 
   await notifee.displayNotification({
     title,
+    subtitle,
     body,
     data: {
-      url,
+      url: url ?? "",
       messageId,
     } as any,
     android: {
       channelId,
+      largeIcon: imageUrl ? imageUrl : require('@/assets/images/favicon.png'),
       importance: AndroidImportance.HIGH,
       style: imageUrl ? { type: AndroidStyle.BIGPICTURE, picture: imageUrl } : undefined,
       pressAction: {
