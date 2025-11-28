@@ -95,7 +95,7 @@ const Home = () => {
                         loop={true}
                         width={viewportWidth}
                         height={410}
-                        autoPlay={true}
+                        autoPlay={carrocelData.length > 1 ? true : false}
                         autoPlayInterval={3000}
                         data={carrocelData}
                         onSnapToItem={(index: any) => setIndex(index)}

@@ -12,12 +12,13 @@ import {useLocalSearchParams} from 'expo-router';
 import {ArrowRight, Check, EyeClosedIcon, EyeIcon} from 'lucide-react-native';
 import React, {useState} from 'react';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
-import {ActivityIndicator, Keyboard, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, Keyboard, Text, View} from 'react-native';
 
 const CheckPassword = () => {
     const params = useLocalSearchParams();
     const [loading, setLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [passwordActions, setPasswordActions] = useState<string>('');
     const {checkPassword} = useAuthContext();
 
     const {
@@ -49,6 +50,9 @@ const CheckPassword = () => {
             } as unknown as UserProps;
             Keyboard.dismiss();
             const checked: any = await checkPassword(datacheck);
+            if(checked) {
+                setPasswordActions(checked)
+            }
             if (checked) {
                 reset();
             }
@@ -104,9 +108,9 @@ const CheckPassword = () => {
                         )}
                         name="senha"
                     />
-                    {errors.senha && (
+                    {passwordActions && (
                         <Text className="text-solar-red-primary">
-                            {errors.senha?.message}
+                            {passwordActions}
                         </Text>
                     )}
                     <Button

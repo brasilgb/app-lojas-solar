@@ -1,4 +1,5 @@
 import '@/styles/global.css';
+import 'react-native-get-random-values';
 import notifee, { EventType } from '@notifee/react-native';
 import React, { useEffect } from 'react';
 import { Linking, Platform } from 'react-native';
@@ -10,7 +11,7 @@ import messaging from '@react-native-firebase/messaging';
 import { createNotificationChannel, displayNotification } from '@/lib/notifications';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import DeviceInfo from 'react-native-device-info';
+import { getPersistentUniqueId } from '@/utils/deviceStorage';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import serviceapp from '@/services/serviceapp';
@@ -103,7 +104,7 @@ const useNotifications = () => {
             const fcmToken = await messaging().getToken();
             if (fcmToken) {
                 console.log('Firebase: FCM Token obtido:', fcmToken);
-                const deviceId = await DeviceInfo.getUniqueId();
+                const deviceId = await getPersistentUniqueId();
                 await registerDevice(deviceId, fcmToken);
             }
 
@@ -112,7 +113,7 @@ const useNotifications = () => {
             if (initialNotification && initialNotification.notification.data?.url) {
                 Linking.openURL(initialNotification.notification.data.url as string);
             }
-        };
+        };  
 
         initializeNotifications();
 
@@ -152,6 +153,7 @@ const useNotifications = () => {
 
 // registerDevice: envia deviceId + pushToken ao backend
 async function registerDevice(deviceId: string, pushToken: any) {
+    
         const deviceos = Platform.OS;
         const versaoapp = process.env.EXPO_PUBLIC_APP_VERSION?.replace(/\./g, '');
 

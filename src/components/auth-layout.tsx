@@ -18,7 +18,7 @@ const AuthLayout = ({children}: AuthLayoutProps) => {
                         {/* <Image source={require('@/assets/images/logo_lojas_solar.png')}  style={{ width: 300, height: 54 }} /> */}
                     </View>
                     <View
-                        className="h-52 w-full bg-gray-50 border-4 border-white rounded-lg py-3"
+                        className="min-h-52 w-full bg-gray-50 border-4 border-white rounded-lg py-3"
                         style={{elevation: 2}}
                     >
                         {children}

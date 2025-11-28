@@ -14,10 +14,11 @@ import {
 import { Alert } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import serviceapp, { setSessionExpiredCallback } from '../services/serviceapp';
+import { getPersistentUniqueId } from '@/utils/deviceStorage';
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<any>(null);
     const [deviceId, setDeviceId] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -32,16 +33,8 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
             setLoading(true);
             try {
                 // 1. Get Device ID
-                let deviceIdValue = await AsyncStorage.getItem('deviceid');
-                if (deviceIdValue === null) {
-                    const uniqueId = await DeviceInfo.getUniqueId();
-                    if (uniqueId) {
-                        await AsyncStorage.setItem('deviceid', uniqueId);
-                        deviceIdValue = uniqueId;
-                    }
-                }
-                setDeviceId(deviceIdValue);
-
+                const deviceId = await getPersistentUniqueId();
+                setDeviceId(deviceId);
                 // 2. Check for "keepLoggedIn"
                 const keepLoggedIn = await SecureStore.getItemAsync(
                     storageKeepLoggedInKey,
@@ -59,7 +52,7 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
 
                 // 3. Get location if not logged in
                 try {
-                    const {status} =
+                    const { status } =
                         await Location.requestForegroundPermissionsAsync();
                     if (status !== 'granted') {
                         Alert.alert(
@@ -82,9 +75,9 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
                     const location = await Location.getCurrentPositionAsync({
                         accuracy: Location.Accuracy.High,
                     });
-                    const {latitude, longitude} = location.coords;
+                    const { latitude, longitude } = location.coords;
                     setPositionGlobal([latitude, longitude]);
-                    const resp = await Location.reverseGeocodeAsync({latitude, longitude});
+                    const resp = await Location.reverseGeocodeAsync({ latitude, longitude });
                     if (resp.length > 0) {
                         setCurrentCity(resp[0].subregion);
                     }
@@ -115,7 +108,7 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
                 setLoading(false);
                 return 'Erro ao conectar ao servidor. O serviço da aplicação parece estar parado.';
             }
-            const {data} = response.data.resposta;
+            const { data } = response.data.resposta;
             if (data.cadastroCliente && data.cadastroSenha) {
                 setLoading(false);
                 router.replace({
@@ -156,7 +149,7 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
     };
 
     const checkPassword = async (datacheck: UserProps) => {
-        
+
         setLoading(true);
         try {
             const response = await serviceapp.get(
@@ -166,9 +159,11 @@ export const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
                 setLoading(false);
                 return 'Erro ao conectar ao servidor. O serviço da aplicação parece estar parado.';
             }
-            const {success, message, data} = response.data.resposta;
+            const { success, message, data } = response.data.resposta;
 
             if (!success) {
+                console.log(message);
+
                 return `${message}`;
             }
 
