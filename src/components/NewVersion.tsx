@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, Text, Platform, Linking} from 'react-native';
-import {FontAwesome} from '@expo/vector-icons';
-import {Button} from './Button';
+import { View, Text, Platform, Linking } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { Button } from './Button';
 
-const VerifyVersion = ({route, onClose}: any) => {
-    const {data} = route.params;
+const VerifyVersion = ({ route, onClose }: any) => {
+    const { data } = route.params;
 
     const handlerVersioning = () => {
         const os = Platform.OS;
@@ -21,25 +21,29 @@ const VerifyVersion = ({route, onClose}: any) => {
     };
 
     return (
-        <View>
+        <View className='absolute top-0 right-0 bottom-0 left-0 justify-center items-center' style={{ zIndex: 1000 }}>
             <View className="flex-1 bg-gray-50 pt-4">
                 <View className="flex-1 flex-col items-center justify-between px-12 pt-4 mb-10">
                     <View className="mb-10">
-                        <Text className="text-3xl text-solar-blue-secondary py-8 text-center font-bold uppercase">
+                        <Text className="text-2xl text-solar-blue-secondary py-8 text-center font-bold uppercase">
                             Nova versão do aplicativo disponível
                         </Text>
+                        <View className='items-center justify-center mb-4'>
+                            <FontAwesome
+                                name="gears"
+                                size={120}
+                                color={'#bccf00'}
+                            />
+                        </View>
                         <Text className="text-lg text-solar-blue-dark font-PoppinsRegular mb-4 px-8 text-center">
                             Está disponível a nova versão do aplicativo das
                             Lojas Solar, clique no botão atualizar para realizar
                             a atualização.
                         </Text>
-                    </View>
-                    <View>
-                        <FontAwesome
-                            name="gears"
-                            size={120}
-                            color={'#bccf00'}
-                        />
+                        <Text className="text-sm text-solar-blue-dark font-PoppinsRegular mb-4 px-8 text-center">
+                            É importante que faça a atualização para garantir a
+                            continuidade do uso do aplicativo, com agilidade e segurança
+                        </Text>
                     </View>
                     <View className="py-4 mt-10">
                         <Text className="text-sm font-semibold">
@@ -52,15 +56,9 @@ const VerifyVersion = ({route, onClose}: any) => {
                     <View className="w-full gap-8">
                         <Button
                             size={'default'}
-                            label={'Atualizar agora'}
+                            label={'Atualizar'}
                             onPress={handlerVersioning}
                             variant={'secondary'}
-                        />
-                        <Button
-                            size={'sm'}
-                            label={'Gostaria de atualizar mais tarde'}
-                            onPress={onClose}
-                            variant={'link'}
                         />
                     </View>
                 </View>

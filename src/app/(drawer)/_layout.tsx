@@ -1,5 +1,5 @@
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Drawer} from 'expo-router/drawer';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Drawer } from 'expo-router/drawer';
 import {
     BanknoteArrowDownIcon,
     HandCoinsIcon,
@@ -16,24 +16,24 @@ import {
     UserIcon,
     WrenchIcon,
 } from 'lucide-react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
     DrawerContentScrollView,
     DrawerItem,
     DrawerItemList,
 } from '@react-navigation/drawer';
-import {View, Text, BackHandler, Platform} from 'react-native';
-import {Link, router, useFocusEffect} from 'expo-router';
+import { View, Text, BackHandler, Platform } from 'react-native';
+import { Link, router, useFocusEffect } from 'expo-router';
 import CustomHeader from '@/components/DrawerHeader';
-import {useAuthContext} from '@/contexts/AppContext';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import { useAuthContext } from '@/contexts/AppContext';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import serviceapp from '@/services/serviceapp';
-import {Modalize} from 'react-native-modalize';
-import NewVersion from '@/components/NewVersion';
+import { Modalize } from 'react-native-modalize';
+import VerifyVersion from '@/components/NewVersion';
 
 const CustomDrawerContent = (props: any) => {
-    const {top, bottom} = useSafeAreaInsets();
-    const {signedIn, signOut, user} = useAuthContext();
+    const { top, bottom } = useSafeAreaInsets();
+    const { signedIn, signOut, user } = useAuthContext();
 
     useFocusEffect(
         useCallback(() => {
@@ -62,12 +62,12 @@ const CustomDrawerContent = (props: any) => {
                 {...props}
                 scrollEnabled={true}
                 drawerHideStatusBarOnOpen={'slide'}
-                contentContainerStyle={{backgroundColor: '#ffffff'}}
+                contentContainerStyle={{ backgroundColor: '#ffffff' }}
             >
                 <View className="bg-white">
                     <DrawerItemList {...props} />
                     <DrawerItem
-                        icon={({color, size}) => (
+                        icon={({ color, size }) => (
                             <LogOut color={color} size={size} />
                         )}
                         label={signedIn ? 'Sair' : 'Login'}
@@ -102,7 +102,7 @@ const CustomDrawerContent = (props: any) => {
 const DrawerLayout = () => {
     const modalizeRef = useRef<Modalize>(null);
     const [versionData, setVersionData] = useState<any>(null);
-    const {signedIn} = useAuthContext();
+    const { signedIn } = useAuthContext();
 
     useEffect(() => {
         const getVersionCheck = async () => {
@@ -113,7 +113,7 @@ const DrawerLayout = () => {
             await serviceapp
                 .get('WS_VERSAO_APP')
                 .then((response: any) => {
-                    const {android, ios} = response.data.resposta.data;
+                    const { android, ios } = response.data.resposta.data;
                     const version = Platform.OS === 'ios' ? ios : android;
                     if (parseInt(version, 10) > parseInt(versionApp, 10)) {
                         let versionNew: any = version?.split('').join('.');
@@ -121,7 +121,7 @@ const DrawerLayout = () => {
                             atual: process.env.EXPO_PUBLIC_APP_VERSION,
                             nova: versionNew,
                         };
-                        setVersionData({route: {params: {data}}});
+                        setVersionData({ route: { params: { data } } });
                         modalizeRef.current?.open();
                     }
                 })
@@ -134,14 +134,11 @@ const DrawerLayout = () => {
 
     return (
         <GestureHandlerRootView>
-            <Modalize ref={modalizeRef} adjustToContentHeight>
-                {versionData && (
-                    <NewVersion
-                        {...versionData}
-                        onClose={() => modalizeRef.current?.close()}
-                    />
-                )}
-            </Modalize>
+            {versionData && (
+                <VerifyVersion
+                    {...versionData}
+                />
+            )}
             <Drawer
                 drawerContent={CustomDrawerContent}
                 screenOptions={{
@@ -157,7 +154,7 @@ const DrawerLayout = () => {
                     options={{
                         drawerLabel: 'Home',
                         title: 'Home',
-                        drawerIcon: ({color, size}) => (
+                        drawerIcon: ({ color, size }) => (
                             <HomeIcon color={color} size={size} />
                         ),
                     }}
@@ -168,8 +165,8 @@ const DrawerLayout = () => {
                     options={{
                         drawerLabel: 'Minha conta/Alterar Senha',
                         title: 'Minha conta',
-                        drawerItemStyle: {display: signedIn ? 'flex' : 'none'},
-                        drawerIcon: ({color, size}) => (
+                        drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
+                        drawerIcon: ({ color, size }) => (
                             <UserIcon color={color} size={size} />
                         ),
                     }}
@@ -181,8 +178,8 @@ const DrawerLayout = () => {
                         headerShown: false,
                         drawerLabel: 'Crediário',
                         title: 'Crediário',
-                        drawerItemStyle: {display: signedIn ? 'flex' : 'none'},
-                        drawerIcon: ({color, size}) => (
+                        drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
+                        drawerIcon: ({ color, size }) => (
                             <HandshakeIcon color={color} size={size} />
                         ),
                     }}
@@ -194,8 +191,8 @@ const DrawerLayout = () => {
                         headerShown: false,
                         drawerLabel: 'Assinar documentos',
                         title: 'Assinar documentos',
-                        drawerItemStyle: {display: signedIn ? 'flex' : 'none'},
-                        drawerIcon: ({color, size}) => (
+                        drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
+                        drawerIcon: ({ color, size }) => (
                             <PenLineIcon color={color} size={size} />
                         ),
                     }}
@@ -206,8 +203,8 @@ const DrawerLayout = () => {
                     options={{
                         drawerLabel: 'Conf. de privacidade',
                         title: 'Conf. de privacidade',
-                        drawerItemStyle: {display: signedIn ? 'flex' : 'none'},
-                        drawerIcon: ({color, size}) => (
+                        drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
+                        drawerIcon: ({ color, size }) => (
                             <ShieldUserIcon color={color} size={size} />
                         ),
                     }}
@@ -219,7 +216,7 @@ const DrawerLayout = () => {
                         headerShown: false,
                         drawerLabel: 'Lojas solar próximas',
                         title: 'Lojas solar próximas',
-                        drawerIcon: ({color, size}) => (
+                        drawerIcon: ({ color, size }) => (
                             <MapPinIcon color={color} size={size} />
                         ),
                     }}
@@ -230,7 +227,7 @@ const DrawerLayout = () => {
                     options={{
                         drawerLabel: 'Fale conosco',
                         title: 'Fale conosco',
-                        drawerIcon: ({color, size}) => (
+                        drawerIcon: ({ color, size }) => (
                             <PhoneCallIcon color={color} size={size} />
                         ),
                     }}
@@ -242,8 +239,8 @@ const DrawerLayout = () => {
                         headerShown: false,
                         drawerLabel: 'Faça seu pagamento',
                         title: 'Faça seu pagamento',
-                        drawerItemStyle: {display: signedIn ? 'flex' : 'none'},
-                        drawerIcon: ({color, size}) => (
+                        drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
+                        drawerIcon: ({ color, size }) => (
                             <HandCoinsIcon color={color} size={size} />
                         ),
                     }}
@@ -255,8 +252,8 @@ const DrawerLayout = () => {
                         headerShown: false,
                         drawerLabel: 'Cashback',
                         title: 'Cashback',
-                        drawerItemStyle: {display: signedIn ? 'flex' : 'none'},
-                        drawerIcon: ({color, size}) => (
+                        drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
+                        drawerIcon: ({ color, size }) => (
                             <BanknoteArrowDownIcon color={color} size={size} />
                         ),
                     }}
@@ -268,8 +265,8 @@ const DrawerLayout = () => {
                         headerShown: false,
                         drawerLabel: 'Histórico de compras',
                         title: 'Histórico de compras',
-                        drawerItemStyle: {display: signedIn ? 'flex' : 'none'},
-                        drawerIcon: ({color, size}) => (
+                        drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
+                        drawerIcon: ({ color, size }) => (
                             <HistoryIcon color={color} size={size} />
                         ),
                     }}
@@ -281,8 +278,8 @@ const DrawerLayout = () => {
                         headerShown: false,
                         drawerLabel: 'Protocolo de assistência',
                         title: 'Protocolo de assistência',
-                        drawerItemStyle: {display: signedIn ? 'flex' : 'none'},
-                        drawerIcon: ({color, size}) => (
+                        drawerItemStyle: { display: signedIn ? 'flex' : 'none' },
+                        drawerIcon: ({ color, size }) => (
                             <WrenchIcon color={color} size={size} />
                         ),
                     }}
@@ -292,7 +289,7 @@ const DrawerLayout = () => {
                     name="privacy-police"
                     options={{
                         drawerLabel: () => null,
-                        drawerItemStyle: {display: 'none'},
+                        drawerItemStyle: { display: 'none' },
                     }}
                 />
 
@@ -300,7 +297,7 @@ const DrawerLayout = () => {
                     name="frequently-asked-questions"
                     options={{
                         drawerLabel: () => null,
-                        drawerItemStyle: {display: 'none'},
+                        drawerItemStyle: { display: 'none' },
                     }}
                 />
             </Drawer>
