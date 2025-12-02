@@ -69,7 +69,6 @@ const CartPayment = () => {
             Payment: {
                 Type: 'CreditCard',
                 Amount: Number(dataCart.valorOrdem) * 100,
-                // Amount: 1,
                 Currency: 'BRL',
                 Country: 'BRA',
                 Provider: 'Cielo',

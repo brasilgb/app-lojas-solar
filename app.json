@@ -42,7 +42,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.loja.solar",
       "config": {
-        "googleMapsApiKey": "AIzaSyDs-4JCmCL-HG9r99SIvNWs6b4Lt4Tw_PI",
+        "googleMapsApiKey": "AIzaSyA8m2VnsHjhhYsFSRdYGwW3h_119sQOCbc",
         "usesNonExemptEncryption": false
       }
     },
@@ -62,7 +62,7 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDs-4JCmCL-HG9r99SIvNWs6b4Lt4Tw_PI"
+          "apiKey": "AIzaSyA8m2VnsHjhhYsFSRdYGwW3h_119sQOCbc"
         }
       },
       "package": "com.loja.solar",
