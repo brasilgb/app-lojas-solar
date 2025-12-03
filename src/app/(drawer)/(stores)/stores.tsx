@@ -6,7 +6,7 @@ import { useAuthContext } from '@/contexts/AppContext';
 import serviceapp from '@/services/serviceapp';
 import { router, useFocusEffect } from 'expo-router';
 import { MapPinHouseIcon, MapPinIcon } from 'lucide-react-native';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
@@ -26,7 +26,7 @@ export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
 const CARD_WIDTH = width * 0.8;
 
 const SolarStores = () => {
-    const { positionGlobal, currentCity, setStoreList } = useAuthContext();
+    const { positionGlobal, setStoreList } = useAuthContext();
     const [location, setLocation] = useState<[any, any]>([0, 0]);
     const [locationLojasProxima, setLocationLojasProxima] = useState<any>([]);
     const [citiesStore, setCitiesStore] = useState<any>([]);
@@ -119,6 +119,7 @@ const SolarStores = () => {
                     .then(response => {
                         const { data, message, token } = response.data.resposta;
                         setCitiesStore(data);
+
                     })
                     .catch(err => {
                         console.log(err);
@@ -220,7 +221,6 @@ const SolarStores = () => {
         </View>
     );
 
-
     if (loading) {
         return <AppLoading />;
     }
@@ -243,9 +243,7 @@ const SolarStores = () => {
                             Localização
                         </Text>
                         <Text className="text-sm font-medium text-white">
-                            {selectedCity
-                                ? selectedCity?.cidade
-                                : currentCity?.toUpperCase()}
+                            {selectedCity?.cidade}
                         </Text>
                     </View>
                     <View className="flex-row gap-2">

@@ -28,7 +28,6 @@ interface AuthContextData {
     signedIn: boolean;
     disconnect: () => void;
     positionGlobal: any;
-    currentCity: string;
     storeList: any;
     setStoreList: any;
     loading: any;

@@ -1,7 +1,7 @@
 import { AuthContextData, SignInProps, UserProps } from '@/types/app-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
-import { router } from 'expo-router';
+import { router, SplashScreen } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import {
     createContext,
@@ -26,12 +26,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const storageUserKey = 'solar_user';
     const storageKeepLoggedInKey = 'solar_keepLoggedIn';
     const [storeList, setStoreList] = useState<any>([]);
-    const [currentCity, setCurrentCity] = useState<any>(null);
+
+    useEffect(() => {
+        async function loadPosition() {
+            try {
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    console.log('Permission to access location was denied');
+                }
+                const location = await Location.getCurrentPositionAsync({});
+                const { latitude, longitude } = location.coords;
+                setPositionGlobal([latitude, longitude]);
+            } catch (error) {
+                console.error("Erro ao obter localização:", error);
+            } finally {
+                SplashScreen.hide();
+            }
+        }
+        loadPosition();
+    }, []);
 
     useEffect(() => {
         async function initializeApp() {
-            setLoading(true);
             try {
+                setLoading(true);
                 // 1. Get Device ID
                 const deviceId = await getPersistentUniqueId();
                 setDeviceId(deviceId);
@@ -49,52 +67,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                         return;
                     }
                 }
-
-                // 3. Get location if not logged in
-                try {
-                    const { status } =
-                        await Location.requestForegroundPermissionsAsync();
-                    if (status !== 'granted') {
-                        Alert.alert(
-                            'Permissão de Localização',
-                            'A permissão de localização é necessária para encontrar lojas próximas. Por favor, habilite nas configurações do seu dispositivo.',
-                        );
-                        return;
-                    }
-
-                    const isLocationEnabled =
-                        await Location.hasServicesEnabledAsync();
-                    if (!isLocationEnabled) {
-                        Alert.alert(
-                            'Serviço de Localização',
-                            'O serviço de localização está desativado. Por favor, ative-o para continuar.',
-                        );
-                        return;
-                    }
-
-                    const location = await Location.getCurrentPositionAsync({
-                        accuracy: Location.Accuracy.High,
-                    });
-                    const { latitude, longitude } = location.coords;
-                    setPositionGlobal([latitude, longitude]);
-                    const resp = await Location.reverseGeocodeAsync({ latitude, longitude });
-                    if (resp.length > 0) {
-                        setCurrentCity(resp[0].subregion);
-                    }
-                } catch (locationError) {
-                    if (__DEV__) console.error('Erro ao obter localização:', locationError);
-                    Alert.alert(
-                        'Erro de Localização',
-                        'Não foi possível obter sua localização. Verifique suas configurações de GPS e conexão com a internet.',
-                    );
-                }
             } catch (error) {
-                if (__DEV__) console.error('Falha na inicialização do app', error);
-            } finally {
-                setLoading(false);
+                console.error("Erro ao obter SecureStore:", error);
             }
         }
-
         initializeApp();
     }, []);
 
@@ -235,8 +211,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 deviceId,
                 signOut,
                 disconnect,
-                positionGlobal,
-                currentCity,
+                positionGlobal
             }}
         >
             {children}

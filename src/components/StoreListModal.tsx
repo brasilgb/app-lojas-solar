@@ -47,7 +47,7 @@ const StoreListModal = ({
                 <Text
                     className={`text-sm text-solar-blue-secondary font-roboto font-bold`}
                 >
-                    {item?.cidade}
+                    {item?.cidade} - <Text className='text-[9px] text-gray-500'>{item?.endereco}</Text>
                 </Text>
             </View>
         </TouchableOpacity>

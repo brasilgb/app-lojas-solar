@@ -49,7 +49,9 @@
     "android": {
       "edgeToEdgeEnabled": true,
       "permissions": [
-        "POST_NOTIFICATIONS"
+        "POST_NOTIFICATIONS",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
       ],
       "blockedPermissions": [
         "android.permission.READ_MEDIA_IMAGES",
