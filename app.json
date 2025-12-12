@@ -76,6 +76,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Permitir que o aplicativo acesse sua localização em primeiro plano para encontrar sua posição no mapa."
+        }
+      ],
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
       [

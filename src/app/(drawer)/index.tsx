@@ -14,11 +14,12 @@ import {
     UserIcon,
     WrenchIcon
 } from 'lucide-react-native';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
     ActivityIndicator,
     Dimensions,
     Image,
+    ImageBackground,
     Platform,
     Text,
     TouchableOpacity,
@@ -36,7 +37,22 @@ const Home = () => {
     const [index, setIndex] = useState(0);
     const [carrocelData, setCarrocelData] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const carouselRef = useRef<ICarouselInstance>(null);
+
+    useEffect(() => {
+        async function getCarrocel() {
+            setLoading(true)
+            await serviceapp
+                .get(`(WS_CARROCEL_PROMOCAO)`)
+                .then((response: any) => {
+                    const { data } = response.data.resposta;
+                    setCarrocelData(data.carrocel);
+                })
+                .catch(err => {
+                    console.log(err);
+                }).finally( () => setLoading(false));
+        }
+        getCarrocel();
+    }, []);
 
     let colorBar = Platform.OS === 'ios' ? 'rgba(0, 162, 227, 0)' : '#1a9cd9';
     const handlePressButtonAsync = async (url: any) => {
@@ -46,37 +62,16 @@ const Home = () => {
         });
     };
 
-    async function getCarrocel() {
-        setLoading(true);
-        await serviceapp
-            .get(`(WS_CARROCEL_PROMOCAO)`)
-            .then(response => {
-                const { data } = response.data.resposta;
-                setCarrocelData(data.carrocel);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-            .finally(() => setLoading(false));
-    }
-
-    useFocusEffect(
-        useCallback(() => {
-            getCarrocel();
-        }, []),
-    );
-
     const CarouselCardItem = ({ item }: { item: any }) => (
-        <View className="flex-1 items-center justify-center w-full">
-            <View className="bg-solar-gray-dark w-full">
+        <View className="flex-1 items-center justify-center w-full h-[410px]">
+            <View className="bg-solar-gray-dark w-full h-full">
                 <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => handlePressButtonAsync(item.carLink)}
                 >
                     <Image
                         source={{ uri: item.carLinkImagem }}
-                        defaultSource={require('@/assets/images/default-slide.png')}
-                        style={{ width: viewportWidth, height: 410, resizeMode: 'contain' }}
+                        style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
                     />
                 </TouchableOpacity>
             </View>
@@ -85,27 +80,41 @@ const Home = () => {
 
     return (
         <View className="flex-1 bg-white">
-            {loading && carrocelData?.length === 0 ? (
-                <View className="z-50 h-[410] border-t border-t-solar-green-primary items-center justify-center">
-                    <ActivityIndicator size="large" color="#1a9cd9" />
+            {loading ? (
+                <View className="z-50 h-[410] border-t border-t-solar-green-primary bg-solar-blue-primary items-center justify-center">
+                    <ImageBackground
+                        source={require('@/assets/images/default-slide.png')}
+                        style={{ width: '100%', height: 410 }}
+                        className="h-[410] border-t border-t-solar-green-primary items-center justify-center"
+                    >
+                        <ActivityIndicator size="large" color="#1a9cd9" />
+                    </ImageBackground>
                 </View>
             ) : (
-                <View className="h-[410] border-t border-t-solar-green-primary items-center justify-center bg-solar-green-primary">
-                    <Carousel
-                        loop={true}
-                        width={viewportWidth}
-                        height={410}
-                        autoPlay={carrocelData?.length > 1 ? true : false}
-                        autoPlayInterval={3000}
-                        data={carrocelData}
-                        onSnapToItem={(index: any) => setIndex(index)}
-                        renderItem={({ item }) => <CarouselCardItem item={item} />}
-                    />
+                <View className="h-[410] border-t border-t-solar-green-primary bg-solar-blue-primary items-center justify-center">
+                    {carrocelData
+                        ?
+                        <Carousel
+                            data={carrocelData}
+                            renderItem={({ item }) => <CarouselCardItem item={item} />}
+                            loop={true}
+                            width={viewportWidth}
+                            height={410}
+                            autoPlay={carrocelData?.length > 1 ? true : false}
+                            autoPlayInterval={3000}
+                            onSnapToItem={(index: any) => setIndex(index)}
+                        />
+                        :
+                        <Image
+                            source={require('@/assets/images/default-slide.png')}
+                            style={{ width: '100%', height: 410, resizeMode: 'cover' }}
+                        />
+                    }
                 </View>
             )}
 
             <ScrollView className="bg-white border-t border-y-solar-green-primary">
-                <View className="flex-row flex-wrap items-start justify-between gap-3 p-3">
+                <View className="flex-row flex-wrap items-start justify-between gap-3 p-3.5">
                     <TouchableOpacity
                         style={{ elevation: 2 }}
                         onPress={() =>

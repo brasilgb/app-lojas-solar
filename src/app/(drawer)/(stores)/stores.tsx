@@ -50,9 +50,12 @@ const SolarStores = () => {
     const mapRef = useRef<any>(0);
     let mapAnimation = new Animated.Value(0);
 
+    const initialLat = parseFloat(positionGlobal[0] || '0.0') || 0.0;
+    const initialLon = parseFloat(positionGlobal[1] || '0.0') || 0.0;
+
     const [region, setRegion] = useState({
-        latitude: positionGlobal[0],
-        longitude: positionGlobal[1],
+        latitude: initialLat,
+        longitude: initialLon,
         latitudeDelta: 0.0043,
         longitudeDelta: 0.0034,
     });

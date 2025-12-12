@@ -11,8 +11,6 @@ import {
     useEffect,
     useState,
 } from 'react';
-import { Alert } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import serviceapp, { setSessionExpiredCallback } from '../services/serviceapp';
 import { getPersistentUniqueId } from '@/utils/deviceStorage';
 
@@ -22,28 +20,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<any>(null);
     const [deviceId, setDeviceId] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [positionGlobal, setPositionGlobal] = useState<any>([0, 0]);
     const storageUserKey = 'solar_user';
     const storageKeepLoggedInKey = 'solar_keepLoggedIn';
     const [storeList, setStoreList] = useState<any>([]);
 
+    const [positionGlobal, setPositionGlobal] = useState<any>([0, 0]);
+
     useEffect(() => {
-        async function loadPosition() {
-            try {
-                let { status } = await Location.requestForegroundPermissionsAsync();
-                if (status !== 'granted') {
-                    console.log('Permission to access location was denied');
-                }
-                const location = await Location.getCurrentPositionAsync({});
-                const { latitude, longitude } = location.coords;
-                setPositionGlobal([latitude, longitude]);
-            } catch (error) {
-                console.error("Erro ao obter localização:", error);
-            } finally {
-                SplashScreen.hide();
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.log('Permissão de localização não concedida');
+                return;
             }
-        }
-        loadPosition();
+            let currentLocation = await Location.getCurrentPositionAsync({});
+            const { latitude, longitude } = currentLocation.coords;
+            setPositionGlobal([latitude, longitude]);
+        })();
     }, []);
 
     useEffect(() => {
